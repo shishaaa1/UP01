@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using tiger_API.Itreface;
+using tiger_API.Modell;
+using tiger_API.Service;
 
 namespace tiger_API.Controllers
 {
@@ -13,15 +15,29 @@ namespace tiger_API.Controllers
             _tigger = tigger;
         }
         /// <summary>
-        /// Тестовая фигня
+        /// Регистрация пользовтаеля
         /// </summary>
         /// <remarks>Данный метод для проверки</remarks>
         /// <returns></returns>
-        [Route("ok")]
-        [HttpGet]
-        public IActionResult Get()
+        [Route("AddUsers")]
+        [HttpPost]
+        public Task AddUsers([FromForm] Users users)
         {
-            return Ok();
+            var res= _tigger.ReginU(users);
+            return res;
         }
+        /// <summary>
+        /// Авторизация пользователя
+        /// </summary>
+        /// <remarks>бла бла бла</remarks>
+        /// <returns></returns>
+        [Route("LoginUsers")]
+        [HttpPost]
+        public Task<int> Login([FromForm] string login, [FromForm] string password)
+        {
+            var res = _tigger.LoginUsers(login, password);
+            return res;
+        }
+
     }
 }

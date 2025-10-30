@@ -5,17 +5,17 @@ namespace tiger_API.Context
 {
     public class UsersContext : DbContext
     {
-        public DbSet<Users> users {  get; set; }
+        public DbSet<Users> Users {  get; set; }
 
         public UsersContext()
         {
             Database.EnsureCreated();
-            users.Load();
+            Users.Load();
         }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql("", new MySqlServerVersion(new Version(8,0,11)));
+            optionsBuilder.UseSqlServer(DbConnection.config);
         }
+
     }
 }
