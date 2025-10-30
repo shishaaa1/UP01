@@ -11,15 +11,38 @@
     <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Заголовок -->
+            <RowDefinition Height="Auto"/>
+            <!-- Новый TextBlock -->
+            <RowDefinition Height="Auto"/>
+            <!-- TextBox поиска -->
             <RowDefinition Height="*"/>
+            <!-- Список пользователей -->
         </Grid.RowDefinitions>
 
+        <!-- Заголовок страницы -->
         <TextBlock Text="Список пользователей"
                    Style="{StaticResource PageTitleStyle}"
-                   Grid.Row="0"/>
+                   Grid.Row="0"
+                   Margin="0,0,0,10"/>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0 10 0 0">
-            <ItemsControl ItemsSource="{Binding Users}">
+        <!-- Новый TextBlock над поиском -->
+        <TextBlock Text="Введите имя или ID для поиска"
+                   FontSize="14"
+                   Grid.Row="1"
+                   Margin="0,0,0,5"/>
+
+        <!-- Поле поиска -->
+        <TextBox Margin="0,0,0,10"
+                 Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                 VerticalContentAlignment="Center"
+                 FontSize="16"
+                 Padding="10"
+                 Grid.Row="2"/>
+
+        <!-- Список пользователей -->
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding FilteredUsers}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <local:UserCard />
