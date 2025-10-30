@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TaigerDesktop.View;
 
 namespace TaigerDesktop.Pages
 {
@@ -23,6 +24,11 @@ namespace TaigerDesktop.Pages
         public CheckPhotos()
         {
             InitializeComponent();
+        }
+
+        private void Photo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            
         }
     }
 }
