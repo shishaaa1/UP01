@@ -5,8 +5,97 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaigerDesktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="TaigerDesktop" Height="600" Width="1000"
+        Background="{StaticResource LightBackgroundBrush}">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Стиль для пункта меню -->
+            <Style x:Key="MenuItemButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Padding" Value="20,0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8">
+                                <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource SoftLavenderBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!-- Активный пункт меню -->
+            <Style x:Key="ActiveMenuItemStyle" BasedOn="{StaticResource MenuItemButtonStyle}" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource SoftLavenderBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource DarkPurpleBrush}"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <!-- Боковое меню -->
+            <ColumnDefinition Width="240"/>
+            <!-- Основной контент -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Боковое меню -->
+        <Border Grid.Column="0" Background="{StaticResource WhiteBrush}" Padding="0,30,0,20">
+            <StackPanel>
+                <TextBlock Text="Меню" 
+                           Foreground="{StaticResource DarkPurpleBrush}"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           Margin="20,0,0,30"/>
+
+                <Button x:Name="BtnStatistics" Content="Просмотр статистики"
+                        Style="{StaticResource MenuItemButtonStyle}"
+                        Click="NavigateToPage"/>
+                <Button x:Name="BtnHome" Content="Домой"
+                        Style="{StaticResource MenuItemButtonStyle}"
+                        Click="NavigateToPage"/>
+                <Button x:Name="BtnPhotos" Content="Просмотр Фото"
+                        Style="{StaticResource MenuItemButtonStyle}"
+                        Click="NavigateToPage"/>
+                <Button x:Name="BtnUsers" Content="Просмотр Пользователей"
+                        Style="{StaticResource MenuItemButtonStyle}"
+                        Click="NavigateToPage"/>
+                <Button x:Name="BtnAddAdmin" Content="Добавить администратора"
+                        Style="{StaticResource MenuItemButtonStyle}"
+                        Click="NavigateToPage"/>
+
+                <Separator Height="1" Margin="20,20" Background="{StaticResource SoftLavenderBrush}"/>
+
+                <Button x:Name="BtnLogout" Content="Выйти из аккаунта"
+                        Style="{StaticResource MenuItemButtonStyle}"
+                        Click="OnLogoutClick"
+                        Foreground="#EF4444"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Основной контент -->
+        <Frame x:Name="MainFrame"
+               Grid.Column="1"
+               NavigationUIVisibility="Hidden"
+               Background="Transparent"/>
     </Grid>
 </Window>
