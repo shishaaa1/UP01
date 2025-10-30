@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TaigerDesktop.Models;
+using TaigerDesktop.Pages;
 
 namespace TaigerDesktop.View
 {
@@ -24,20 +26,43 @@ namespace TaigerDesktop.View
         {
             InitializeComponent();
         }
-
-        private void OpenPhotoViewer(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        private void DeletePhoto(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void OpenPhotoViewer(object sender, RoutedEventArgs e)
         {
+            if (DataContext is PhotosUsers photo && photo.photos != null)
+            {
+                var viewer = new PhotoViewerWindow(photo.photos);
+                viewer.ShowDialog();
+            }
+        }
 
+        private async void DeletePhoto(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PhotosUsers photo)
+            {
+                var result = MessageBox.Show(
+                    "Удалить фото?",
+                    "Подтверждение",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    var api = new TaigerDesktop.Connect.ApiContext();
+                    bool success = await api.DeletePhoto(photo.Id);
+
+                    if (success)
+                    {
+                        MessageBox.Show("Фото удалено.");
+                        // Удалить из родительского контейнера
+                        if (this.Parent is Panel panel)
+                            panel.Children.Remove(this);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка при удалении.");
+                    }
+                }
+            }
         }
     }
 }

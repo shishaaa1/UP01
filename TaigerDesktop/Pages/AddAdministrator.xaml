@@ -52,19 +52,19 @@
 
             <!-- Логин -->
             <StackPanel Margin="0,0,0,0">
-                <TextBlock Text="Логин:"
+                <TextBlock Text="Имя:"
                            Style="{StaticResource FieldLabelStyle}"
                            Margin="0,0,0,0"/>
-                <TextBox x:Name="Login"
+                <TextBox x:Name="Name"
                          Style="{StaticResource ModernTextBoxStyle}"/>
             </StackPanel>
 
             <!-- Имя -->
             <StackPanel Margin="0,0,0,0">
-                <TextBlock Text="Имя:"
+                <TextBlock Text="Логин:"
                            Style="{StaticResource FieldLabelStyle}"
                            Margin="0,0,0,0"/>
-                <TextBox x:Name="Name"
+                <TextBox x:Name="Login"
                          Style="{StaticResource ModernTextBoxStyle}"/>
             </StackPanel>
 
@@ -86,6 +86,6 @@
                 Width="280"
                 Height="42"
                 Margin="0,0,0,0"
-                FontSize="13"/>
+                FontSize="13" Click="Button_Click"/>
     </Grid>
 </Page>
