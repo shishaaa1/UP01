@@ -60,6 +60,44 @@
             android:textColor="@color/muted_text"
             android:textColorHint="@color/muted_text" />
     </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ваш пол"
+        android:textSize="16sp"
+        android:textColor="@color/muted_text"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/gender_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:singleSelection="true"
+        app:checkedButton="@id/btn_male">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_male"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="М"
+            android:textSize="18sp"
+            app:iconGravity="textStart"
+            app:iconTint="@color/primary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_female"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ж"
+            android:textSize="18sp"
+
+            app:iconGravity="textStart"
+            app:iconTint="@color/primary" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <!-- Кнопка -->
     <Button
