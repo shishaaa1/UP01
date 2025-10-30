@@ -2,7 +2,7 @@
 
 namespace tiger_API.Itreface
 {
-    public interface ITigger
+    public interface IUsers
     {
         Task ReginU(Users users);
     }

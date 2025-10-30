@@ -3,7 +3,7 @@ using tiger_API.Modell;
 
 namespace tiger_API.Service
 {
-    public class TigerService : ITigger
+    public class UsersService : IUsers
     {
         /// <summary>
         /// Registers a user.

@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddScoped<ITigger, TigerService>();/// реализация интерфейса и сервиса
+builder.Services.AddScoped<IUsers, UsersService>(); // реализация интерфейса и сервиса
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

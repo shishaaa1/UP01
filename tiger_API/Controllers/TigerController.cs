@@ -6,9 +6,9 @@ namespace tiger_API.Controllers
     [Route("api/TigerController")]
     public class TigerController : Controller
     {
-        private readonly ITigger _tigger;
+        private readonly IUsers _tigger;
 
-        public TigerController(ITigger tigger)
+        public TigerController(IUsers tigger)
         {
             _tigger = tigger;
         }
