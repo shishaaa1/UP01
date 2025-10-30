@@ -6,10 +6,11 @@
       xmlns:local="clr-namespace:TaigerDesktop.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="HomePage"
-      Background="#90CAF9">
+      Title="HomePage">
 
     <Grid>
-        
+        <Grid.Background>
+            <ImageBrush ImageSource="/Images/backgroundHomePage.jpg" Stretch="UniformToFill" />
+        </Grid.Background>
     </Grid>
 </Page>

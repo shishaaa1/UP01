@@ -60,7 +60,7 @@ namespace TaigerDesktop
             {
                 // Возвращаемся на страницу авторизации
                 var loginWindow = new Authorisation(); // или как у тебя называется окно авторизации
-                loginWindow.Show();
+                //loginWindow.Show();
                 this.Close();
             }
         }

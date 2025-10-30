@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TaigerDesktop.Connect
 {
-    internal class ApiContext
+    public class ApiContext
     {
     }
 }

@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:TaigerDesktop"
         mc:Ignorable="d"
         Title="TaigerDesktop" Height="600" Width="1000"
-        Background="{StaticResource LightBackgroundBrush}">
+        Background="{StaticResource LightBackgroundBrush}"
+        Icon="Images/icon.ico">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -66,11 +67,10 @@
                            FontSize="20"
                            FontWeight="SemiBold"
                            Margin="20,0,0,30"/>
-
-                <Button x:Name="BtnStatistics" Content="Просмотр статистики"
+                <Button x:Name="BthHome" Content="Домой"
                         Style="{StaticResource MenuItemButtonStyle}"
                         Click="NavigateToPage"/>
-                <Button x:Name="BtnHome" Content="Домой"
+                <Button x:Name="BtnStatistics" Content="Просмотр статистики"
                         Style="{StaticResource MenuItemButtonStyle}"
                         Click="NavigateToPage"/>
                 <Button x:Name="BtnPhotos" Content="Просмотр Фото"
