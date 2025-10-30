@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_margin="20dp"
+    android:layout_height="600dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="24dp"
+    android:translationZ="10dp"
+    android:id="@+id/card_profile">
+
+    <RelativeLayout
+        android:elevation="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Фото профиля -->
+        <ImageView
+            android:id="@+id/iv_profile_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/simple_profile_photo" />
+
+        <!-- Затемнение для текста -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/gradient_overlay" />
+
+        <!-- Имя, фамилия, возраст -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:background=""
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Анна Смирнова"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:id="@+id/tv_age"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25 лет • Москва"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:alpha="0.9" />
+
+        </LinearLayout>
+
+        <!-- Индикатор свайпа -->
+        <ImageView
+            android:id="@+id/iv_swipe_indicator"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:alpha="0" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

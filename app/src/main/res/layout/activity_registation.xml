@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="🫶 Booble"
+        android:text="Регистрация🫰"
         android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="@color/primary"
@@ -21,7 +21,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Найди свою вторую половинку"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:text="Хочешь поскорее найди вторую половинку? \n Зарегистрируйся скорее!"
         android:textSize="16sp"
         android:textColor="@color/muted_text"
         android:layout_marginBottom="40dp"
@@ -63,7 +65,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="Продолжить"
+        android:text="Зарегистрироваться"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/white"
@@ -72,13 +74,5 @@
         android:layout_marginBottom="16dp" />
 
     <!-- Ссылка на регистрацию -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Еще нет аккаунта? Зарегистрироваться"
-        android:textColor="@color/primary"
-        android:textSize="14sp"
-        android:onClick="Registration"
-        />
 
 </LinearLayout>
