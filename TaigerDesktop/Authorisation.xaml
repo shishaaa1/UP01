@@ -71,12 +71,13 @@
 
         <!-- Кнопка входа -->
         <Button Grid.Row="2" Grid.Column="1"
-                Content="Войти"
-                Style="{StaticResource PrimaryButtonStyle}"
-                HorizontalAlignment="Center"
-                Width="280"
-                Height="42"
-                Margin="0,0,0,25"
-                FontSize="13"/>
+        Content="Войти"
+        Style="{StaticResource PrimaryButtonStyle}"
+        HorizontalAlignment="Center"
+        Width="280"
+        Height="42"
+        Margin="0,0,0,25"
+        FontSize="13"
+        Click="LoginButton_Click"/>
     </Grid>
 </Page>

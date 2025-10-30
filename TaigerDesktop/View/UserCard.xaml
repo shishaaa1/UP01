@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="TaigerDesktop.View.UserCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MinWidth="800"
+             Height="Auto"
+             Margin="0 0 0 16">
+    <Border Background="{StaticResource WhiteBrush}"
+            CornerRadius="14"
+            Padding="20"
+            BorderThickness="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <!-- Аватар -->
+                <ColumnDefinition Width="*"/>
+                <!-- Информация -->
+                <ColumnDefinition Width="240"/>
+                <!-- Кнопки -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Аватар -->
+            <Ellipse Width="70" Height="70" Grid.Column="0">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding AvatarPath}" Stretch="UniformToFill"/>
+                </Ellipse.Fill>
+            </Ellipse>
+
+            <!-- Все поля -->
+            <Grid Grid.Column="1" Margin="20 0 20 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Id -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="ID:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Id}" Margin="10 0 0 0"/>
+
+                <!-- FirstName -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Имя:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FirstName}" Margin="10 0 0 0"/>
+
+                <!-- LastName -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Фамилия:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding LastName}" Margin="10 0 0 0"/>
+
+                <!-- BirthDay -->
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="ДР:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding BirthDay, StringFormat='{}{0:dd.MM.yyyy}'}" Margin="10 0 0 0"/>
+
+                <!-- BIO -->
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="О себе:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}" VerticalAlignment="Top"/>
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding BIO}" Margin="10 0 0 0" TextWrapping="Wrap" MaxWidth="400"/>
+
+                <!-- CreatedAt -->
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Создан:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
+                <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding CreatedAt, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Margin="10 0 0 0"/>
+
+                <!-- Login -->
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Логин:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
+                <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Login}" Margin="10 0 0 0"/>
+
+                <!-- Password (внимание: показываем!) -->
+                <TextBlock Grid.Row="7" Grid.Column="0" Text="Пароль:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
+                <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Password}" Margin="10 0 0 0" Foreground="#D32F2F"/>
+            </Grid>
+
+            <!-- Кнопки — фиксированы, не уезжают -->
+            <UniformGrid Grid.Column="2" Columns="1" VerticalAlignment="Center">
+                <Button Content="Изменить"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Height="42"
+                        FontSize="15"
+                        Click="EditUser"
+                        Margin="0 0 0 8"/>
+                <Button Content="Удалить"
+                        Background="#FCA5A5"
+                        Height="42"
+                        FontSize="15"
+                        Cursor="Hand"
+                        Click="DeleteUser">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="8">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  TextBlock.Foreground="White"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#F87171"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="#EF4444"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </UniformGrid>
+        </Grid>
+    </Border>
+</UserControl>

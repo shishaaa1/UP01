@@ -13,19 +13,24 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace TaigerDesktop.Pages
+namespace TaigerDesktop.View
 {
     /// <summary>
-    /// Логика взаимодействия для CheckStat.xaml
+    /// Логика взаимодействия для UserCard.xaml
     /// </summary>
-    public partial class CheckStat : Page
+    public partial class UserCard : UserControl
     {
-        public CheckStat()
+        public UserCard()
         {
             InitializeComponent();
         }
 
-        private void ChartCanvas_MouseMove(object sender, MouseEventArgs e)
+        private void EditUser(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteUser(object sender, RoutedEventArgs e)
         {
 
         }

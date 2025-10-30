@@ -21,7 +21,14 @@ namespace TaigerDesktop
             InitializeComponent();
             // Загружаем начальную страницу, например, статистику
             MainFrame.Navigate(new Authorisation());
-            SetActiveButton(BtnStatistics);
+        }
+
+        // Показать меню после авторизации
+        public void ShowMenu()
+        {
+            MenuBorder.Visibility = Visibility.Visible;
+            // Растягиваем колонку меню
+            MenuColumn.Width = new GridLength(240);
         }
 
         private void NavigateToPage(object sender, RoutedEventArgs e)
@@ -29,9 +36,11 @@ namespace TaigerDesktop
             if (sender is Button button)
             {
                 SetActiveButton(button);
-
                 switch (button.Name)
                 {
+                    case "BthHome":
+                        MainFrame.Navigate(new Pages.HomePage());
+                        break;
                     case "BtnStatistics":
                         MainFrame.Navigate(new Pages.CheckStat());
                         break;
@@ -44,38 +53,37 @@ namespace TaigerDesktop
                     case "BtnAddAdmin":
                         MainFrame.Navigate(new Pages.AddAdministrator());
                         break;
-                    case "BthHome":
-                        MainFrame.Navigate(new Pages.HomePage());
-                        break;
                 }
             }
         }
 
         private void OnLogoutClick(object sender, RoutedEventArgs e)
         {
-            // Здесь можно добавить подтверждение или очистку сессии
             var result = MessageBox.Show("Вы уверены, что хотите выйти?", "Выход",
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                // Возвращаемся на страницу авторизации
-                var loginWindow = new Authorisation(); // или как у тебя называется окно авторизации
-                //loginWindow.Show();
-                this.Close();
+                // Скрываем меню
+                MenuBorder.Visibility = Visibility.Collapsed;
+                MenuColumn.Width = new GridLength(0);
+
+                // Очищаем логин
+                App.CurrentAdminLogin = null;
+
+                // Возвращаемся на авторизацию
+                MainFrame.Navigate(new Authorisation());
             }
         }
 
-        // Визуальная индикация активного пункта
-        private void SetActiveButton(Button activeButton)
+        public void SetActiveButton(Button activeButton)
         {
-            // Сброс всех кнопок к базовому стилю
-            foreach (var btn in new[] { BtnStatistics, BtnPhotos, BtnUsers, BtnAddAdmin })
+            var buttons = new[] { BthHome, BtnStatistics, BtnPhotos, BtnUsers, BtnAddAdmin };
+            foreach (var btn in buttons)
             {
                 btn.Style = (Style)FindResource("MenuItemButtonStyle");
             }
-
-            // Установка активного стиля
-            activeButton.Style = (Style)FindResource("ActiveMenuItemStyle");
+            if (activeButton != null)
+                activeButton.Style = (Style)FindResource("ActiveMenuItemStyle");
         }
     }
 }

@@ -24,5 +24,40 @@ namespace TaigerDesktop
         {
             InitializeComponent();
         }
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            string login = Login.Text;
+            string password = Password.Password;
+
+            // Пример проверки (замени на свою логику)
+            if (IsValidAdmin(login, password))
+            {
+                // Сохраняем логин
+                App.CurrentAdminLogin = login;
+
+                // Получаем MainWindow
+                if (Window.GetWindow(this) is MainWindow mainWindow)
+                {
+                    // Показываем меню
+                    mainWindow.ShowMenu();
+
+                    // Переходим на HomePage
+                    mainWindow.MainFrame.Navigate(new Pages.HomePage());
+
+                    // Активируем кнопку "Домой"
+                    mainWindow.SetActiveButton(mainWindow.BthHome);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private bool IsValidAdmin(string login, string password)
+        {
+            // Замени на реальную проверку (БД, API и т.д.)
+            return login == "admin" && password == "123";
+        }
     }
 }

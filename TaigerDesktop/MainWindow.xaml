@@ -53,49 +53,49 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <!-- Боковое меню -->
-            <ColumnDefinition Width="240"/>
-            <!-- Основной контент -->
+            <ColumnDefinition Width="240" x:Name="MenuColumn"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Боковое меню -->
-        <Border Grid.Column="0" Background="{StaticResource WhiteBrush}" Padding="0,30,0,20">
+        <!-- Боковое меню — скрыто по умолчанию -->
+        <Border x:Name="MenuBorder"
+            Grid.Column="0"
+            Background="{StaticResource WhiteBrush}"
+            Padding="0,30,0,20"
+            Visibility="Collapsed">
             <StackPanel>
-                <TextBlock Text="Меню" 
-                           Foreground="{StaticResource DarkPurpleBrush}"
-                           FontSize="20"
-                           FontWeight="SemiBold"
-                           Margin="20,0,0,30"/>
+                <TextBlock Text="Меню"
+                       Foreground="{StaticResource DarkPurpleBrush}"
+                       FontSize="20"
+                       FontWeight="SemiBold"
+                       Margin="20,0,0,30"/>
                 <Button x:Name="BthHome" Content="Домой"
-                        Style="{StaticResource MenuItemButtonStyle}"
-                        Click="NavigateToPage"/>
+                    Style="{StaticResource MenuItemButtonStyle}"
+                    Click="NavigateToPage"/>
                 <Button x:Name="BtnStatistics" Content="Просмотр статистики"
-                        Style="{StaticResource MenuItemButtonStyle}"
-                        Click="NavigateToPage"/>
+                    Style="{StaticResource MenuItemButtonStyle}"
+                    Click="NavigateToPage"/>
                 <Button x:Name="BtnPhotos" Content="Просмотр Фото"
-                        Style="{StaticResource MenuItemButtonStyle}"
-                        Click="NavigateToPage"/>
+                    Style="{StaticResource MenuItemButtonStyle}"
+                    Click="NavigateToPage"/>
                 <Button x:Name="BtnUsers" Content="Просмотр Пользователей"
-                        Style="{StaticResource MenuItemButtonStyle}"
-                        Click="NavigateToPage"/>
+                    Style="{StaticResource MenuItemButtonStyle}"
+                    Click="NavigateToPage"/>
                 <Button x:Name="BtnAddAdmin" Content="Добавить администратора"
-                        Style="{StaticResource MenuItemButtonStyle}"
-                        Click="NavigateToPage"/>
-
+                    Style="{StaticResource MenuItemButtonStyle}"
+                    Click="NavigateToPage"/>
                 <Separator Height="1" Margin="20,20" Background="{StaticResource SoftLavenderBrush}"/>
-
                 <Button x:Name="BtnLogout" Content="Выйти из аккаунта"
-                        Style="{StaticResource MenuItemButtonStyle}"
-                        Click="OnLogoutClick"
-                        Foreground="#EF4444"/>
+                    Style="{StaticResource MenuItemButtonStyle}"
+                    Click="OnLogoutClick"
+                    Foreground="#EF4444"/>
             </StackPanel>
         </Border>
 
         <!-- Основной контент -->
         <Frame x:Name="MainFrame"
-               Grid.Column="1"
-               NavigationUIVisibility="Hidden"
-               Background="Transparent"/>
+           Grid.Column="1"
+           NavigationUIVisibility="Hidden"
+           Background="Transparent"/>
     </Grid>
 </Window>
