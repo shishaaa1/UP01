@@ -9,28 +9,34 @@ namespace tiger_API.Service
 {
     public class UsersService : IUsers
     {
-        private readonly UsersContext _context;
+        private readonly UsersContext _Userscontext;
 
-        public UsersService(UsersContext context)
+        public UsersService(UsersContext Userscontext)
         {
-            _context = context;
+            _Userscontext = Userscontext;
         }
 
-        /// <summary>
-        /// Registers a user.
-        /// </summary>
-        /// <param name="users">The user to register.</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task ReginU(Users users)
         {
-            _context.Users.Add(users);
-            await _context.SaveChangesAsync();
+            _Userscontext.Users.Add(users);
+            await _Userscontext.SaveChangesAsync();
+            
         }
 
         public async Task<int> LoginUsers(string login, string password)
         {
-            Users User = new UsersContext().Users.Where(x => x.Login == login && x.Password == password).First();
+            Users User = _Userscontext.Users.Where(x => x.Login == login && x.Password == password).First();
             return User.Id;
+        }
+
+        public async Task DeleteUser(int id)
+        {
+            var user = _Userscontext.Users.Find(id);
+            if(user != null)
+            {
+                _Userscontext.Users.Remove(user);
+                await _Userscontext.SaveChangesAsync();
+            }
         }
     }
 }

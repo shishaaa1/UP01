@@ -8,9 +8,8 @@
         public DateTime Birthday {  get; set; }
         public string BIO { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool Sex { get; set; }
         public string Login {  get; set; }
         public string Password {  get; set; }
-
-
     }
 }

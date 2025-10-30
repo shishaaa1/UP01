@@ -11,7 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUsers, UsersService>(); // реализация интерфейса и сервиса
+builder.Services.AddScoped<IAdmin, AdminService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<UsersContext>(); // реализация интерфейса и сервиса
+builder.Services.AddScoped<AdminContext>(); // реализация интерфейса и сервиса
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -37,7 +39,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "tiger_API v1");
-        c.RoutePrefix = string.Empty;
     });
 }
 

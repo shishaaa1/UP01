@@ -6,11 +6,11 @@ using tiger_API.Service;
 namespace tiger_API.Controllers
 {
     [Route("api/TigerController")]
-    public class TigerController : Controller
+    public class UsersController : Controller
     {
         private readonly IUsers _tigger;
 
-        public TigerController(IUsers tigger)
+        public UsersController(IUsers tigger)
         {
             _tigger = tigger;
         }
@@ -37,6 +37,19 @@ namespace tiger_API.Controllers
         {
             var res = _tigger.LoginUsers(login, password);
             return res;
+        }
+
+        /// <summary>
+        /// Удаление пользователя
+        /// </summary>
+        /// <remarks>бла бла бла</remarks>
+        /// <returns></returns>
+        [Route("DeleteUser")]
+        [HttpDelete]
+        public ActionResult DeleteUser([FromForm] int id)
+        {
+            var res = _tigger.DeleteUser(id);
+            return Ok();
         }
 
     }

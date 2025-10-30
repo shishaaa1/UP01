@@ -6,5 +6,6 @@ namespace tiger_API.Itreface
     {
         Task ReginU(Users users);
         Task<int> LoginUsers(string login, string password);
+        Task DeleteUser(int id);
     }
 }
