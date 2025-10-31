@@ -88,18 +88,10 @@ namespace TaigerDesktop
         private void OnLogoutClick(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("Вы уверены, что хотите выйти?", "Выход",
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
+        MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                // Скрываем меню
-                MenuBorder.Visibility = Visibility.Collapsed;
-                MenuColumn.Width = new GridLength(0);
-
-                // Очищаем логин
-                App.CurrentAdminLogin = null;
-
-                // Возвращаемся на авторизацию
-                MainFrame.Navigate(new Authorisation());
+                Logout(); // Используем единый метод выхода
             }
         }
 
