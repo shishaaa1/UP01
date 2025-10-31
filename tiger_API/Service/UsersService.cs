@@ -4,6 +4,7 @@ using tiger_API.Context;
 using tiger_API.Itreface;
 using tiger_API.Modell;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace tiger_API.Service
 {
@@ -37,6 +38,33 @@ namespace tiger_API.Service
                 _Userscontext.Users.Remove(user);
                 await _Userscontext.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<DailyStat>> GetRegistrationsCountToday()
+        {
+            var today = DateTime.UtcNow.Date;
+            var startDate = today.AddDays(-29);
+
+            var stats = new List<DailyStat>();
+
+            // Получаем всех пользователей за последние 30 дней за один запрос
+            var usersInPeriod = await _Userscontext.Users
+                .Where(u => u.CreatedAt >= startDate && u.CreatedAt < today.AddDays(1))
+                .ToListAsync();
+
+            for (int i = 0; i < 30; i++)
+            {
+                var date = startDate.AddDays(i);
+                var count = usersInPeriod.Count(u => u.CreatedAt.Date == date);
+
+                stats.Add(new DailyStat
+                {
+                    Date = date,
+                    NewUsers = count
+                });
+            }
+
+            return stats;
         }
     }
 }

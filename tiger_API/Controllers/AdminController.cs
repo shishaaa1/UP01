@@ -4,6 +4,8 @@ using tiger_API.Modell;
 
 namespace tiger_API.Controllers
 {
+    [Route("api/AdminController")]
+    [ApiController]
     public class AdminController : Controller
     {
         private readonly IAdmin _admin;
@@ -30,12 +32,18 @@ namespace tiger_API.Controllers
         /// </summary>
         /// <remarks>Данный метод авторизирует администратора в системе</remarks>
         /// <returns></returns>
-        [Route("LoginAdmin")]
-        [HttpPost]
-        public Task<int> Login([FromForm] string login, [FromForm] string password)
+        [HttpPost("LoginAdmin")]
+        public async Task<IActionResult> LoginAdmin([FromForm] string login, [FromForm] string password)
         {
-            var res = _admin.LoginAdmin(login, password);
-            return res;
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
+                return BadRequest("Логин и пароль обязательны");
+
+            var result = await _admin.LoginAdmin(login, password);
+
+            if (result <= 0)
+                return Unauthorized();
+
+            return Ok(new { AdminId = result });
         }
     }
 }

@@ -5,7 +5,8 @@ using tiger_API.Service;
 
 namespace tiger_API.Controllers
 {
-    [Route("api/TigerController")]
+    [Route("api/UserController")]
+    [ApiController]
     public class UsersController : Controller
     {
         private readonly IUsers _tigger;
@@ -48,9 +49,23 @@ namespace tiger_API.Controllers
         [HttpDelete]
         public ActionResult DeleteUser([FromForm] int id)
         {
-            var res = _tigger.DeleteUser(id);
+            _tigger.DeleteUser(id);
             return Ok();
         }
+
+        /// <summary>
+        /// Считываение новых пользователей за сегодня
+        /// </summary>
+        /// <remarks>Ура</remarks>
+        /// <returns></returns>
+        [Route("CountUsersToday")]
+        [HttpGet]
+        public async Task<ActionResult<List<DailyStat>>> GetUsersToDay()
+        {
+            var res = await _tigger.GetRegistrationsCountToday();
+            return Ok(res);
+        }
+
 
     }
 }
