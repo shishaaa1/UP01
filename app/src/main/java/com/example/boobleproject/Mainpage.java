@@ -55,6 +55,7 @@ public class Mainpage extends AppCompatActivity {
         rvProfiles.setClipToPadding(false);
         rvProfiles.setPadding(24, 100, 24, 200);
 
+        // Блокируем скролл чтобы нельзя было листать карточки
         rvProfiles.setLayoutFrozen(false);
     }
 

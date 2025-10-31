@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder> {
 
     private List<Profile> profiles;
@@ -32,6 +33,28 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
     @Override
     public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
         holder.bind(profiles.get(position));
+
+        if (position == 0) {
+            // Только верхняя карточка видима и нормального размера
+            holder.itemView.setAlpha(1f);
+            holder.itemView.setScaleX(1f);
+            holder.itemView.setScaleY(1f);
+            holder.itemView.setTranslationY(0f);
+            holder.itemView.setVisibility(View.VISIBLE);
+
+            // Устанавливаем нормальную высоту
+            ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            holder.itemView.setLayoutParams(params);
+        } else {
+            // Все остальные карточки невидимы и с нулевой высотой
+            holder.itemView.setVisibility(View.INVISIBLE);
+
+            // Устанавливаем нулевую высоту чтобы нельзя было прокрутить
+            ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+            params.height = 0;
+            holder.itemView.setLayoutParams(params);
+        }
     }
 
     @Override
@@ -39,20 +62,16 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         return profiles.size();
     }
 
-
     public void removeItemAt(int position) {
         if (position >= 0 && position < profiles.size()) {
             profiles.remove(position);
             notifyItemRemoved(position);
 
-            if (position < profiles.size()) {
-                notifyItemRangeChanged(position, profiles.size() - position);
+            // Обновляем новую верхнюю карточку
+            if (!profiles.isEmpty()) {
+                notifyItemChanged(0);
             }
         }
-    }
-
-    public void removeTopItem() {
-        removeItemAt(0);
     }
 
     public void addProfiles(List<Profile> newProfiles) {
@@ -63,10 +82,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
     public boolean isEmpty() {
         return profiles.isEmpty();
-    }
-
-    public int getProfileCount() {
-        return profiles.size();
     }
 
     static class ProfileViewHolder extends RecyclerView.ViewHolder {

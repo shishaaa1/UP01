@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     private final ProfileAdapter adapter;
+    private final RecyclerView recyclerView;
     private final ImageView swipeIndicator;
     private final Runnable onSwipeLeft, onSwipeRight;
     private final Handler handler;
@@ -29,6 +30,7 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     ) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.adapter = adapter;
+        this.recyclerView = recyclerView;
         this.swipeIndicator = swipeIndicator;
         this.onSwipeLeft = onSwipeLeft;
         this.onSwipeRight = onSwipeRight;
@@ -46,13 +48,13 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         isSwiping = true;
 
-        int swipedPosition = viewHolder.getBindingAdapterPosition();
-
         int iconRes = direction == ItemTouchHelper.LEFT ? R.drawable.krest : R.drawable.heart;
         showSwipeIconWithDelay(iconRes, () -> {
-            if (swipedPosition != RecyclerView.NO_POSITION) {
-                adapter.removeItemAt(swipedPosition);
-            }
+            // Удаляем верхнюю карточку (всегда позиция 0)
+            adapter.removeItemAt(0);
+
+            // Анимируем появление следующей карточки
+            animateNextCardAppearance();
 
             if (direction == ItemTouchHelper.LEFT) {
                 onSwipeLeft.run();
@@ -64,6 +66,30 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         });
     }
 
+    private void animateNextCardAppearance() {
+        handler.postDelayed(() -> {
+            RecyclerView.ViewHolder nextViewHolder = recyclerView.findViewHolderForAdapterPosition(0);
+            if (nextViewHolder != null) {
+                View nextCard = nextViewHolder.itemView;
+
+                // Устанавливаем начальное состояние (карточка снизу)
+                nextCard.setTranslationY(300f);
+                nextCard.setAlpha(0f);
+                nextCard.setScaleX(0.8f);
+                nextCard.setScaleY(0.8f);
+
+                // Анимация появления снизу
+                nextCard.animate()
+                        .translationY(0f)
+                        .alpha(1f)
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(500)
+                        .start();
+            }
+        }, 100);
+    }
+
     @Override
     public void onChildDraw(@NonNull Canvas c,
                             @NonNull RecyclerView recyclerView,
@@ -71,9 +97,17 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
                             float dX, float dY,
                             int actionState, boolean isCurrentlyActive) {
 
+        // Разрешаем свайп только для верхней карточки (позиция 0)
+        if (viewHolder.getBindingAdapterPosition() != 0) {
+            // Для неверхних карточек блокируем любой свайп
+            viewHolder.itemView.setTranslationX(0);
+            viewHolder.itemView.setTranslationY(0);
+            return;
+        }
+
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
-        if (isSwiping) return; // Блокируем анимацию во время свайпа
+        if (isSwiping) return;
 
         float threshold = viewHolder.itemView.getWidth() * 0.35f;
         float progress = Math.min(1f, Math.abs(dX) / threshold);
@@ -83,7 +117,6 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
             swipeIndicator.setImageResource(iconRes);
             swipeIndicator.setVisibility(View.VISIBLE);
 
-            // Плавное увеличение иконки
             float scale = 0.6f + 0.4f * progress;
             swipeIndicator.setScaleX(scale);
             swipeIndicator.setScaleY(scale);
@@ -103,34 +136,38 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         }
     }
 
+    // Блокируем свайп для неверхних карточек
+    @Override
+    public int getSwipeDirs(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        if (viewHolder.getBindingAdapterPosition() == 0) {
+            return super.getSwipeDirs(recyclerView, viewHolder);
+        }
+        return 0; // Запрещаем свайп для всех кроме позиции 0
+    }
+
     private void showSwipeIconWithDelay(int iconRes, Runnable onComplete) {
-        // Сначала показываем иконку с анимацией
         swipeIndicator.setImageResource(iconRes);
         swipeIndicator.setVisibility(View.VISIBLE);
         swipeIndicator.setScaleX(0.6f);
         swipeIndicator.setScaleY(0.6f);
         swipeIndicator.setAlpha(0f);
 
-        // Анимация появления и увеличения
         swipeIndicator.animate()
                 .alpha(1f)
-                .scaleX(1.2f) // Сначала увеличиваем немного больше
+                .scaleX(1.2f)
                 .scaleY(1.2f)
                 .setDuration(300)
                 .withEndAction(() -> {
-                    // Затем уменьшаем до нормального размера и исчезаем
                     swipeIndicator.animate()
                             .scaleX(1f)
                             .scaleY(1f)
                             .setDuration(200)
                             .withEndAction(() -> {
-                                // Исчезаем
                                 swipeIndicator.animate()
                                         .alpha(0f)
                                         .setDuration(200)
                                         .withEndAction(() -> {
                                             swipeIndicator.setVisibility(View.GONE);
-                                            // Вызываем колбэк после всей анимации
                                             handler.postDelayed(onComplete, 100);
                                         })
                                         .start();
@@ -148,11 +185,11 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-        return 0.5f; // Увеличиваем порог свайпа для более плавного срабатывания
+        return 0.5f;
     }
 
     @Override
     public float getSwipeEscapeVelocity(float defaultValue) {
-        return defaultValue * 0.5f; // Уменьшаем скорость свайпа
+        return defaultValue * 0.5f;
     }
 }
