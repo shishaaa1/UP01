@@ -39,11 +39,8 @@ namespace TaigerDesktop.View
         {
             if (DataContext is PhotosUsers photo)
             {
-                var result = MessageBox.Show(
-                    "Удалить фото?",
-                    "Подтверждение",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                var result = MessageBox.Show("Удалить фото?", "Подтверждение",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
@@ -53,9 +50,12 @@ namespace TaigerDesktop.View
                     if (success)
                     {
                         MessageBox.Show("Фото удалено.");
-                        // Удалить из родительского контейнера
-                        if (this.Parent is Panel panel)
-                            panel.Children.Remove(this);
+                        // Уведомить родителя
+                        if (VisualTreeHelper.GetParent(this) is DependencyObject parent)
+                        {
+                            var page = FindParent<CheckPhotos>(parent);
+                            page?.RemovePhoto(photo);
+                        }
                     }
                     else
                     {
@@ -63,6 +63,16 @@ namespace TaigerDesktop.View
                     }
                 }
             }
+        }
+
+        // Вспомогательный метод поиска родителя
+        private static T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            while (child != null && !(child is T))
+            {
+                child = VisualTreeHelper.GetParent(child);
+            }
+            return child as T;
         }
     }
 }

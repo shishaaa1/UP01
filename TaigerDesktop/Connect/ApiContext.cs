@@ -57,20 +57,13 @@ namespace TaigerDesktop.Connect
             }
         }
 
-        // Метод выхода
         public void Logout()
         {
             CurrentLogin = string.Empty;
             IsAuthenticated = false;
         }
 
-        // Получение списка администраторов
-        public async Task<List<Admin>> GetAdminsAsync()
-        {
-            CheckAuthentication();
-            var result = await _httpClient.GetFromJsonAsync<List<Admin>>("Admin");
-            return result ?? new List<Admin>();
-        }
+
 
         public async Task<Admin> AddAdminAsync(Admin user)
         {
@@ -102,50 +95,78 @@ namespace TaigerDesktop.Connect
                 return null;
             }
         }
-
-        public async Task<bool> DeleteAdminAsync(int id)
+        public async Task<List<Users>> GetAllUsersAsync()
         {
-            CheckAuthentication();
-            var response = await _httpClient.DeleteAsync($"Admin/{id}");
-            return response.IsSuccessStatusCode;
-        }
-
-        // Методы для работы с пользователями
-        public async Task<List<Users>> GetUsersAsync()
-        {
-            CheckAuthentication();
-            var result = await _httpClient.GetFromJsonAsync<List<Users>>("Users");
-            return result ?? new List<Users>();
-        }
-
-        public async Task<List<PhotosUsers>> GetPhotosForCheckAsync()
-        {
-            CheckAuthentication();
-            var result = await _httpClient.GetFromJsonAsync<List<PhotosUsers>>("Photos/forcheck");
-            return result ?? new List<PhotosUsers>();
-        }
-        public async Task<bool> DeleteUser(int id)
-        {
-            CheckAuthentication();
-            var result = await _httpClient.DeleteAsync($"Users/{id}");
-            return result.IsSuccessStatusCode;
-        }
-        public async Task<bool> DeletePhotoAsync(int id)
-        {
-            CheckAuthentication();
-            var response = await _httpClient.DeleteAsync($"Photos/{id}");
-            return response.IsSuccessStatusCode;
-        }
-
-        // Проверка авторизации перед запросами
-        private void CheckAuthentication()
-        {
-            if (!IsAuthenticated)
+            try
             {
-                throw new UnauthorizedAccessException("Требуется авторизация администратора");
+                var response = await _httpClient.GetAsync("UserController/GetUsers");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<Users>>() ?? new List<Users>();
+                }
+                return new List<Users>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка получения пользователей: {ex.Message}");
+                return new List<Users>();
             }
         }
-
+        public async Task<List<PhotosUsers>> GetAllPhotosAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("UsersController/GetUsersPhoto");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<List<PhotosUsers>>() ?? new List<PhotosUsers>();
+                }
+                return new List<PhotosUsers>();
+            }
+            catch (Exception ex) {
+                Console.WriteLine($"Ошибка получения пользоваталей: {ex.Message}");
+                return new List<PhotosUsers>();
+            }
+        }
+        public async Task<bool> DeleteUserAsync(int userId)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"UserController/DeleteUser/{userId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка удаления пользователя: {ex.Message}");
+                return false;
+            }
+        }
+        public async Task<bool> DeletePhotoAsync(int photoId)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"UserController/DeletePhoto");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка удаления фото пользователя: {ex.Message}");
+                return false;
+            }
+        }
+        public async Task<bool> UpdateUserAsync(Users user)
+        {
+            try
+            {
+                var response = await _httpClient.PutAsJsonAsync("UserController/UpdateUser", user);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка обновления пользователя: {ex.Message}");
+                return false;
+            }
+        }
         public async Task<List<DailyStat>> GetStatsLast30DaysAsync()
         {
             var response = await _httpClient.GetAsync("UserController/CountUsersToday");

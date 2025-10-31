@@ -30,7 +30,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:UserCard/>
+                        <local:UserPhotoCard/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

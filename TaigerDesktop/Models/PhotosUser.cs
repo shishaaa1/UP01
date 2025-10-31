@@ -12,6 +12,11 @@ namespace TaigerDesktop.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public byte[] photos { get; set; }
+
+        // Дополнительные свойства для биндинга
+        public string UserName { get; set; } // Имя пользователя для отображения
+        public string Login { get; set; } // Логин пользователя
+
         public BitmapImage ImageSource => ByteArrayToImage(photos);
 
         private BitmapImage ByteArrayToImage(byte[] byteArray)
@@ -26,7 +31,7 @@ namespace TaigerDesktop.Models
                 image.CacheOption = BitmapCacheOption.OnLoad;
                 image.StreamSource = stream;
                 image.EndInit();
-                image.Freeze(); // Важно: заморозить для использования в другом потоке
+                image.Freeze();
             }
             return image;
         }

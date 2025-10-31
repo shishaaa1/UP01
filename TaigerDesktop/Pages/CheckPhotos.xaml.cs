@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TaigerDesktop.Connect;
+using TaigerDesktop.Models;
 using TaigerDesktop.View;
 
 namespace TaigerDesktop.Pages
@@ -21,14 +24,32 @@ namespace TaigerDesktop.Pages
     /// </summary>
     public partial class CheckPhotos : Page
     {
+        private readonly ApiContext _api = new();
+        public ObservableCollection<PhotosUsers> UserPhotos { get; set; } = new();
+
         public CheckPhotos()
         {
             InitializeComponent();
+            DataContext = this; // Привязка к самому себе
+            Loaded += OnLoaded;
         }
 
-        private void Photo_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private async void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            
+            await LoadPhotos();
+        }
+        public void RemovePhoto(PhotosUsers photo)
+        {
+            UserPhotos.Remove(photo);
+        }
+        private async Task LoadPhotos()
+        {
+            var photos = await _api.GetAllPhotosAsync();
+            UserPhotos.Clear();
+            foreach (var photo in photos)
+            {
+                UserPhotos.Add(photo);
+            }
         }
     }
 }
