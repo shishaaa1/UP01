@@ -145,5 +145,15 @@ namespace TaigerDesktop.Connect
                 throw new UnauthorizedAccessException("Требуется авторизация администратора");
             }
         }
+
+        public async Task<List<DailyStat>> GetStatsLast30DaysAsync()
+        {
+            var response = await _httpClient.GetAsync("UserController/CountUsersToday");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<DailyStat>>() ?? new List<DailyStat>();
+            }
+            return new List<DailyStat>();
+        }
     }
 }
