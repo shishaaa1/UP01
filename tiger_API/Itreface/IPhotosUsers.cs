@@ -1,0 +1,7 @@
+﻿namespace tiger_API.Itreface
+{
+    public interface IPhotosUsers
+    {
+        Task<int> UploadPhotoAsync(int userId, byte[] photoData);
+    }
+}

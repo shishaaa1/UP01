@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using tiger_API.Itreface;
 using tiger_API.Modell;
 using tiger_API.Service;
@@ -10,10 +11,12 @@ namespace tiger_API.Controllers
     public class UsersController : Controller
     {
         private readonly IUsers _tigger;
+        private readonly IPhotosUsers _photosUsers;
 
-        public UsersController(IUsers tigger)
+        public UsersController(IUsers tigger, IPhotosUsers photosUsers)
         {
             _tigger = tigger;
+            _photosUsers = photosUsers; 
         }
         /// <summary>
         /// Регистрация пользовтаеля
@@ -65,7 +68,5 @@ namespace tiger_API.Controllers
             var res = await _tigger.GetRegistrationsCountToday();
             return Ok(res);
         }
-
-
     }
 }

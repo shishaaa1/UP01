@@ -12,8 +12,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUsers, UsersService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IAdmin, AdminService>(); // реализация интерфейса и сервиса
+builder.Services.AddScoped<IPhotosUsers, PhotosUsersService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<UsersContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<AdminContext>(); // реализация интерфейса и сервиса
+builder.Services.AddScoped<PhotosUserContext>(); // реализация интерфейса и сервиса
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
