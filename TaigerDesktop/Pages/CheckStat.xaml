@@ -66,9 +66,9 @@
 
         <!-- График -->
         <Border Grid.Row="2"
-                Background="{StaticResource WhiteBrush}"
-                CornerRadius="16"
-                Padding="25">
+        Background="{StaticResource WhiteBrush}"
+        CornerRadius="16"
+        Padding="25">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="3" Opacity="0.12" BlurRadius="12"/>
             </Border.Effect>
@@ -78,33 +78,35 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="Динамика новых пользователей"
-                           FontSize="18"
-                           FontWeight="Medium"
-                           Foreground="{StaticResource DarkPurpleBrush}"
-                           Margin="0 0 0 20"/>
-                <Canvas x:Name="ChartCanvas"
-                        Grid.Row="1"
-                        Height="300"
-                        Background="Transparent"
-                        MouseMove="ChartCanvas_MouseMove"
-                        SizeChanged="ChartCanvas_SizeChanged">
-                    <Canvas x:Name="GridCanvas"/>
-                    <Path x:Name="ChartPath"
-                          Stroke="{StaticResource PrimaryBrush}"
-                          StrokeThickness="4"
-                          StrokeLineJoin="Round"
-                          Fill="Transparent"/>
-                    <Canvas x:Name="PointsCanvas"/>
-                    <Border x:Name="TooltipBorder"
-                            Background="{StaticResource WhiteBrush}"
-                            CornerRadius="8"
-                            Padding="12"
-                            Visibility="Collapsed">
-                        <TextBlock x:Name="TooltipText"
-                                   Foreground="{StaticResource DarkPurpleBrush}"
-                                   FontWeight="SemiBold"/>
-                    </Border>
-                </Canvas>
+                   FontSize="18"
+                   FontWeight="Medium"
+                   Foreground="{StaticResource DarkPurpleBrush}"
+                   Margin="0 0 0 20"/>
+
+                <!-- Масштабируемая и обрезаемая область графика -->
+                <Grid Grid.Row="1" ClipToBounds="True">
+                    <Canvas x:Name="ChartCanvas"
+                    Background="Transparent"
+                    MouseMove="ChartCanvas_MouseMove"
+                    SizeChanged="ChartCanvas_SizeChanged">
+                        <Canvas x:Name="GridCanvas"/>
+                        <Path x:Name="ChartPath"
+                      Stroke="{StaticResource PrimaryBrush}"
+                      StrokeThickness="4"
+                      StrokeLineJoin="Round"
+                      Fill="Transparent"/>
+                        <Canvas x:Name="PointsCanvas"/>
+                        <Border x:Name="TooltipBorder"
+                        Background="{StaticResource WhiteBrush}"
+                        CornerRadius="8"
+                        Padding="12"
+                        Visibility="Collapsed">
+                            <TextBlock x:Name="TooltipText"
+                               Foreground="{StaticResource DarkPurpleBrush}"
+                               FontWeight="SemiBold"/>
+                        </Border>
+                    </Canvas>
+                </Grid>
             </Grid>
         </Border>
     </Grid>
