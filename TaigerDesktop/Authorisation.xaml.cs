@@ -1,63 +1,114 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using TaigerDesktop.Connect;
 
 namespace TaigerDesktop
 {
-    /// <summary>
-    /// Логика взаимодействия для Authorisation.xaml
-    /// </summary>
     public partial class Authorisation : Page
     {
+        private readonly ApiContext _apiContext;
+
         public Authorisation()
         {
             InitializeComponent();
+            _apiContext = App.ApiContext;
+
+            // Очищаем состояние при загрузке страницы авторизации
+            _apiContext.Logout();
         }
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            string login = Login.Text;
+            string login = Login.Text.Trim();
             string password = Password.Password;
 
-            // Пример проверки (замени на свою логику)
-            if (IsValidAdmin(login, password))
+            // Валидация
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
-                // Сохраняем логин
-                App.CurrentAdminLogin = login;
+                MessageBox.Show("Введите логин и пароль", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-                // Получаем MainWindow
-                if (Window.GetWindow(this) is MainWindow mainWindow)
+            // Показываем индикатор загрузки
+            SetLoginButtonState(isEnabled: false, text: "Вход...");
+
+            try
+            {
+                // Авторизация через API
+                bool isSuccess = await _apiContext.LoginAdminAsync(login, password);
+
+                if (isSuccess)
                 {
-                    // Показываем меню
-                    mainWindow.ShowMenu();
-
-                    // Переходим на HomePage
-                    mainWindow.MainFrame.Navigate(new Pages.HomePage());
-
-                    // Активируем кнопку "Домой"
-                    mainWindow.SetActiveButton(mainWindow.BthHome);
+                    // Успешная авторизация
+                    HandleSuccessfulLogin(login);
+                }
+                else
+                {
+                    ShowErrorMessage("Неверный логин или пароль");
                 }
             }
-            else
+            catch (System.Net.Http.HttpRequestException ex)
             {
-                MessageBox.Show("Неверный логин или пароль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowErrorMessage($"Ошибка подключения к серверу: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage($"Произошла ошибка: {ex.Message}");
+            }
+            finally
+            {
+                SetLoginButtonState(isEnabled: true, text: "Войти");
             }
         }
 
-        private bool IsValidAdmin(string login, string password)
+        private void HandleSuccessfulLogin(string login)
         {
-            // Замени на реальную проверку (БД, API и т.д.)
-            return login == "admin" && password == "123";
+            // Получаем MainWindow
+            if (Window.GetWindow(this) is MainWindow mainWindow)
+            {
+                // Показываем меню
+                mainWindow.ShowMenu();
+
+                // Переходим на HomePage
+                mainWindow.MainFrame.Navigate(new Pages.HomePage());
+
+                // Активируем кнопку "Домой"
+                mainWindow.SetActiveButton(mainWindow.BthHome);
+            }
+        }
+
+        private void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(message, "Ошибка авторизации",
+                MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // Очищаем поле пароля и фокусируемся на нем
+            Password.Password = string.Empty;
+            Password.Focus();
+        }
+
+        private void SetLoginButtonState(bool isEnabled, string text)
+        {
+            LoginButton.Content = text;
+            LoginButton.IsEnabled = isEnabled;
+        }
+
+        // Обработка нажатия Enter в полях ввода
+        private void Login_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                Password.Focus();
+            }
+        }
+
+        private void Password_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                LoginButton_Click(sender, e);
+            }
         }
     }
 }

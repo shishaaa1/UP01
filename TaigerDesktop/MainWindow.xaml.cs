@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TaigerDesktop.Connect;
 
 namespace TaigerDesktop
 {
@@ -16,20 +17,47 @@ namespace TaigerDesktop
     /// </summary>
     public partial class MainWindow : Window
     {
+        public ApiContext ApiContext => App.ApiContext;
         public MainWindow()
         {
             InitializeComponent();
             // Загружаем начальную страницу, например, статистику
+            HideMenu();
+
+            // Переходим на страницу авторизации
             MainFrame.Navigate(new Authorisation());
         }
 
-        // Показать меню после авторизации
+        // Метод для выхода (можно привязать к кнопке выхода)
+        public void Logout()
+        {
+            ApiContext.Logout();
+            HideMenu();
+            MainFrame.Navigate(new Authorisation());
+        }
+
+        // Показываем меню после авторизации
         public void ShowMenu()
         {
+            // Показываем элементы меню
             MenuBorder.Visibility = Visibility.Visible;
-            // Растягиваем колонку меню
-            MenuColumn.Width = new GridLength(240);
+            BthHome.Visibility = Visibility.Visible;
+            BtnUsers.Visibility = Visibility.Visible;
+            BtnAddAdmin.Visibility = Visibility.Visible;
+            // Добавьте другие кнопки меню по необходимости
         }
+
+        // Скрываем меню при выходе
+        public void HideMenu()
+        {
+            MenuBorder.Visibility = Visibility.Collapsed;
+            BthHome.Visibility = Visibility.Collapsed;
+            BtnUsers.Visibility = Visibility.Collapsed;
+            BtnAddAdmin.Visibility = Visibility.Collapsed;
+        }
+
+        // Показать меню после авторизации
+       
 
         private void NavigateToPage(object sender, RoutedEventArgs e)
         {

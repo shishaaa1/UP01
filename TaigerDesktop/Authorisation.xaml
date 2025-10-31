@@ -78,6 +78,7 @@
         Height="42"
         Margin="0,0,0,25"
         FontSize="13"
-        Click="LoginButton_Click"/>
+        Click="LoginButton_Click"
+        x:Name="LoginButton"/>
     </Grid>
 </Page>

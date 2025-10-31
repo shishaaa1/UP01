@@ -52,7 +52,7 @@ namespace TaigerDesktop.Pages
 
             try
             {
-                bool success = await _apiContext.AddAdmin(admin);
+                bool success = await _apiContext.AddAdminAsync(admin);
 
                 if (success)
                 {

@@ -48,7 +48,7 @@ namespace TaigerDesktop.View
                 if (result == MessageBoxResult.Yes)
                 {
                     var api = new TaigerDesktop.Connect.ApiContext();
-                    bool success = await api.DeletePhoto(photo.Id);
+                    bool success = await api.DeletePhotoAsync(photo.Id);
 
                     if (success)
                     {
