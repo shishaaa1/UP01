@@ -1,5 +1,6 @@
 package com.example.boobleproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -7,9 +8,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Authorization extends AppCompatActivity {
+public class Mainpage extends AppCompatActivity {
 
     private RecyclerView rvProfiles;
     private ProfileAdapter adapter;
@@ -29,7 +27,7 @@ public class Authorization extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_authorization); // ✅ Важно, что идёт первым
+        setContentView(R.layout.activity_mainpage); // ✅ Важно, что идёт первым
 
         rvProfiles = findViewById(R.id.rv_profiles);
         swipeIndicator = findViewById(R.id.iv_swipe_indicator);
@@ -37,6 +35,15 @@ public class Authorization extends AppCompatActivity {
         setupRecyclerView();   // ✅ Создаём и прикрепляем адаптер
         setupSwipeHelper();    // ✅ Подключаем свайпы
         loadInitialProfiles(); // ✅ Загружаем данные
+    }
+
+    public void Account(View view) {
+        Intent intent = new Intent(this, Personalaccount.class);
+        startActivity(intent);
+    }
+    public void Back(View view) {
+        Intent intent = new Intent(this, Mainpage.class);
+        startActivity(intent);
     }
 
     private void setupRecyclerView() {
@@ -53,9 +60,9 @@ public class Authorization extends AppCompatActivity {
 
     private void loadInitialProfiles() {
         List<Profile> initial = Arrays.asList(
-                new Profile(1, "Анна Смирнова", 25, "Москва", R.drawable.alt1),
-                new Profile(2, "Мария Иванова", 28, "СПб", R.drawable.alt2),
-                new Profile(3, "Екатерина Петрова", 23, "Казань", R.drawable.alt3)
+                new Profile(1, "Иван Иванович", 25, "Москва", R.drawable.alt1),
+                new Profile(2, "Анатолий Канюков", 28, "СПб", R.drawable.alt2),
+                new Profile(3, "Илья Бородин", 23, "Казань", R.drawable.alt3)
         );
 
         if (adapter == null) {
@@ -70,10 +77,17 @@ public class Authorization extends AppCompatActivity {
                 adapter,
                 rvProfiles,
                 swipeIndicator,
-                () -> Toast.makeText(this, "Не нравится", Toast.LENGTH_SHORT).show(),
-                () -> Toast.makeText(this, "Лайк!", Toast.LENGTH_SHORT).show()
+                () -> {
+
+                    Toast.makeText(this, "Не нравится", Toast.LENGTH_SHORT).show();
+                },
+                () -> {
+
+                    Toast.makeText(this, "Лайк!", Toast.LENGTH_SHORT).show();
+                }
         );
 
-        new ItemTouchHelper(swipeHelper).attachToRecyclerView(rvProfiles);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeHelper);
+        itemTouchHelper.attachToRecyclerView(rvProfiles);
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Нижний слой: круглый фон -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#A78BFA" />
+            <size android:width="40dp" android:height="40dp" />
+        </shape>
+    </item>
+
+    <!-- Верхний слой: иконка в центре -->
+    <item
+        android:gravity="center"
+        android:drawable="@drawable/cabin"
+        android:width="30dp"
+        android:height="30dp" />
+</layer-list>

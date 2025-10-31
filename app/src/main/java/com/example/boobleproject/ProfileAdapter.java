@@ -32,7 +32,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
     @Override
     public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
         holder.bind(profiles.get(position));
-
     }
 
     @Override
@@ -40,18 +39,34 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         return profiles.size();
     }
 
-    public void removeTopItem() {
-        if (!profiles.isEmpty()) {
-            profiles.remove(0);
-            notifyItemRemoved(0);
-            notifyItemRangeChanged(0, profiles.size());
+
+    public void removeItemAt(int position) {
+        if (position >= 0 && position < profiles.size()) {
+            profiles.remove(position);
+            notifyItemRemoved(position);
+
+            if (position < profiles.size()) {
+                notifyItemRangeChanged(position, profiles.size() - position);
+            }
         }
+    }
+
+    public void removeTopItem() {
+        removeItemAt(0);
     }
 
     public void addProfiles(List<Profile> newProfiles) {
         int start = profiles.size();
         profiles.addAll(newProfiles);
         notifyItemRangeInserted(start, newProfiles.size());
+    }
+
+    public boolean isEmpty() {
+        return profiles.isEmpty();
+    }
+
+    public int getProfileCount() {
+        return profiles.size();
     }
 
     static class ProfileViewHolder extends RecyclerView.ViewHolder {

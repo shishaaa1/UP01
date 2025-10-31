@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_background"
+    tool:context=".Personalaccount">
+
+    <!-- Фон -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_background">
+
+        <!-- Закругленный квадрат с профилем -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:padding="24dp"
+            android:clipToPadding="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <!-- Закругленный контейнер профиля -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="32dp">
+
+                        <!-- Фото профиля с иконкой добавления -->
+                        <FrameLayout
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="24dp"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            >
+
+                            <!-- Круглое фото -->
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/iv_profile_photo"
+                                android:layout_width="120dp"
+                                android:layout_height="120dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/alt1"
+
+                                android:scaleType="centerCrop"
+                                app:civ_border_width="2dp"
+                                app:civ_border_color="@color/primary" />
+
+                            <!-- Иконка добавления фото (в правом нижнем углу) -->
+                            <ImageButton
+                                android:id="@+id/btn_add_photo"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_gravity="bottom|end"
+                                android:layout_marginEnd="5dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@drawable/circle_primary_background"
+                                android:elevation="8dp"
+                                android:scaleType="center" />
+
+                        </FrameLayout>
+
+                        <!-- Имя и Фамилия -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            app:boxBackgroundMode="outline"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusTopStart="12dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_first_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Имя"
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            app:boxBackgroundMode="outline"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusTopStart="12dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_last_name"
+                                android:layout_width="match_parent"
+                                app:placeholderTextColor="@color/black"
+                                android:layout_height="wrap_content"
+                                android:hint="Фамилия"
+                                android:textColor="@color/black"
+                                android:textSize="16sp" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Возраст -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="24dp"
+                            app:boxBackgroundMode="outline"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusTopStart="12dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_age"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:hint="Возраст"
+
+                                android:inputType="number"
+                                android:textSize="16sp" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Пол -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ваш пол"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"
+                            android:layout_marginBottom="8dp" />
+
+                        <com.google.android.material.button.MaterialButtonToggleGroup
+                            android:id="@+id/gender_group"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="24dp"
+                            app:singleSelection="true"
+                            app:checkedButton="@id/btn_male">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_male"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:placeholderTextColor="@color/black"
+                                android:textColor="@color/black"
+                                android:text="М"
+                                android:textSize="18sp"
+
+                                app:iconGravity="textStart"
+                                app:iconTint="@color/primary" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_female"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="wrap_content"
+                                app:placeholderTextColor="@color/black"
+                                android:layout_height="wrap_content"
+                                android:text="Ж"
+                                android:textColor="@color/black"
+                                android:textSize="18sp"
+                                app:iconGravity="textStart"
+                                app:iconTint="@color/primary" />
+
+                        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                        <!-- Биография -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="32dp"
+                            app:boxBackgroundMode="outline"
+                            app:boxCornerRadiusBottomEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusTopStart="12dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_bio"
+                                android:layout_width="match_parent"
+                                android:layout_height="120dp"
+                                android:gravity="top"
+                                android:hint="Биография"
+                                android:textColor="@color/black"
+                                android:inputType="textMultiLine"
+                                android:textSize="16sp" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Кнопка изменить профиль -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_edit_profile"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:backgroundTint="@color/primary"
+                            android:text="Изменить профиль"
+                            android:textAllCaps="false"
+                            android:textSize="16sp"
+                            android:textColor="@color/white"
+                            app:cornerRadius="16dp"
+                            app:iconGravity="textStart"
+                            app:iconPadding="8dp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <!-- Панель с кнопками поверх контента -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+                <ImageButton
+
+                    android:id="@+id/btn_back"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:onClick="Main"
+
+                    android:background="@drawable/backs" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/view_panel"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/btn_message"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/message"
+                    android:scaleType="center"
+                    android:src="@drawable/messages" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- ИКОНКА СВАЙПА — ПОВЕРХ ВСЕГО -->
+    <ImageView
+        android:id="@+id/iv_swipe_indicator"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:alpha="0"
+        android:scaleType="centerInside" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

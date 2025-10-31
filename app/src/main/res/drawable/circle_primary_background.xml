@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Фон (круг) -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/primary" />
+            <stroke
+                android:width="3dp"
+                android:color="@color/white" />
+        </shape>
+    </item>
+
+    <!-- Иконка с меньшим размером -->
+    <item
+        android:drawable="@drawable/plus"
+        android:width="20dp"
+        android:height="20dp"
+        android:tint="@color/white"
+        android:gravity="center" />
+</layer-list>
