@@ -28,13 +28,14 @@ namespace TaigerDesktop.Connect
         {
             try
             {
-                var loginData = new
+                var formData = new Dictionary<string, string>
                 {
-                    Login = login,
-                    Password = password
+                    { "login", login },
+                    { "password", password }
                 };
 
-                var response = await _httpClient.PostAsJsonAsync("Admin/login", loginData);
+                var content = new FormUrlEncodedContent(formData);
+                var response = await _httpClient.PostAsync("AdminController/LoginAdmin", content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -42,6 +43,11 @@ namespace TaigerDesktop.Connect
                     IsAuthenticated = true;
                     return true;
                 }
+
+                // Опционально: прочитать тело ошибки для отладки
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Ошибка входа: {error}");
+
                 return false;
             }
             catch (Exception ex)
@@ -66,11 +72,35 @@ namespace TaigerDesktop.Connect
             return result ?? new List<Admin>();
         }
 
-        public async Task<bool> AddAdminAsync(Admin admin)
+        public async Task<Admin> AddAdminAsync(Admin user)
         {
-            CheckAuthentication();
-            var response = await _httpClient.PostAsJsonAsync("Admin", admin);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                // 1. Правильный Dictionary
+                var formData = new Dictionary<string, string>
+        {
+            { "Nickname", user.Nickname },
+            { "Login", user.Login },
+            { "Password", user.Password }
+        };
+
+                var content = new FormUrlEncodedContent(formData);
+
+                var response = await _httpClient.PostAsync("AdminController/AddAdmin", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return user;
+                }
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Ошибка добавления админа: {error}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Исключение при добавлении админа: {ex.Message}");
+                return null;
+            }
         }
 
         public async Task<bool> DeleteAdminAsync(int id)

@@ -26,7 +26,7 @@ namespace TaigerDesktop.Pages
         public AddAdministrator()
         {
             InitializeComponent();
-            _apiContext=new ApiContext();
+            _apiContext = new ApiContext();
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -35,44 +35,60 @@ namespace TaigerDesktop.Pages
         }
         private async Task AddAdmin()
         {
-            if (string.IsNullOrWhiteSpace(Login.Text) ||
-                string.IsNullOrWhiteSpace(Password.Password) ||
-                string.IsNullOrWhiteSpace(Name.Text))
+            // Валидация
+            if (string.IsNullOrWhiteSpace(Name.Text))
             {
-                MessageBox.Show("Заполните все обязательные поля!", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Введите имя (никнейм).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            var admin = new Admin
+
+            if (string.IsNullOrWhiteSpace(Login.Text))
             {
+                MessageBox.Show("Введите логин.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(Password.Password))
+            {
+                MessageBox.Show("Введите пароль.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Создаём объект
+            var newAdmin = new Admin
+            {
+                Nickname = Name.Text.Trim(),
                 Login = Login.Text.Trim(),
-                Password = Password.Password,
-                Nickname = Name.Text.Trim()
+                Password = Password.Password.Trim()
             };
+
+            // Отключаем кнопку, чтобы избежать повторных нажатий
+            addButt.IsEnabled = false;
 
             try
             {
-                bool success = await _apiContext.AddAdminAsync(admin);
+                Admin result = await _apiContext.AddAdminAsync(newAdmin);
 
-                if (success)
+                if (result != null)
                 {
-                    MessageBox.Show("Администратор успешно добавлен!", "Успех",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    Login.Text = "";
-                    Password.Password = "";
-                    Name.Text = "";
+                    MessageBox.Show("Администратор успешно добавлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // Очищаем форму
+                    Name.Clear();
+                    Login.Clear();
+                    Password.Clear();
                 }
                 else
                 {
-                    MessageBox.Show("Не удалось добавить администратора. Проверьте данные.", "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Не удалось добавить администратора.\nВозможно, логин уже существует.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                addButt.IsEnabled = true; // Включаем кнопку обратно
             }
         }
     }
