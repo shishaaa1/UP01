@@ -168,7 +168,7 @@ namespace TaigerDesktop.Connect
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"UserController/DeletePhoto");
+                var response = await _httpClient.DeleteAsync($"PhotoController/DeletePhoto?id={photoId}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
