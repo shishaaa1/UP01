@@ -8,6 +8,7 @@ namespace tiger_API.Service
     public class PhotosUsersService :IPhotosUsers
     {
         private readonly PhotosUserContext _photosUserContext;
+        private readonly UsersContext _usersContext;
         public PhotosUsersService(PhotosUserContext photosUserContext)
         {
             _photosUserContext = photosUserContext;
@@ -49,6 +50,31 @@ namespace tiger_API.Service
             _photosUserContext.Photos.Remove(photo);
             await _photosUserContext.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<PhotosUsers>> GetAllPhotosAsync()
+        {
+            return await _photosUserContext.Photos.ToListAsync();
+        }
+        // Service/PhotosUsersService.cs
+
+        public async Task<List<UserPhotoDto>> GetAllPhotosWithUserDataAsync()
+        {
+            return await _photosUserContext.Photos
+                .Join(
+                    _photosUserContext.Users,                   
+                    photo => photo.UserId,                       
+                    user => user.Id,                             
+                    (photo, user) => new UserPhotoDto           
+                    {
+                        PhotoId = photo.Id,
+                        UserId = user.Id,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Login = user.Login,
+                        PhotoData = photo.Photobill
+                    })
+                .ToListAsync();
         }
     }
 }

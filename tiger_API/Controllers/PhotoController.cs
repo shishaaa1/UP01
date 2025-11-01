@@ -64,5 +64,21 @@ namespace tiger_API.Controllers
 
             return Ok(new {PhotoId = id });
         }
+
+        /// <summary>
+        /// Получить все сохранённые фотографии пользователей
+        /// </summary>
+        /// <returns>Список всех фото с привязкой к UserId</returns>
+        [Route("GetAllPhotos")]
+        [HttpGet]
+        public async Task<ActionResult<List<PhotosUsers>>> GetAllPhotos()
+        {
+            var photos = await _photosUsers.GetAllPhotosWithUserDataAsync();
+
+            if (photos == null || !photos.Any())
+                return NotFound(new { Message = "Фотографии не найдены" });
+
+            return Ok(photos);
+        }
     }
 }

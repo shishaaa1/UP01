@@ -77,6 +77,14 @@ namespace tiger_API.Controllers
             return res;
         }
 
+        [Route("GetUsers")]
+        [HttpGet]
+        public async Task<ActionResult<List<Users>>> GetUsers()
+        {
+            var users = await _tigger.GetListUser();
+            return Ok(users);
+        }
+
         /// <summary>
         /// Получение пользователя по ID вместе с фото (без DTO и изменений моделей)
         /// </summary>

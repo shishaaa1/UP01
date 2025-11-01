@@ -36,6 +36,10 @@ namespace tiger_API.Service
         {
             return await _Userscontext.Users.FindAsync(id);
         }
+        public async Task<List<Users>> GetListUser()
+        {
+            return await _Userscontext.Users.ToListAsync();
+        }
 
         public async Task DeleteUser(int id)
         {

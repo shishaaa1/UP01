@@ -9,5 +9,6 @@ namespace tiger_API.Itreface
         Task DeleteUser(int id);
         Task<List<DailyStat>> GetRegistrationsCountToday();
         Task<Users> GetUserById(int id);
+        Task<List<Users>> GetListUser();
     }
 }
