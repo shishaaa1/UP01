@@ -112,19 +112,42 @@ namespace TaigerDesktop.Connect
                 return new List<Users>();
             }
         }
-        public async Task<List<PhotosUsers>> GetAllPhotosAsync()
+        public async Task<List<PhotosUsers>> GetPhotosByUsersIdAsync()
         {
             try
             {
-                var response = await _httpClient.GetAsync("PhotosController/GetPhotoByUserId");
+                var response = await _httpClient.GetAsync("PhotoController/GetAllPhotos");
+
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<List<PhotosUsers>>() ?? new List<PhotosUsers>();
+                    var dtos = await response.Content.ReadFromJsonAsync<List<UserPhotoDto>>();
+                    Console.WriteLine($"Получено фото: {dtos.Count} шт.");
+                    foreach (var dto in dtos)
+                    {
+                        Console.WriteLine($"ID: {dto.PhotoId}, User: {dto.FirstName} {dto.Login}, PhotoData: {dto.PhotoData?.Length} байт");
+                    }
+
+                    return dtos?.Select(dto => new PhotosUsers
+                    {
+
+                        Id = dto.PhotoId,
+                        UserId = dto.UserId,
+                        Photobill = dto.PhotoData,
+                        UserName = $"{dto.FirstName} {dto.LastName}",
+                        Login = dto.Login
+
+                    }).ToList() ?? new List<PhotosUsers>();
+                    
                 }
-                return new List<PhotosUsers>();
+                else
+                {
+                    Console.WriteLine($"Ошибка: {response.StatusCode} - {response.ReasonPhrase}");
+                    return new List<PhotosUsers>();
+                }
             }
-            catch (Exception ex) {
-                Console.WriteLine($"Ошибка получения пользоваталей: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка загрузки фото: {ex.Message}");
                 return new List<PhotosUsers>();
             }
         }
@@ -164,5 +187,15 @@ namespace TaigerDesktop.Connect
             }
             return new List<DailyStat>();
         }
+        private class UserPhotoDto
+        {
+            public int PhotoId { get; set; }
+            public int UserId { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Login { get; set; }
+            public byte[] PhotoData { get; set; }
+        }
     }
+
 }

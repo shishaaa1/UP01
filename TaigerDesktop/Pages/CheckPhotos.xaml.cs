@@ -30,7 +30,7 @@ namespace TaigerDesktop.Pages
         public CheckPhotos()
         {
             InitializeComponent();
-            DataContext = this; // Привязка к самому себе
+            DataContext = this; 
             Loaded += OnLoaded;
         }
 
@@ -44,7 +44,7 @@ namespace TaigerDesktop.Pages
         }
         private async Task LoadPhotos()
         {
-            var photos = await _api.GetAllPhotosAsync();
+            var photos = await _api.GetPhotosByUsersIdAsync();
             UserPhotos.Clear();
             foreach (var photo in photos)
             {

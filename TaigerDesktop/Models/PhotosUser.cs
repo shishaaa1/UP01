@@ -11,13 +11,13 @@ namespace TaigerDesktop.Models
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public byte[] photos { get; set; }
+        public byte[] Photobill { get; set; }
 
         // Дополнительные свойства для биндинга
         public string UserName { get; set; } // Имя пользователя для отображения
         public string Login { get; set; } // Логин пользователя
 
-        public BitmapImage ImageSource => ByteArrayToImage(photos);
+        public BitmapImage ImageSource => ByteArrayToImage(Photobill);
 
         private BitmapImage ByteArrayToImage(byte[] byteArray)
         {

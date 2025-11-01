@@ -28,9 +28,9 @@ namespace TaigerDesktop.View
         }
         private void OpenPhotoViewer(object sender, RoutedEventArgs e)
         {
-            if (DataContext is PhotosUsers photo && photo.photos != null)
+            if (DataContext is PhotosUsers photo && photo.Photobill != null)
             {
-                var viewer = new PhotoViewerWindow(photo.photos);
+                var viewer = new PhotoViewerWindow(photo.Photobill);
                 viewer.ShowDialog();
             }
         }
