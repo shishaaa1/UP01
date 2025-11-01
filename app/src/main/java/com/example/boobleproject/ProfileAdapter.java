@@ -86,19 +86,22 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
     static class ProfileViewHolder extends RecyclerView.ViewHolder {
         ImageView ivPhoto;
-        TextView tvName, tvAge;
+        TextView tvName, tvAge, tvBio;
 
         ProfileViewHolder(View itemView) {
             super(itemView);
             ivPhoto = itemView.findViewById(R.id.iv_profile_photo);
             tvName = itemView.findViewById(R.id.tv_name);
             tvAge = itemView.findViewById(R.id.tv_age);
+            tvBio = itemView.findViewById(R.id.tv_bio);
         }
 
         void bind(Profile profile) {
             ivPhoto.setImageResource(profile.getPhotoRes());
-            tvName.setText(profile.getName());
-            tvAge.setText(profile.getAge() + " лет • " + profile.getCity());
+            tvName.setText(profile.getFullName());
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
+            tvAge.setText(sdf.format(profile.getBirthday()));
+            tvBio.setText(profile.getBio());
         }
     }
 }

@@ -51,6 +51,16 @@
                 android:textSize="18sp"
                 android:textColor="@color/white"
                 android:alpha="0.9" />
+
+            <TextView
+                android:id="@+id/tv_bio"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.9"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Mainpage extends AppCompatActivity {
@@ -61,9 +63,9 @@ public class Mainpage extends AppCompatActivity {
 
     private void loadInitialProfiles() {
         List<Profile> initial = Arrays.asList(
-                new Profile(1, "Иван Иванович", 25, "Москва", R.drawable.alt1),
-                new Profile(2, "Анатолий Канюков", 28, "СПб", R.drawable.alt2),
-                new Profile(3, "Илья Бородин", 23, "Казань", R.drawable.alt3)
+                new Profile(0,"Бородин","Илья",createDate(2004,11,19),"М","Красивый мужчина, которого можно увидеть на свете",R.drawable.alt1),
+                new Profile(1,"Канюков","Анатолтй",createDate(1989,11,19),"М","Красивый мужчина, которого можно увидеть на свете adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg",R.drawable.alt2),
+        new Profile(2,"Гашев","Данил",createDate(2002,06,14),"М","Красивый мужчина, которого можно увидеть на свете",R.drawable.alt3)
         );
 
         if (adapter == null) {
@@ -90,5 +92,11 @@ public class Mainpage extends AppCompatActivity {
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeHelper);
         itemTouchHelper.attachToRecyclerView(rvProfiles);
+    }
+
+    private Date createDate(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day);
+        return calendar.getTime();
     }
 }
