@@ -11,16 +11,11 @@
     <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Заголовок -->
             <RowDefinition Height="Auto"/>
-            <!-- Новый TextBlock -->
             <RowDefinition Height="Auto"/>
-            <!-- TextBox поиска -->
             <RowDefinition Height="*"/>
-            <!-- Список пользователей -->
         </Grid.RowDefinitions>
 
-        <!-- Заголовок страницы -->
         <TextBlock Text="Список пользователей"
                    Style="{StaticResource PageTitleStyle}"
                    Grid.Row="0"
@@ -35,11 +30,12 @@
                  FontSize="16"
                  Padding="10"
                  Grid.Row="2"/>
+
         <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding FilteredUsers}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:UserCard />
+                        <local:UserCard UserDeleted="OnUserDeleted"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

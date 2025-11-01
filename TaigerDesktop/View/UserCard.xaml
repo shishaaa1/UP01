@@ -36,6 +36,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -73,6 +74,8 @@
                 <!-- Password (внимание: показываем!) -->
                 <TextBlock Grid.Row="7" Grid.Column="0" Text="Пароль:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
                 <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Password}" Margin="10 0 0 0" Foreground="#D32F2F"/>
+                <TextBlock Grid.Row="8" Grid.Column="0" Text="Пол:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
+                <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding Sex}" Margin="10 0 0 0" Foreground="#D32F2F"/>
             </Grid>
 
             <!-- Кнопки — фиксированы, не уезжают -->

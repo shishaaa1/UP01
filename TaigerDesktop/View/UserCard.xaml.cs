@@ -26,6 +26,8 @@ namespace TaigerDesktop.View
         {
             InitializeComponent();
         }
+        public event Action<Users> UserDeleted;
+
         private async void DeleteUser(object sender, RoutedEventArgs e)
         {
             if (DataContext is Users user)
@@ -39,14 +41,12 @@ namespace TaigerDesktop.View
                 if (result == MessageBoxResult.Yes)
                 {
                     var api = new TaigerDesktop.Connect.ApiContext();
-                    bool success = await api.DeleteUserAsync(user.Id); // ← убедись, что метод называется DeleteUserAsync
+                    bool success = await api.DeleteUserAsync(user.Id);
 
                     if (success)
                     {
                         MessageBox.Show("Пользователь удалён.");
-                        // Уведомить родительскую страницу
-                        var page = FindParent<CheckUsers>(this);
-                        page?.RemoveUser(user);
+                        UserDeleted?.Invoke(user);
                     }
                     else
                     {
@@ -54,16 +54,6 @@ namespace TaigerDesktop.View
                     }
                 }
             }
-        }
-
-        // Вспомогательный метод поиска родителя
-        private static T FindParent<T>(DependencyObject child) where T : DependencyObject
-        {
-            while (child != null && !(child is T))
-            {
-                child = System.Windows.Media.VisualTreeHelper.GetParent(child);
-            }
-            return child as T;
         }
     }
 }

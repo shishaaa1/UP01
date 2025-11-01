@@ -17,7 +17,7 @@ namespace TaigerDesktop.Models
         public string Login { get; set; }
         public string Password { get; set; }
         public DateTime BirthDay => Birthday;
-
+        public bool Sex { get; set; }
         public string AvatarPath { get; set; } = "/Assets/default-avatar.png";
     }
 }

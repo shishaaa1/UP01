@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,80 +25,91 @@ namespace TaigerDesktop.Pages
     /// </summary>
     public partial class CheckUsers : Page
     {
-        private readonly ApiContext _api = new();
-        private string _searchQuery = "";
-        private List<Users> _allUsers = new();
-        public ObservableCollection<Users> FilteredUsers { get; set; } = new();
+        private ObservableCollection<Users> _allUsers;
+        private ObservableCollection<Users> _filteredUsers;
+        private string _searchQuery;
+
+        public ObservableCollection<Users> AllUsers
+        {
+            get => _allUsers;
+            set
+            {
+                _allUsers = value;
+                OnPropertyChanged();
+                ApplyFilter();
+            }
+        }
+
+        public ObservableCollection<Users> FilteredUsers
+        {
+            get => _filteredUsers;
+            set
+            {
+                _filteredUsers = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string SearchQuery
         {
             get => _searchQuery;
             set
             {
-                if (_searchQuery != value)
-                {
-                    _searchQuery = value;
-                    OnPropertyChanged();
-                    FilterUsers(); // фильтруем при каждом изменении
-                }
+                _searchQuery = value;
+                OnPropertyChanged();
+                ApplyFilter();
             }
         }
-
+        public async void LoadUsers()
+        {
+            var api = new TaigerDesktop.Connect.ApiContext();
+            var users = await api.GetAllUsersAsync();
+            AllUsers = new ObservableCollection<Users>(users);
+        }
+        private void OnUserDeleted(Users user)
+        {
+            RemoveUser(user);
+        }
         public CheckUsers()
         {
             InitializeComponent();
-            DataContext = this; // привязка к самому себе
-            Loaded += OnLoaded;
+            DataContext = this;
+            LoadUsers();
         }
 
-        private async void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+        private void ApplyFilter()
         {
-            await LoadUsers();
-        }
+            if (AllUsers == null) return;
 
-        private async Task LoadUsers()
-        {
-            var users = await _api.GetAllUsersAsync();
-            _allUsers = users ?? new List<Users>();
-            FilterUsers(); // показать всех изначально
-        }
-
-        private void FilterUsers()
-        {
-            var query = SearchQuery?.Trim().ToLower() ?? "";
-
-            FilteredUsers.Clear();
-
-            if (string.IsNullOrEmpty(query))
+            if (string.IsNullOrWhiteSpace(SearchQuery))
             {
-                // Показать всех
-                foreach (var user in _allUsers)
-                    FilteredUsers.Add(user);
+                FilteredUsers = new ObservableCollection<Users>(AllUsers);
             }
             else
             {
-                // Фильтрация по ID, имени, фамилии или логину
-                var filtered = _allUsers.Where(u =>
-                    u.Id.ToString() == query || // точное совпадение по ID
-                    (u.FirstName != null && u.FirstName.ToLower().Contains(query)) ||
-                    (u.LastName != null && u.LastName.ToLower().Contains(query)) ||
-                    (u.Login != null && u.Login.ToLower().Contains(query))
-                );
+                var filtered = AllUsers.Where(u =>
+                    u.FirstName?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true ||
+                    u.LastName?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true ||
+                    u.Id.ToString().Contains(SearchQuery) ||
+                    u.Login?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true
+                ).ToList();
 
-                foreach (var user in filtered)
-                    FilteredUsers.Add(user);
+                FilteredUsers = new ObservableCollection<Users>(filtered);
             }
         }
 
-        // INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        // Метод для удаления пользователя из списка
         public void RemoveUser(Users user)
         {
-            _allUsers.Remove(user);
-            FilterUsers(); // перезапустить фильтрацию
+            AllUsers?.Remove(user);
+            // Фильтр применится автоматически благодаря привязке данных
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
