@@ -116,7 +116,7 @@ namespace TaigerDesktop.Connect
         {
             try
             {
-                var response = await _httpClient.GetAsync("UsersController/GetUsersPhoto");
+                var response = await _httpClient.GetAsync("PhotosController/GetPhotoByUserId");
                 if (response.IsSuccessStatusCode)
                 {
                     return await response.Content.ReadFromJsonAsync<List<PhotosUsers>>() ?? new List<PhotosUsers>();
@@ -132,7 +132,7 @@ namespace TaigerDesktop.Connect
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"UserController/DeleteUser/{userId}");
+                var response = await _httpClient.DeleteAsync($"UserController/DeleteUser");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -154,19 +154,7 @@ namespace TaigerDesktop.Connect
                 return false;
             }
         }
-        public async Task<bool> UpdateUserAsync(Users user)
-        {
-            try
-            {
-                var response = await _httpClient.PutAsJsonAsync("UserController/UpdateUser", user);
-                return response.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка обновления пользователя: {ex.Message}");
-                return false;
-            }
-        }
+        
         public async Task<List<DailyStat>> GetStatsLast30DaysAsync()
         {
             var response = await _httpClient.GetAsync("UserController/CountUsersToday");

@@ -26,16 +26,6 @@ namespace TaigerDesktop.View
         {
             InitializeComponent();
         }
-
-        private void EditUser(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is Users user)
-            {
-                // TODO: Открыть окно редактирования
-                MessageBox.Show($"Редактировать пользователя: {user.FirstName} {user.LastName}");
-            }
-        }
-
         private async void DeleteUser(object sender, RoutedEventArgs e)
         {
             if (DataContext is Users user)
