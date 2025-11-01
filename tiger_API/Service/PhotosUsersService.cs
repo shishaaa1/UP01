@@ -28,6 +28,28 @@ namespace tiger_API.Service
             await _photosUserContext.SaveChangesAsync();
             return photo.Id;
         }
+
+        public async Task<byte[]> GetPhotoByUserIdAsync(int userId)
+        {
+            var photo = await _photosUserContext.Photos
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (photo?.Photobill == null)
+                throw new FileNotFoundException("Фото для пользователя не найдено");
+
+            return photo.Photobill;
+        }
+
+        public async Task<bool> DeletePhotoAsync(int photoId)
+        {
+            var photo = await _photosUserContext.Photos.FindAsync(photoId);
+            if (photo == null)
+                return false; 
+
+            _photosUserContext.Photos.Remove(photo);
+            await _photosUserContext.SaveChangesAsync();
+            return true;
+        }
     }
 }
 

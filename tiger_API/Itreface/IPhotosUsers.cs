@@ -3,5 +3,7 @@
     public interface IPhotosUsers
     {
         Task<int> UploadPhotoAsync(int userId, byte[] photoData);
+        Task<byte[]> GetPhotoByUserIdAsync(int userId);
+        Task<bool> DeletePhotoAsync(int photoId);
     }
 }

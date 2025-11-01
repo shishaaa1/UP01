@@ -68,5 +68,53 @@ namespace tiger_API.Controllers
             var res = await _tigger.GetRegistrationsCountToday();
             return Ok(res);
         }
+
+        [Route("GetUserById")]
+        [HttpGet]
+        public async Task<Users> GetUsersToDay(int id)
+        {
+            var res= await _tigger.GetUserById(id);
+            return res;
+        }
+
+        /// <summary>
+        /// Получение пользователя по ID вместе с фото (без DTO и изменений моделей)
+        /// </summary>
+        /// <param name="id">ID пользователя</param>
+        /// <returns>Объект с данными пользователя и фото в виде байтов</returns>
+        [Route("GetUsersAndPhoto")]
+        [HttpGet]
+        public async Task<ActionResult> GetUserWithPhoto(int id)
+        {
+            // Получаем пользователя
+            var user = await _tigger.GetUserById(id);
+            if (user == null)
+                return NotFound(new { Message = "Пользователь не найден" });
+
+            // Получаем фото
+            byte[] photoBytes = null;
+            try
+            {
+                photoBytes = await _photosUsers.GetPhotoByUserIdAsync(id);
+            }
+            catch (FileNotFoundException)
+            {
+                
+            }
+            var result = new
+            {
+                user.Id,
+                user.FirstName,
+                user.LastName,
+                user.Birthday,
+                user.BIO,
+                user.CreatedAt,
+                user.Sex,
+                user.Login,
+                PhotoBytes = photoBytes 
+            };
+
+            return Ok(result);
+        }
     }
 }

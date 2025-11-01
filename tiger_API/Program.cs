@@ -5,6 +5,7 @@ using tiger_API.Itreface;
 using tiger_API.Service;
 using tiger_API.Context;
 using System.Data.Common;
+using tiger_API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "Методы в контроллере"
     });
+    c.OperationFilter<SwaggerFileOperationFilter>();
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -38,6 +40,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "tiger_API v1");

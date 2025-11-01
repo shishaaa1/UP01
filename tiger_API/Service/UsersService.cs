@@ -11,10 +11,12 @@ namespace tiger_API.Service
     public class UsersService : IUsers
     {
         private readonly UsersContext _Userscontext;
+        private readonly IPhotosUsers _photosUsers;
 
-        public UsersService(UsersContext Userscontext)
+        public UsersService(UsersContext Userscontext, IPhotosUsers photosUsers)
         {
             _Userscontext = Userscontext;
+            _photosUsers = photosUsers;
         }
 
         public async Task ReginU(Users users)
@@ -28,6 +30,11 @@ namespace tiger_API.Service
         {
             Users User = _Userscontext.Users.Where(x => x.Login == login && x.Password == password).First();
             return User.Id;
+        }
+
+        public async Task<Users> GetUserById(int id)
+        {
+            return await _Userscontext.Users.FindAsync(id);
         }
 
         public async Task DeleteUser(int id)
@@ -66,5 +73,7 @@ namespace tiger_API.Service
 
             return stats;
         }
+
+        
     }
 }

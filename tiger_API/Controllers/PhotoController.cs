@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using tiger_API.Itreface;
+using tiger_API.Modell;
 
 namespace tiger_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/PhotoController")]
     [ApiController]
     public class PhotoController : Controller
     {
@@ -17,40 +18,51 @@ namespace tiger_API.Controllers
         /// <summary>
         /// Загрузка фото пользователя
         /// </summary>
-        /// <param name="userId">ID пользователя</param>
-        /// <param name="photoFile">Файл изображения</param>
         /// <returns>Идентификатор загруженного фото</returns>
-        [HttpPost("UploadPhoto")]
-        [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UploadPhoto(
-            [FromForm] int userId,
-            [FromForm] IFormFile photoFile)
+        [Route("UploadPhoto")]
+        [HttpPost]
+        public async Task<IActionResult> UploadPhoto([FromForm] UploadPhotoRequest request)
         {
-            // Валидация входных данных
-            if (userId <= 0)
-                return BadRequest("Неверный ID пользователя.");
+            using var ms = new MemoryStream();
+            await request.PhotoFile.CopyToAsync(ms);
+            var photoBytes = ms.ToArray();
 
-            if (photoFile == null || photoFile.Length == 0)
-                return BadRequest("Файл не выбран или пуст.");
-            var allowedTypes = new[] { "image/jpeg", "image/png", "image/jpg", "image/gif" };
-            if (!allowedTypes.Contains(photoFile.ContentType))
-                return BadRequest($"Недопустимый формат файла. Разрешены: {string.Join(", ", allowedTypes)}");
-
+            var id = await _photosUsers.UploadPhotoAsync(request.UserId, photoBytes);
+            return Ok(new { PhotoId = id });
+        }
+        [Route("GetPhotoByUsersId")]
+        [HttpGet]
+        public async Task<IActionResult> GetPhotoByUser(int userId)
+        {
             try
             {
-                using var ms = new MemoryStream();
-                await photoFile.CopyToAsync(ms);
-                var photoBytes = ms.ToArray();
-
-                var id = await _photosUsers.UploadPhotoAsync(userId, photoBytes);
-
-                return Ok(new { PhotoId = id });
+                var photoBytes = await _photosUsers.GetPhotoByUserIdAsync(userId);
+                return File(photoBytes, "image/jpeg"); // или другой тип
             }
-            catch (Exception ex)
+            catch (FileNotFoundException)
             {
-                Console.WriteLine($"Ошибка загрузки: {ex.Message}");
-                return Ok();
+                return NotFound("Фото не найдено");
             }
+        }
+
+        /// <summary>
+        /// Удаление фото по его ID
+        /// </summary>
+        /// <param name="id">ID фотографии (не пользователя!)</param>
+        /// <returns>Результат операции</returns>
+        [Route("DeletePhoto")]
+        [HttpDelete]
+        public async Task<IActionResult> DeletePhoto([FromQuery] int id)
+        {
+            if (id <= 0)
+                return BadRequest("Некорректный ID фото");
+
+            var isDeleted = await _photosUsers.DeletePhotoAsync(id);
+
+            if (!isDeleted)
+                return NotFound(new { Message = "Фото с таким ID не найдено" });
+
+            return Ok(new {PhotoId = id });
         }
     }
 }
