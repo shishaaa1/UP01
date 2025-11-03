@@ -51,6 +51,11 @@ namespace tiger_API.Service
             }
         }
 
+        public async Task<List<Users>> GetAllUsersAsync()
+        {
+            return await _Userscontext.Users.ToListAsync();
+        }
+
         public async Task<List<DailyStat>> GetRegistrationsCountToday()
         {
             var today = DateTime.UtcNow.Date;

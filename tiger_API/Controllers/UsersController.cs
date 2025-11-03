@@ -86,7 +86,7 @@ namespace tiger_API.Controllers
         }
 
         /// <summary>
-        /// Получение пользователя по ID вместе с фото (без DTO и изменений моделей)
+        /// Получение пользователя по ID вместе с фото 
         /// </summary>
         /// <param name="id">ID пользователя</param>
         /// <returns>Объект с данными пользователя и фото в виде байтов</returns>
@@ -94,7 +94,6 @@ namespace tiger_API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetUserWithPhoto(int id)
         {
-            // Получаем пользователя
             var user = await _tigger.GetUserById(id);
             if (user == null)
                 return NotFound(new { Message = "Пользователь не найден" });

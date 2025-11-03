@@ -10,5 +10,6 @@ namespace tiger_API.Itreface
         Task<List<DailyStat>> GetRegistrationsCountToday();
         Task<Users> GetUserById(int id);
         Task<List<Users>> GetListUser();
+        Task<List<Users>> GetAllUsersAsync();
     }
 }
