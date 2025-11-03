@@ -78,7 +78,7 @@ android:padding="24dp">
     android:text="Еще нет аккаунта? Зарегистрироваться"
     android:textColor="@color/primary"
     android:textSize="14sp"
-    android:onClick="Registration"
+    android:onClick="goToRegistration"
     />
 
 </LinearLayout>

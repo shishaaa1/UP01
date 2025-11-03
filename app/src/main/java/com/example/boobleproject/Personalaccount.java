@@ -133,4 +133,10 @@ public class Personalaccount extends AppCompatActivity {
     public void Main(View view) {
         onBackPressed();
     }
+
+    public void EditProfile(){
+
+    }
+
+
 }

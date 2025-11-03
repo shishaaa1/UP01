@@ -63,9 +63,9 @@ public class Mainpage extends AppCompatActivity {
 
     private void loadInitialProfiles() {
         List<Profile> initial = Arrays.asList(
-                new Profile(0,"Бородин","Илья",createDate(2004,11,19),"М","Красивый мужчина, которого можно увидеть на свете",R.drawable.alt1),
-                new Profile(1,"Канюков","Анатолтй",createDate(1989,11,19),"М","Красивый мужчина, которого можно увидеть на свете adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg",R.drawable.alt2),
-        new Profile(2,"Гашев","Данил",createDate(2002,06,14),"М","Красивый мужчина, которого можно увидеть на свете",R.drawable.alt3)
+                new Profile(0,"Бородин","Илья",createDate(2004,11,19),true,"Красивый мужчина, которого можно увидеть на свете",R.drawable.alt1),
+                new Profile(1,"Канюков","Анатолтй",createDate(1989,11,19),false,"Красивый мужчина, которого можно увидеть на свете adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg adfagsdfgsdgsdfgsdfgsdfgsdfgsdfgsdfgsfdgsdfgsdfgsdfg",R.drawable.alt2),
+        new Profile(2,"Гашев","Данил",createDate(2002,06,14),true,"Красивый мужчина, которого можно увидеть на свете",R.drawable.alt3)
         );
 
         if (adapter == null) {

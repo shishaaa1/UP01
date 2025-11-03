@@ -17,8 +17,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void Registration(View view){
-        setContentView(R.layout.activity_registation);
+    public void goToRegistration(View view) {
+        Intent intent = new Intent(this, Registation.class); // ← ЗАПУСК АКТИВИТИ!
+        startActivity(intent);
     }
     public void Main(View view) {
         Intent intent = new Intent(this, Mainpage.class);

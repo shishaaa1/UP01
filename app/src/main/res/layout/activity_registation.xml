@@ -1,116 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/light_background"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:fillViewport="true">
 
-    <!-- Логотип и заголовок -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Регистрация🫰"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:textColor="@color/primary"
-        android:layout_marginBottom="8dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textStyle="bold"
-        android:text="Хочешь поскорее найди вторую половинку? \n Зарегистрируйся скорее!"
-        android:textSize="16sp"
-        android:textColor="@color/muted_text"
-        android:layout_marginBottom="40dp"
-        android:gravity="center" />
-
-    <!-- Email -->
-    <com.google.android.material.textfield.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Логин"
-            android:textColor="@color/muted_text"
-            android:textColorHint="@color/muted_text" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Пароль -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:passwordToggleEnabled="true"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Пароль"
-            android:inputType="textPassword"
-            android:textColor="@color/muted_text"
-            android:textColorHint="@color/muted_text" />
-    </com.google.android.material.textfield.TextInputLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ваш пол"
-        android:textSize="16sp"
-        android:textColor="@color/muted_text"
-        android:layout_marginBottom="8dp" />
-
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/gender_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:singleSelection="true"
-        app:checkedButton="@id/btn_male">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_male"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        <!-- Логотип и заголовок -->
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="М"
-            android:textSize="18sp"
-            app:iconGravity="textStart"
-            app:iconTint="@color/primary" />
+            android:text="Регистрация🫰"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:layout_marginBottom="8dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_female"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ж"
+            android:textStyle="bold"
+            android:text="Хочешь поскорее найти вторую половинку? \nЗарегистрируйся скорее!"
+            android:textSize="16sp"
+            android:textColor="@color/muted_text"
+            android:layout_marginBottom="40dp"
+            android:gravity="center" />
+
+        <!-- Имя -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_firstname"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_firstname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Имя"
+                android:textColor="@color/muted_text"
+                android:textColorHint="@color/muted_text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Фамилия -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_lastname"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_lastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Фамилия"
+                android:textColor="@color/muted_text"
+                android:textColorHint="@color/muted_text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Дата рождения -->
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Логин -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_login"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Логин"
+                android:textColor="@color/muted_text"
+                android:textColorHint="@color/muted_text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Пароль -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_password"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:passwordToggleEnabled="true">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Пароль"
+                android:inputType="textPassword"
+                android:textColor="@color/muted_text"
+                android:textColorHint="@color/muted_text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Пол -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ваш пол"
+            android:textSize="16sp"
+            android:textColor="@color/muted_text"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/gender_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:singleSelection="true"
+            app:checkedButton="@id/btn_male">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_male"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="М"
+                android:textSize="18sp"
+                app:iconGravity="textStart"
+                app:iconTint="@color/primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_female"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ж"
+                android:textSize="18sp"
+                app:iconGravity="textStart"
+                app:iconTint="@color/primary" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+        <!-- Био -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_bio"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:hintTextColor="@color/muted_text"
+            app:boxStrokeColor="@color/primary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="О себе (био)"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:maxLines="5"
+                android:textColor="@color/muted_text"
+                android:textColorHint="@color/muted_text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Кнопка -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Зарегистрироваться"
             android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/primary"
+            android:layout_marginBottom="16dp"
+            app:cornerRadius="12dp" />
 
-            app:iconGravity="textStart"
-            app:iconTint="@color/primary" />
-
-    </com.google.android.material.button.MaterialButtonToggleGroup>
-
-    <!-- Кнопка -->
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="Зарегистрироваться"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/primary"
-
-        android:layout_marginBottom="16dp" />
-
-    <!-- Ссылка на регистрацию -->
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

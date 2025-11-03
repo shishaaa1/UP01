@@ -100,7 +100,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
             ivPhoto.setImageResource(profile.getPhotoRes());
             tvName.setText(profile.getFullName());
             java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
-            tvAge.setText(sdf.format(profile.getBirthday()));
+            tvAge.setText(sdf.format(profile.getBirthday()) + " " + "Пол: "+ profile.getGenderAsString());
             tvBio.setText(profile.getBio());
         }
     }
