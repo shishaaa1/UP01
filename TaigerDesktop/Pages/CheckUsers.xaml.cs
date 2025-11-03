@@ -23,7 +23,7 @@ namespace TaigerDesktop.Pages
     /// <summary>
     /// Логика взаимодействия для CheckUsers.xaml
     /// </summary>
-    public partial class CheckUsers : Page
+    public partial class CheckUsers : Page, INotifyPropertyChanged
     {
         private ObservableCollection<Users> _allUsers;
         private ObservableCollection<Users> _filteredUsers;
@@ -46,7 +46,7 @@ namespace TaigerDesktop.Pages
             set
             {
                 _filteredUsers = value;
-                OnPropertyChanged();
+                OnPropertyChanged(); // ← критически важно!
             }
         }
 
@@ -60,25 +60,6 @@ namespace TaigerDesktop.Pages
                 ApplyFilter();
             }
         }
-        public async void LoadUsers()
-        {
-            try
-            {
-                var api = new TaigerDesktop.Connect.ApiContext();
-                var users = await api.GetAllUsersAsync();
-
-                MessageBox.Show($"API вернул: {users?.Count ?? 0} пользователей");
-                AllUsers = new ObservableCollection<Users>(users);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("ОШИБКА API: " + ex.Message);
-            }
-        }
-        private void OnUserDeleted(Users user)
-        {
-            RemoveUser(user);
-        }
         public CheckUsers()
         {
             InitializeComponent();
@@ -86,9 +67,35 @@ namespace TaigerDesktop.Pages
             LoadUsers();
         }
 
+        public async void LoadUsers()
+        {
+            try
+            {
+                var api = new ApiContext();
+                var users = await api.GetAllUsersAsync();
+
+                // Для отладки — можно убрать после проверки
+                // System.Windows.MessageBox.Show($"Загружено: {users?.Count ?? 0} пользователей");
+
+                AllUsers = users != null
+                    ? new ObservableCollection<Users>(users)
+                    : new ObservableCollection<Users>();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Ошибка загрузки: {ex.Message}", "Ошибка",
+                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                AllUsers = new ObservableCollection<Users>();
+            }
+        }
+
         private void ApplyFilter()
         {
-            if (AllUsers == null) return;
+            if (AllUsers == null)
+            {
+                FilteredUsers = new ObservableCollection<Users>();
+                return;
+            }
 
             if (string.IsNullOrWhiteSpace(SearchQuery))
             {
@@ -97,23 +104,24 @@ namespace TaigerDesktop.Pages
             else
             {
                 var filtered = AllUsers.Where(u =>
-                    u.FirstName?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true ||
-                    u.LastName?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true ||
-                    u.Id.ToString().Contains(SearchQuery) ||
-                    u.Login?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true
+                    (u.FirstName?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (u.LastName?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (u.Id.ToString().Contains(SearchQuery)) ||
+                    (u.Login?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true)
                 ).ToList();
 
                 FilteredUsers = new ObservableCollection<Users>(filtered);
             }
         }
 
-        // Метод для удаления пользователя из списка
+        // Метод вызывается из UserCard через FindParent
         public void RemoveUser(Users user)
         {
             AllUsers?.Remove(user);
-            // Фильтр применится автоматически благодаря привязке данных
+            // ApplyFilter() вызовется автоматически через сеттер AllUsers
         }
 
+        // INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
