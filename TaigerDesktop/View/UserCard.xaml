@@ -52,7 +52,7 @@
 
                 <!-- BirthDay -->
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="ДР:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding BirthDay, StringFormat='{}{0:dd.MM.yyyy}'}" Margin="10 0 0 0"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Birthday, StringFormat='{}{0:dd.MM.yyyy}'}" Margin="10 0 0 0"/>
 
                 <!-- BIO -->
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="О себе:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}" VerticalAlignment="Top"/>
@@ -70,7 +70,7 @@
                 <TextBlock Grid.Row="7" Grid.Column="0" Text="Пароль:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
                 <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Password}" Margin="10 0 0 0" Foreground="#D32F2F"/>
                 <TextBlock Grid.Row="8" Grid.Column="0" Text="Пол:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}"/>
-                <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding Sex}" Margin="10 0 0 0" Foreground="#D32F2F"/>
+                <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding SexDisplay}" Margin="10 0 0 0" Foreground="#D32F2F"/>
             </Grid>
 
             <!-- Кнопки — фиксированы, не уезжают -->

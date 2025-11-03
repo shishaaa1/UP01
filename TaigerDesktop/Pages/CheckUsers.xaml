@@ -35,8 +35,11 @@
             <ItemsControl ItemsSource="{Binding FilteredUsers}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:UserCard DataContext="{Binding}" 
-                            UserDeleted="OnUserDeleted"/>
+                        <local:UserCard 
+                    DataContext="{Binding}"
+                    UserDeleted="{Binding RelativeSource={RelativeSource AncestorType=Page}, 
+                                         Path=DataContext.OnUserDeleted}"
+                    Margin="0,0,0,16"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
