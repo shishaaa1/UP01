@@ -99,7 +99,7 @@ namespace TaigerDesktop.Connect
         {
             try
             {
-                var response = await _httpClient.GetAsync("UserController/GetUsers");
+                var response = await _httpClient.GetAsync("UserController/GetUserAndPhoto");
                 if (response.IsSuccessStatusCode)
                 {
                     return await response.Content.ReadFromJsonAsync<List<Users>>() ?? new List<Users>();
