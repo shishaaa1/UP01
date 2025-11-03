@@ -62,9 +62,40 @@ namespace TaigerDesktop.Pages
         }
         public async void LoadUsers()
         {
-            var api = new TaigerDesktop.Connect.ApiContext();
-            var users = await api.GetAllUsersAsync();
-            AllUsers = new ObservableCollection<Users>(users);
+            try
+            {
+                var api = new TaigerDesktop.Connect.ApiContext();
+                var users = await api.GetAllUsersAsync();
+
+                MessageBox.Show($"API вернул: {users?.Count ?? 0} пользователей");
+
+                // ←←← ВСТАВЬ ЭТИ 3 СТРОКИ ДЛЯ ТЕСТА ←←←
+                if (users == null || users.Count == 0)
+                {
+                    users = new List<Users>
+            {
+                new Users
+                {
+                    Id = 999,
+                    FirstName = "ТЕСТ",
+                    LastName = "ПОЛЬЗОВАТЕЛЬ",
+                    Birthday = DateTime.Today.AddYears(-20),
+                    BIO = "Это тестовый пользователь, API пока пустой",
+                    CreatedAt = DateTime.Now,
+                    Login = "test",
+                    Password = "123",
+                    Sex = true
+                }
+            };
+                    MessageBox.Show("API пустой → показываем ТЕСТОВУЮ карточку");
+                }
+
+                AllUsers = new ObservableCollection<Users>(users);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ОШИБКА API: " + ex.Message);
+            }
         }
         private void OnUserDeleted(Users user)
         {
