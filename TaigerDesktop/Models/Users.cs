@@ -18,7 +18,7 @@ namespace TaigerDesktop.Models
         public string Login { get; set; }
         public string Password { get; set; }
         public bool Sex { get; set; }
-       
+        public string SexDisplay => Sex ? "Мужчина" : "Женщина";
     }
 }
 

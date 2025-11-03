@@ -55,7 +55,7 @@
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Birthday, StringFormat='{}{0:dd.MM.yyyy}'}" Margin="10 0 0 0"/>
 
                 <!-- BIO -->
-                <TextBlock Grid.Row="4" Grid.Column="0" Text="О себе:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}" VerticalAlignment="Top"/>
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="О себе:" FontWeight="SemiBold" Foreground="{StaticResource DarkPurpleBrush}" />
                 <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding BIO}" Margin="10 0 0 0" TextWrapping="Wrap" MaxWidth="400"/>
 
                 <!-- CreatedAt -->
