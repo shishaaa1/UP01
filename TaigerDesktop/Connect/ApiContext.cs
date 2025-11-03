@@ -162,7 +162,7 @@ namespace TaigerDesktop.Connect
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"UserController/DeleteUser");
+                var response = await _httpClient.DeleteAsync($"UserController/DeleteUser/{userId}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
