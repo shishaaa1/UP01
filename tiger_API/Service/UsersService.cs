@@ -43,11 +43,11 @@ namespace tiger_API.Service
 
         public async Task DeleteUser(int id)
         {
-            var user = _Userscontext.Users.Find(id);
-            if(user != null)
+            var user = await _Userscontext.Users.FindAsync(id);
+            if (user != null)
             {
                 _Userscontext.Users.Remove(user);
-                await _Userscontext.SaveChangesAsync();
+                await _Userscontext.SaveChangesAsync(); 
             }
         }
 

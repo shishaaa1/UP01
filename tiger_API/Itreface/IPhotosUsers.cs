@@ -9,5 +9,6 @@ namespace tiger_API.Itreface
         Task<bool> DeletePhotoAsync(int photoId);
         Task<List<PhotosUsers>> GetAllPhotosAsync();
         Task<List<UserPhotoDto>> GetAllPhotosWithUserDataAsync();
+        Task DeletePhotosByUserIdAsync(int userId);
     }
 }

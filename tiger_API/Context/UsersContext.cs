@@ -7,6 +7,7 @@ namespace tiger_API.Context
     {
         public DbSet<Users> Users {  get; set; }
 
+
         public UsersContext()
         {
             Database.EnsureCreated();

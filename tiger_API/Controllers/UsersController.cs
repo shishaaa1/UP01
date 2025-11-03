@@ -52,7 +52,8 @@ namespace tiger_API.Controllers
         [HttpDelete]
         public ActionResult DeleteUser([FromForm] int id)
         {
-            _tigger.DeleteUser(id);
+            _photosUsers.DeletePhotosByUserIdAsync(id); 
+            _tigger.DeleteUser(id);                
             return Ok();
         }
 

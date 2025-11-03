@@ -51,6 +51,17 @@ namespace tiger_API.Service
             await _photosUserContext.SaveChangesAsync();
             return true;
         }
+        public async Task DeletePhotosByUserIdAsync(int userId)
+        {
+            var photos = await _photosUserContext.Photos
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+
+            
+                _photosUserContext.Photos.RemoveRange(photos);
+                await _photosUserContext.SaveChangesAsync();
+            
+        }
 
         public async Task<List<PhotosUsers>> GetAllPhotosAsync()
         {
