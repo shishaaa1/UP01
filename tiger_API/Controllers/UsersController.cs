@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using tiger_API.Itreface;
 using tiger_API.Modell;
 using tiger_API.Service;
@@ -48,13 +49,26 @@ namespace tiger_API.Controllers
         /// </summary>
         /// <remarks>бла бла бла</remarks>
         /// <returns></returns>
-        [Route("DeleteUser")]
-        [HttpDelete]
-        public ActionResult DeleteUser([FromForm] int id)
+        [HttpDelete("DeleteUser/{id}")]
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
-            _photosUsers.DeletePhotosByUserIdAsync(id); 
-            _tigger.DeleteUser(id);                
-            return Ok();
+            try
+            {
+                await _photosUsers.DeletePhotosByUserIdAsync(id);
+
+                await _tigger.DeleteUser(id);
+
+                return Ok(new { success = true });
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return Conflict(new { success = false, error = "Невозможно удалить пользователя — есть связанные записи." });
+            }
+            catch (Exception ex)
+            {
+                // логируем ex.Message
+                return StatusCode(500, new { success = false, error = ex.Message });
+            }
         }
 
         /// <summary>
