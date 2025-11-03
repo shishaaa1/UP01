@@ -3,6 +3,7 @@ package com.example.boobleproject;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,10 +19,12 @@ import com.example.boobleproject.ApiClient;
 import com.example.boobleproject.ApiService;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -101,8 +104,21 @@ public class Registation extends AppCompatActivity {
                     Toast.makeText(Registation.this, "Регистрация успешна!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(Registation.this, "Ошибка регистрации: " + response.code(), Toast.LENGTH_SHORT).show();
+                    String errorMessage = "Неизвестная ошибка";  // Fallback
+                    ResponseBody errorBody = response.errorBody();
+                    if (errorBody != null) {
+                        try {
+                            errorMessage = errorBody.string();  // Читаем тело ошибки
+                            // Опционально: если JSON, распарсите (пример ниже)
+                        } catch (IOException e) {
+                            Log.e("RegistrationError", "Ошибка чтения ответа: " + e.getMessage());
+                            errorMessage = "Ошибка чтения ответа сервера";
+                        }
+                    }
+                    Toast.makeText(Registation.this, "Ошибка регистрации: " + errorMessage, Toast.LENGTH_LONG).show();
+                    Log.e("RegistrationError", "Код: " + response.code() + ", Тело: " + errorMessage);
                 }
+
             }
 
             @Override
