@@ -123,5 +123,52 @@ namespace tiger_API.Controllers
 
             return Ok(result);
         }
+
+        /// <summary>
+        /// Получение всех пользователей вместе с их фото
+        /// </summary>
+        /// <returns>Список объектов с данными пользователей и фото в виде байтов</returns>
+        [Route("GetAllUsersWithPhoto")]
+        [HttpGet] 
+        public async Task<ActionResult<List<object>>> GetAllUsersAndPhoto()
+        {
+            var users = await _tigger.GetAllUsersAsync(); 
+            if (users == null || !users.Any())
+            {
+                return Ok(new List<object>()); 
+            }
+
+            var result = new List<object>();
+
+            foreach (var user in users)
+            {
+                byte[]? photoBytes = null;
+                try
+                {
+                    photoBytes = await _photosUsers.GetPhotoByUserIdAsync(user.Id);
+                }
+                catch (FileNotFoundException)
+                {
+                    
+                }
+
+                result.Add(new
+                {
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.Birthday,
+                    user.BIO,
+                    user.CreatedAt,
+                    user.Sex,
+                    user.Login,
+                    PhotoBytes = photoBytes
+                });
+            }
+
+            return Ok(result);
+        }
+
+
     }
 }
