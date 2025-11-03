@@ -118,7 +118,7 @@ namespace TaigerDesktop.Pages
         public void RemoveUser(Users user)
         {
             AllUsers?.Remove(user);
-            // ApplyFilter() вызовется автоматически через сеттер AllUsers
+            FilteredUsers?.Remove(user);
         }
 
         // INotifyPropertyChanged
