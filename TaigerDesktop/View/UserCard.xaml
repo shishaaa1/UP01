@@ -18,12 +18,7 @@
                 <!-- Кнопки -->
             </Grid.ColumnDefinitions>
 
-            <!-- Аватар -->
-            <Ellipse Width="70" Height="70" Grid.Column="0">
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding AvatarPath}" Stretch="UniformToFill"/>
-                </Ellipse.Fill>
-            </Ellipse>
+            
 
             <!-- Все поля -->
             <Grid Grid.Column="1" Margin="20 0 20 0">

@@ -19,23 +19,7 @@ namespace TaigerDesktop.Models
         public string Password { get; set; }
         public DateTime BirthDay => Birthday;
         public bool Sex { get; set; }
-        public string AvatarPath { get; set; }
-        private BitmapImage ByteArrayToImage(byte[] byteArray)
-        {
-            if (byteArray == null || byteArray.Length == 0) return null;
-
-            var image = new BitmapImage();
-            using (var stream = new System.IO.MemoryStream(byteArray))
-            {
-                stream.Position = 0;
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.StreamSource = stream;
-                image.EndInit();
-                image.Freeze();
-            }
-            return image;
-        }
+       
     }
 }
 

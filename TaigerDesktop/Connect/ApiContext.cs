@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using TaigerDesktop.Models;
 
 namespace TaigerDesktop.Connect
@@ -99,11 +103,14 @@ namespace TaigerDesktop.Connect
         {
             try
             {
-                var response = await _httpClient.GetAsync("UserController/GetUserAndPhoto");
+                var response = await _httpClient.GetAsync("UserController/GetUsers");
+
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadFromJsonAsync<List<Users>>() ?? new List<Users>();
+                    var users = await response.Content.ReadFromJsonAsync<List<Users>>();
+                    return users ?? new List<Users>();
                 }
+
                 return new List<Users>();
             }
             catch (Exception ex)
@@ -196,6 +203,7 @@ namespace TaigerDesktop.Connect
             public string Login { get; set; }
             public byte[] PhotoData { get; set; }
         }
+        
     }
 
 }
