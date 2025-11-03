@@ -35,7 +35,8 @@
             <ItemsControl ItemsSource="{Binding FilteredUsers}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:UserCard UserDeleted="OnUserDeleted"/>
+                        <local:UserCard DataContext="{Binding}" 
+                            UserDeleted="OnUserDeleted"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
