@@ -3,6 +3,7 @@ package com.example.boobleproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class Mainpage extends AppCompatActivity {
     private ProfileAdapter adapter;
     private List<Profile> profileQueue;
     private ImageView swipeIndicator;
+    ImageButton btnProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +39,17 @@ public class Mainpage extends AppCompatActivity {
         setupRecyclerView();   // ✅ Создаём и прикрепляем адаптер
         setupSwipeHelper();    // ✅ Подключаем свайпы
         loadInitialProfiles(); // ✅ Загружаем данные
+
+
+        btnProfile = findViewById(R.id.btn_account);
+
+        btnProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(Mainpage.this, Personalaccount.class);
+            startActivity(intent);
+        });
     }
 
-    public void Account(View view) {
-        Intent intent = new Intent(this, Personalaccount.class);
-        startActivity(intent);
-    }
+
     public void Back(View view) {
         Intent intent = new Intent(this, Mainpage.class);
         startActivity(intent);

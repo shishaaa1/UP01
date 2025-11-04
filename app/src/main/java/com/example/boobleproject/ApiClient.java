@@ -1,5 +1,7 @@
 package com.example.boobleproject;
 
+import com.google.gson.GsonBuilder;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -13,6 +15,8 @@ public class ApiClient {
     private static Retrofit retrofit;
 
     public static ApiService getApiService() {
+
+
         if (retrofit == null) {
             // 🔹 ЛОГИРОВАНИЕ — увидишь ВСЁ: редиректы, тело, ошибки
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -30,7 +34,11 @@ public class ApiClient {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(client)               // ← Используем наш клиент
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(
+                            new GsonBuilder()
+                                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss") // <-- сюда
+                                    .create()
+                    ))
                     .build();
         }
         return retrofit.create(ApiService.class);

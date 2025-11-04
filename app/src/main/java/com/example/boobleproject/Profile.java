@@ -10,7 +10,7 @@ public class Profile {
     public boolean gender;
     public String bio;
     public int photoRes;
-    public byte[] photoBytes;
+    public String photoBytes;
 
     public Profile(int id, String firstName, String lastName, Date birthday,
                   boolean gender, String bio,int photoRes) {
@@ -37,7 +37,7 @@ public class Profile {
     }
     public String getBio() { return bio; }
     public int getPhotoRes() { return photoRes; }
-    public byte[] getPhotoPath() { return photoBytes; }
+    public String getPhotoBytes() { return photoBytes; }
 
 
     public String getFullName() {
