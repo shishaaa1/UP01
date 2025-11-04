@@ -6,6 +6,8 @@ using tiger_API.Service;
 using tiger_API.Context;
 using System.Data.Common;
 using tiger_API;
+using Microsoft.AspNetCore.SignalR;
+using tiger_API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,10 +16,14 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IUsers, UsersService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IAdmin, AdminService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IPhotosUsers, PhotosUsersService>(); // реализация интерфейса и сервиса
+builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<UsersContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<AdminContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<PhotosUserContext>(); // реализация интерфейса и сервиса
+builder.Services.AddScoped<MessegeContext>(); // реализация интерфейса и сервиса
 
+
+builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
