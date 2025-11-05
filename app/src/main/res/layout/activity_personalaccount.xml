@@ -120,36 +120,8 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <!-- Возраст -->
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="24dp"
-                            app:boxBackgroundMode="outline"
-                            app:boxCornerRadiusBottomEnd="12dp"
-                            app:boxCornerRadiusBottomStart="12dp"
-                            app:boxCornerRadiusTopEnd="12dp"
-                            app:boxCornerRadiusTopStart="12dp">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/et_age"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/black"
-                                android:hint="Дата рождения"
-
-                                android:inputType="number"
-                                android:textSize="16sp" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
 
                         <!-- Пол -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Ваш пол"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:layout_marginBottom="8dp" />
 
                         <com.google.android.material.button.MaterialButtonToggleGroup
                             android:id="@+id/gender_group"
@@ -157,34 +129,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="24dp"
                             app:singleSelection="true"
-                            app:checkedButton="@id/btn_male">
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_male"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:placeholderTextColor="@color/black"
-                                android:textColor="@color/black"
-                                android:text="М"
-                                android:textSize="18sp"
-
-                                app:iconGravity="textStart"
-                                app:iconTint="@color/primary" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_female"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                                android:layout_width="wrap_content"
-                                app:placeholderTextColor="@color/black"
-                                android:layout_height="wrap_content"
-                                android:text="Ж"
-                                android:textColor="@color/black"
-                                android:textSize="18sp"
-                                app:iconGravity="textStart"
-                                app:iconTint="@color/primary" />
-
-                        </com.google.android.material.button.MaterialButtonToggleGroup>
+                            app:checkedButton="@id/btn_male"/>
 
                         <!-- Биография -->
                         <com.google.android.material.textfield.TextInputLayout

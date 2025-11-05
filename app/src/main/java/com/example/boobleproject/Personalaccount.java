@@ -1,5 +1,6 @@
 package com.example.boobleproject;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -21,9 +22,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,9 +45,13 @@ public class Personalaccount extends AppCompatActivity {
     private TextView firstNameTextView;
     private TextView lastNameTextView;
     private TextView bioTextView;
-
+    private int currentUserId;
+    private int currentPhotoId = -1;
+    private boolean photoChanged = false;
+    private Uri selectedImageUri;
     private CircleImageView profilePhoto;
     private ImageButton bthAddPhoto;
+    private MaterialButton btnEditProfile;
     private SharedPreferences prefs;
     private static final String PREFS_NAME = "ProfilePrefs";
     private static final String PHOTO_PATH_KEY = "profile_photo_path";
@@ -61,24 +70,27 @@ public class Personalaccount extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_personalaccount);
 
+
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         profilePhoto = findViewById(R.id.iv_profile_photo);
         bthAddPhoto = findViewById(R.id.btn_add_photo);
-
+        btnEditProfile = findViewById(R.id.btn_edit_profile);
         firstNameTextView = findViewById(R.id.et_first_name);
         lastNameTextView = findViewById(R.id.et_last_name);
         bioTextView = findViewById(R.id.et_bio);
 
         bthAddPhoto.setOnClickListener(v -> openGallery());
+        btnEditProfile.setOnClickListener(v -> EditProfile());
         loadSavedPhoto();
 
         // Загружаем userId из SharedPreferences
         SharedPreferences userPrefs = getSharedPreferences("userPrefs", MODE_PRIVATE);
-        int userId = userPrefs.getInt("userId", -1);
+        currentUserId = userPrefs.getInt("userId", -1); // Сохраняем в поле класса
 
-        if (userId != -1) {
-            loadUserProfile(userId);
-            //loadUserPhoto(userId); // <-- вот эта строка
+        Log.d("PersonalAccount", "Загружен userId: " + currentUserId); // Добавьте логирование
+
+        if (currentUserId != -1) {
+            loadUserProfile(currentUserId);
         } else {
             Toast.makeText(this, "Ошибка: пользователь не найден", Toast.LENGTH_SHORT).show();
         }
@@ -153,40 +165,7 @@ public class Personalaccount extends AppCompatActivity {
         }
     }
 
-    private void loadUserPhoto(int userId) {
-        ApiService apiService = ApiClient.getApiService();
-        apiService.getPhotoByUser(userId).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    // Получаем байты из ответа
-                    byte[] photoBytes;
-                    try {
-                        photoBytes = response.body().bytes();
-                    } catch (IOException e) {
-                        Toast.makeText(Personalaccount.this, "Ошибка чтения фото", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
 
-                    // Преобразуем в Bitmap
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.length);
-                    if (bitmap != null) {
-                        profilePhoto.setImageBitmap(bitmap);
-                    } else {
-                        Toast.makeText(Personalaccount.this, "Ошибка отображения фото", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    // Если фото нет — можешь поставить дефолтную картинку
-                    profilePhoto.setImageResource(R.drawable.alt1);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(Personalaccount.this, "Ошибка загрузки фото: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }//
 
     private void loadUserProfile(int userId) {
         ApiService apiService = ApiClient.getApiService();
@@ -203,23 +182,18 @@ public class Personalaccount extends AppCompatActivity {
                         byte[] bytes = android.util.Base64.decode(user.getPhotoBytes(), android.util.Base64.DEFAULT);
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         profilePhoto.setImageBitmap(bitmap);
+                        // Получаем ID фото пользователя
+                        loadUserPhotoId(userId);
                     } else {
                         loadSavedPhoto();
                     }
-                }
-            }
-            private void savePhotoToInternalStorage(Bitmap bitmap) {
-                try {
-                    File file = new File(getFilesDir(), "profile_photo.jpg");
-                    FileOutputStream fos = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                    fos.close();
 
-                    savePhotoPath(file.getAbsolutePath());
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    // Убедитесь, что currentUserId установлен
+                    currentUserId = userId;
+                    Log.d("PersonalAccount", "currentUserId установлен: " + currentUserId);
                 }
             }
+
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
                 Log.e("PersonalAccount", "Ошибка при загрузке профиля", t);
@@ -227,6 +201,25 @@ public class Personalaccount extends AppCompatActivity {
             }
         });
     }
+
+    private void loadUserPhotoId(int userId) {
+        ApiService apiService = ApiClient.getApiService();
+        apiService.getUserPhotoId(userId).enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    currentPhotoId = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Log.e("PersonalAccount", "Ошибка при загрузке ID фото", t);
+            }
+        });
+    }
+
+
 
 
     @Override
@@ -239,8 +232,188 @@ public class Personalaccount extends AppCompatActivity {
     }
 
     public void EditProfile(){
+        if (currentUserId <= 0) {
+            Toast.makeText(this, "Ошибка: ID пользователя не найден", Toast.LENGTH_SHORT).show();
+            Log.e("PersonalAccount", "currentUserId = " + currentUserId);
+            return;
+        }
 
+        String firstName = firstNameTextView.getText().toString().trim();
+        String lastName = lastNameTextView.getText().toString().trim();
+        String bio = bioTextView.getText().toString().trim();
+
+        if (firstName.isEmpty() || lastName.isEmpty()) {
+            Toast.makeText(this, "Имя и фамилия обязательны для заполнения", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Log.d("PersonalAccount", "Обновление профиля для userId: " + currentUserId);
+
+        updateUserData(firstName, lastName, bio);
     }
+
+    private void updatePhoto() {
+        if (currentPhotoId != -1) {
+            deleteOldPhoto();
+        } else {
+            uploadNewPhoto();
+        }
+    }
+    private void updateUserData(String firstName, String lastName, String bio) {
+        ApiService apiService = ApiClient.getApiService();
+
+        Log.d("PersonalAccount", "Обновление пользователя: userId=" + currentUserId +
+                ", firstName=" + firstName + ", lastName=" + lastName + ", bio=" + bio);
+
+        RequestBody firstNameBody = RequestBody.create(MediaType.parse("text/plain"), firstName);
+        RequestBody lastNameBody = RequestBody.create(MediaType.parse("text/plain"), lastName);
+        RequestBody bioBody = RequestBody.create(MediaType.parse("text/plain"), bio);
+
+        apiService.updateUser(currentUserId, firstNameBody, lastNameBody, bioBody)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Log.d("PersonalAccount", "Response code: " + response.code());
+
+                        if (response.isSuccessful()) {
+                            if (photoChanged && selectedImageUri != null) {
+                                updatePhoto();
+                            } else {
+                                // УБИРАЕМ hideProgressDialog
+                                Toast.makeText(Personalaccount.this, "Профиль успешно обновлен", Toast.LENGTH_SHORT).show();
+                                loadUserProfile(currentUserId); // Обновляем данные на экране
+                            }
+                        } else {
+                            // УБИРАЕМ hideProgressDialog
+                            Log.e("PersonalAccount", "Ошибка при обновлении данных. Код: " + response.code());
+                            Toast.makeText(Personalaccount.this, "Ошибка при обновлении данных: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        // УБИРАЕМ hideProgressDialog
+                        Log.e("PersonalAccount", "Ошибка сети: " + t.getMessage(), t);
+                        Toast.makeText(Personalaccount.this, "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void deleteOldPhoto() {
+        ApiService apiService = ApiClient.getApiService();
+        apiService.deletePhoto(currentPhotoId).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    uploadNewPhoto();
+                } else {
+
+                    Toast.makeText(Personalaccount.this, "Ошибка при удалении старого фото", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                Toast.makeText(Personalaccount.this, "Ошибка при удалении фото: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void uploadNewPhoto() {
+        if (selectedImageUri == null) {
+            Toast.makeText(this, "Фото не выбрано", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            // Получаем InputStream из Uri
+            InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
+            if (inputStream == null) {
+                Toast.makeText(this, "Ошибка чтения фото", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Читаем байты из потока
+            byte[] photoBytes;
+            try {
+                // Создаем ByteArrayOutputStream для чтения байтов
+                java.io.ByteArrayOutputStream byteArrayOutputStream = new java.io.ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) != -1) {
+                    byteArrayOutputStream.write(buffer, 0, length);
+                }
+                photoBytes = byteArrayOutputStream.toByteArray();
+
+                // Закрываем потоки
+                inputStream.close();
+                byteArrayOutputStream.close();
+
+            } catch (IOException e) {
+                Toast.makeText(this, "Ошибка обработки фото", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Создаем временный файл из байтов (для Retrofit)
+            File tempFile = new File(getCacheDir(), "temp_photo.jpg");
+            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                fos.write(photoBytes);
+            }
+
+            // Подготавливаем запрос
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), tempFile);
+            MultipartBody.Part photoPart = MultipartBody.Part.createFormData("PhotoFile", "profile.jpg", requestFile);
+            RequestBody userIdBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(currentUserId));
+
+            // Отправляем запрос
+            ApiService apiService = ApiClient.getApiService();
+            apiService.uploadPhoto(userIdBody, photoPart).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    // Удаляем временный файл
+                    if (tempFile.exists()) {
+                        tempFile.delete();
+                    }
+
+                    if (response.isSuccessful()) {
+                        Toast.makeText(Personalaccount.this, "Профиль и фото успешно обновлены", Toast.LENGTH_SHORT).show();
+                        photoChanged = false;
+                        savePhotoLocally();
+                        // Обновляем профиль чтобы показать новое фото
+                        loadUserProfile(currentUserId);
+                    } else {
+                        Log.e("PersonalAccount", "Ошибка загрузки фото: " + response.code());
+                        Toast.makeText(Personalaccount.this, "Ошибка при загрузке фото: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Удаляем временный файл
+                    if (tempFile.exists()) {
+                        tempFile.delete();
+                    }
+
+                    Log.e("PersonalAccount", "Ошибка сети при загрузке фото", t);
+                    Toast.makeText(Personalaccount.this, "Ошибка сети при загрузке фото: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e("PersonalAccount", "Ошибка в uploadNewPhoto", e);
+            Toast.makeText(this, "Ошибка при обработке фото", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void savePhotoLocally() {
+        if (selectedImageUri != null) {
+            String savedPath = copyImageToInternalStorage(selectedImageUri);
+            if (savedPath != null) {
+                savePhotoPath(savedPath);
+            }
+        }
+    }
+
 
 
 }

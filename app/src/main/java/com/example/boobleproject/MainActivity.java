@@ -28,6 +28,12 @@ public class MainActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
     }
 
+    public void goToRegistration(View view) {
+        Intent intent = new Intent(this, Registation.class);
+        startActivity(intent);
+    }
+
+
     public void onLoginClick(View view) {
         String login = loginEditText.getText().toString();
         String password = passwordEditText.getText().toString();
