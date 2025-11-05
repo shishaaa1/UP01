@@ -186,7 +186,7 @@ public class Personalaccount extends AppCompatActivity {
                 Toast.makeText(Personalaccount.this, "Ошибка загрузки фото: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }//
 
     private void loadUserProfile(int userId) {
         ApiService apiService = ApiClient.getApiService();
