@@ -186,8 +186,6 @@ namespace tiger_API.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> UpdateUser(int userId, [FromForm] UpdateUserDto dto)
         {
-            await _photosUsers.DeletePhotosByUserIdAsync(userId);
-            await _photosUsers.UploadPhotoAsync()
             await _tigger.UpdateUserAsync(userId, dto);
             return Ok();
         }
