@@ -7,12 +7,14 @@ namespace tiger_API.Context
     {
         public DbSet<Message> Messages { get; set; }
         public DbSet<Users> Users { get; set; }
+        public DbSet<PhotosUsers> PhotosUsers {get;set;} 
 
         public MessegeContext()
         {
             Database.EnsureCreated();
             Messages.Load();
             Users.Load();
+            PhotosUsers.Load();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
