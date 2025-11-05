@@ -183,7 +183,8 @@ namespace tiger_API.Controllers
 
             return Ok(result);
         }
-        [HttpPut("{userId}")]
+        [Route("UpdateUsers")]
+        [HttpPut]
         public async Task<IActionResult> UpdateUser(int userId, [FromForm] UpdateUserDto dto)
         {
             await _tigger.UpdateUserAsync(userId, dto);
