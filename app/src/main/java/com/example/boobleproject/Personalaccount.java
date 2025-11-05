@@ -81,7 +81,6 @@ public class Personalaccount extends AppCompatActivity {
 
         bthAddPhoto.setOnClickListener(v -> openGallery());
         btnEditProfile.setOnClickListener(v -> EditProfile());
-        loadSavedPhoto();
 
         // Загружаем userId из SharedPreferences
         SharedPreferences userPrefs = getSharedPreferences("userPrefs", MODE_PRIVATE);
@@ -102,55 +101,26 @@ public class Personalaccount extends AppCompatActivity {
 
     private void setProfilePhoto(Uri uri) {
         try {
-            // Копируем файл во внутреннее хранилище приложения
-            String savedPath = copyImageToInternalStorage(uri);
-            if (savedPath != null) {
-                // Загружаем из внутреннего хранилища
-                loadImageFromInternalStorage(savedPath);
-                // Сохраняем путь
-                savePhotoPath(savedPath);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+            selectedImageUri = uri;
+            photoChanged = true;
 
-    private String copyImageToInternalStorage(Uri uri) {
-        try {
+            // УБИРАЕМ сохранение на устройство
+            // Просто показываем выбранное фото
             InputStream inputStream = getContentResolver().openInputStream(uri);
-            if (inputStream == null) return null;
-
-            // Создаем файл во внутреннем хранилище
-            File internalFile = new File(getFilesDir(), "profile_photo.jpg");
-            FileOutputStream outputStream = new FileOutputStream(internalFile);
-
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, length);
-            }
-
-            inputStream.close();
-            outputStream.close();
-
-            return internalFile.getAbsolutePath();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void loadImageFromInternalStorage(String filePath) {
-        try {
-            File file = new File(filePath);
-            if (file.exists()) {
-                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+            if (inputStream != null) {
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 profilePhoto.setImageBitmap(bitmap);
+                inputStream.close();
             }
+
+            Log.d("PersonalAccount", "Фото выбрано, photoChanged = " + photoChanged);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+
 
     private void savePhotoPath(String filePath) {
         SharedPreferences.Editor editor = prefs.edit();
@@ -158,12 +128,6 @@ public class Personalaccount extends AppCompatActivity {
         editor.apply();
     }
 
-    private void loadSavedPhoto() {
-        String savedPath = prefs.getString(PHOTO_PATH_KEY, null);
-        if (savedPath != null) {
-            loadImageFromInternalStorage(savedPath);
-        }
-    }
 
 
 
@@ -185,10 +149,11 @@ public class Personalaccount extends AppCompatActivity {
                         // Получаем ID фото пользователя
                         loadUserPhotoId(userId);
                     } else {
-                        loadSavedPhoto();
+                        // УБИРАЕМ loadSavedPhoto()
+                        // Ставим дефолтную картинку если фото нет в API
+                        profilePhoto.setImageResource(R.drawable.alt1); // или другая дефолтная картинка
                     }
 
-                    // Убедитесь, что currentUserId установлен
                     currentUserId = userId;
                     Log.d("PersonalAccount", "currentUserId установлен: " + currentUserId);
                 }
@@ -202,6 +167,8 @@ public class Personalaccount extends AppCompatActivity {
         });
     }
 
+
+
     private void loadUserPhotoId(int userId) {
         ApiService apiService = ApiClient.getApiService();
         apiService.getUserPhotoId(userId).enqueue(new Callback<Integer>() {
@@ -209,18 +176,52 @@ public class Personalaccount extends AppCompatActivity {
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     currentPhotoId = response.body();
+                    Log.d("PersonalAccount", "Получен photoId: " + currentPhotoId);
+                } else {
+                    currentPhotoId = -1;
+                    Log.d("PersonalAccount", "Фото не найдено, photoId: " + currentPhotoId);
                 }
             }
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
                 Log.e("PersonalAccount", "Ошибка при загрузке ID фото", t);
+                currentPhotoId = -1;
             }
         });
     }
 
+    private void updatePhoto() {
+        Log.d("PersonalAccount", "updatePhoto: currentPhotoId = " + currentPhotoId);
+        if (currentPhotoId != -1) {
+            deleteOldPhoto();
+        } else {
+            uploadNewPhoto();
+        }
+    }
 
 
+    private void deleteOldPhoto() {
+        ApiService apiService = ApiClient.getApiService();
+        apiService.deletePhoto(currentPhotoId).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d("PersonalAccount", "Старое фото удалено, ID: " + currentPhotoId);
+                    uploadNewPhoto();
+                } else {
+                    Log.e("PersonalAccount", "Ошибка при удалении старого фото: " + response.code());
+                    Toast.makeText(Personalaccount.this, "Ошибка при удалении старого фото", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("PersonalAccount", "Ошибка при удалении фото", t);
+                Toast.makeText(Personalaccount.this, "Ошибка при удалении фото: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() {
@@ -234,7 +235,6 @@ public class Personalaccount extends AppCompatActivity {
     public void EditProfile(){
         if (currentUserId <= 0) {
             Toast.makeText(this, "Ошибка: ID пользователя не найден", Toast.LENGTH_SHORT).show();
-            Log.e("PersonalAccount", "currentUserId = " + currentUserId);
             return;
         }
 
@@ -248,17 +248,9 @@ public class Personalaccount extends AppCompatActivity {
         }
 
         Log.d("PersonalAccount", "Обновление профиля для userId: " + currentUserId);
-
         updateUserData(firstName, lastName, bio);
     }
 
-    private void updatePhoto() {
-        if (currentPhotoId != -1) {
-            deleteOldPhoto();
-        } else {
-            uploadNewPhoto();
-        }
-    }
     private void updateUserData(String firstName, String lastName, String bio) {
         ApiService apiService = ApiClient.getApiService();
 
@@ -273,18 +265,18 @@ public class Personalaccount extends AppCompatActivity {
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
-                        Log.d("PersonalAccount", "Response code: " + response.code());
+                        Log.d("PersonalAccount", "UpdateUser Response code: " + response.code());
 
                         if (response.isSuccessful()) {
+                            Log.d("PersonalAccount", "Данные пользователя обновлены, проверяем фото: photoChanged=" + photoChanged);
                             if (photoChanged && selectedImageUri != null) {
+                                Log.d("PersonalAccount", "Начинаем процесс обновления фото");
                                 updatePhoto();
                             } else {
-                                // УБИРАЕМ hideProgressDialog
                                 Toast.makeText(Personalaccount.this, "Профиль успешно обновлен", Toast.LENGTH_SHORT).show();
-                                loadUserProfile(currentUserId); // Обновляем данные на экране
+                                loadUserProfile(currentUserId);
                             }
                         } else {
-                            // УБИРАЕМ hideProgressDialog
                             Log.e("PersonalAccount", "Ошибка при обновлении данных. Код: " + response.code());
                             Toast.makeText(Personalaccount.this, "Ошибка при обновлении данных: " + response.code(), Toast.LENGTH_SHORT).show();
                         }
@@ -292,95 +284,70 @@ public class Personalaccount extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        // УБИРАЕМ hideProgressDialog
-                        Log.e("PersonalAccount", "Ошибка сети: " + t.getMessage(), t);
+                        Log.e("PersonalAccount", "Ошибка сети при обновлении данных", t);
                         Toast.makeText(Personalaccount.this, "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-    private void deleteOldPhoto() {
-        ApiService apiService = ApiClient.getApiService();
-        apiService.deletePhoto(currentPhotoId).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    uploadNewPhoto();
-                } else {
 
-                    Toast.makeText(Personalaccount.this, "Ошибка при удалении старого фото", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                Toast.makeText(Personalaccount.this, "Ошибка при удалении фото: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void uploadNewPhoto() {
+        Log.d("PersonalAccount", "uploadNewPhoto вызван, selectedImageUri: " + selectedImageUri);
+
         if (selectedImageUri == null) {
+            Log.e("PersonalAccount", "selectedImageUri is null");
             Toast.makeText(this, "Фото не выбрано", Toast.LENGTH_SHORT).show();
             return;
         }
 
         try {
-            // Получаем InputStream из Uri
             InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
             if (inputStream == null) {
+                Log.e("PersonalAccount", "Не удалось открыть InputStream");
                 Toast.makeText(this, "Ошибка чтения фото", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Читаем байты из потока
-            byte[] photoBytes;
-            try {
-                // Создаем ByteArrayOutputStream для чтения байтов
-                java.io.ByteArrayOutputStream byteArrayOutputStream = new java.io.ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = inputStream.read(buffer)) != -1) {
-                    byteArrayOutputStream.write(buffer, 0, length);
-                }
-                photoBytes = byteArrayOutputStream.toByteArray();
+            Log.d("PersonalAccount", "InputStream получен, создаем временный файл");
 
-                // Закрываем потоки
-                inputStream.close();
-                byteArrayOutputStream.close();
+            File file = new File(getCacheDir(), "temp_photo_" + System.currentTimeMillis() + ".jpg");
+            FileOutputStream outputStream = new FileOutputStream(file);
 
-            } catch (IOException e) {
-                Toast.makeText(this, "Ошибка обработки фото", Toast.LENGTH_SHORT).show();
-                return;
+            byte[] buffer = new byte[1024];
+            int length;
+            int totalBytes = 0;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+                totalBytes += length;
             }
 
-            // Создаем временный файл из байтов (для Retrofit)
-            File tempFile = new File(getCacheDir(), "temp_photo.jpg");
-            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                fos.write(photoBytes);
-            }
+            inputStream.close();
+            outputStream.close();
 
-            // Подготавливаем запрос
-            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), tempFile);
+            Log.d("PersonalAccount", "Временный файл создан, размер: " + totalBytes + " байт");
+
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/jpeg"), file);
             MultipartBody.Part photoPart = MultipartBody.Part.createFormData("PhotoFile", "profile.jpg", requestFile);
             RequestBody userIdBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(currentUserId));
 
-            // Отправляем запрос
+            Log.d("PersonalAccount", "Отправляем запрос UploadPhoto для userId: " + currentUserId);
+
             ApiService apiService = ApiClient.getApiService();
             apiService.uploadPhoto(userIdBody, photoPart).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    // Удаляем временный файл
-                    if (tempFile.exists()) {
-                        tempFile.delete();
+                    Log.d("PersonalAccount", "UploadPhoto Response code: " + response.code());
+
+                    if (file.exists()) {
+                        file.delete();
                     }
 
                     if (response.isSuccessful()) {
+                        Log.d("PersonalAccount", "Фото успешно загружено");
                         Toast.makeText(Personalaccount.this, "Профиль и фото успешно обновлены", Toast.LENGTH_SHORT).show();
                         photoChanged = false;
-                        savePhotoLocally();
-                        // Обновляем профиль чтобы показать новое фото
-                        loadUserProfile(currentUserId);
+                        // УБИРАЕМ savePhotoLocally()
+                        loadUserProfile(currentUserId); // Обновляем данные из API
                     } else {
                         Log.e("PersonalAccount", "Ошибка загрузки фото: " + response.code());
                         Toast.makeText(Personalaccount.this, "Ошибка при загрузке фото: " + response.code(), Toast.LENGTH_SHORT).show();
@@ -389,12 +356,12 @@ public class Personalaccount extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    // Удаляем временный файл
-                    if (tempFile.exists()) {
-                        tempFile.delete();
+                    Log.e("PersonalAccount", "Ошибка сети при загрузке фото", t);
+
+                    if (file.exists()) {
+                        file.delete();
                     }
 
-                    Log.e("PersonalAccount", "Ошибка сети при загрузке фото", t);
                     Toast.makeText(Personalaccount.this, "Ошибка сети при загрузке фото: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -404,16 +371,4 @@ public class Personalaccount extends AppCompatActivity {
             Toast.makeText(this, "Ошибка при обработке фото", Toast.LENGTH_SHORT).show();
         }
     }
-
-    private void savePhotoLocally() {
-        if (selectedImageUri != null) {
-            String savedPath = copyImageToInternalStorage(selectedImageUri);
-            if (savedPath != null) {
-                savePhotoPath(savedPath);
-            }
-        }
-    }
-
-
-
 }

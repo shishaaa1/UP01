@@ -67,5 +67,4 @@ public interface ApiService {
 
     @GET("api/PhotoController/GetUserPhotoId")
     Call<Integer> getUserPhotoId(@Query("userId") int userId);
-
 }
