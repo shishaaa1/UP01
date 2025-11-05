@@ -183,6 +183,18 @@ namespace tiger_API.Controllers
 
             return Ok(result);
         }
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> UpdateUser(int userId, [FromForm] UpdateUserDto dto)
+        {
+            if (dto == null)
+                return BadRequest("Invalid data");
+
+            var success = await _tigger.UpdateUserAsync(userId, dto);
+            if (!success)
+                return NotFound($"User with ID {userId} not found");
+
+            return Ok("User updated successfully");
+        }
 
 
     }

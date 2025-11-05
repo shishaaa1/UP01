@@ -11,5 +11,6 @@ namespace tiger_API.Itreface
         Task<Users> GetUserById(int id);
         Task<List<Users>> GetListUser();
         Task<List<Users>> GetAllUsersAsync();
+        Task<bool> UpdateUserAsync(int userId, UpdateUserDto dto);
     }
 }

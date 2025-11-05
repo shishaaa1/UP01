@@ -55,7 +55,25 @@ namespace tiger_API.Service
         {
             return await _Userscontext.Users.ToListAsync();
         }
+        public async Task<bool> UpdateUserAsync(int userId, UpdateUserDto dto)
+        {
+            var user = await _Userscontext.Users.FindAsync(userId);
+            if (user == null)
+                return false;
 
+            if (!string.IsNullOrEmpty(dto.FirstName))
+                user.FirstName = dto.FirstName;
+
+            if (!string.IsNullOrEmpty(dto.LastName))
+                user.LastName = dto.LastName;
+
+            if (!string.IsNullOrEmpty(dto.BIO))
+                user.BIO = dto.BIO;
+
+            _Userscontext.Users.Update(user);
+            await _Userscontext.SaveChangesAsync();
+            return true;
+        }
         public async Task<List<DailyStat>> GetRegistrationsCountToday()
         {
             var today = DateTime.UtcNow.Date;
