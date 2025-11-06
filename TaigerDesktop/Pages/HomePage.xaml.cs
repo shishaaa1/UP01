@@ -23,7 +23,7 @@ namespace TaigerDesktop.Pages
         public HomePage()
         {
             InitializeComponent();
-            DataContext = new { CurrentAdminLogin = App.CurrentAdminLogin ?? "admin" };
+            DataContext = App.Instance;
         }
     }
 }

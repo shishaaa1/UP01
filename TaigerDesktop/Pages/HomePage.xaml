@@ -18,7 +18,7 @@
         <Border Background="#80000000" 
                 CornerRadius="20"
                 Width="500"
-                Height="180"
+                Height="200"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
             <StackPanel VerticalAlignment="Center"
@@ -32,12 +32,18 @@
                            Foreground="White"
                            Margin="0 0 0 15"/>
 
-                <!-- Логин администратора -->
-                <TextBlock Text="{Binding CurrentAdminLogin, FallbackValue='admin'}"
+                <!-- Никнейм администратора -->
+                <TextBlock Text="{Binding CurrentAdminName, FallbackValue='Администратор'}" 
                            FontSize="22"
                            FontWeight="Medium"
                            Foreground="#E0E7FF"
                            Margin="0 0 0 8"/>
+
+                <!-- Логин администратора (дополнительная информация) -->
+                <TextBlock Text="{Binding CurrentAdminLogin, StringFormat='Логин: {0}', FallbackValue='Неизвестный'}" 
+                           FontSize="14"
+                           Foreground="#A0A0A0"
+                           Margin="0 0 0 5"/>
 
                 <!-- Подпись -->
                 <TextBlock Text="Вы вошли как администратор"

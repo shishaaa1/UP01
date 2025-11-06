@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -60,13 +61,54 @@ namespace TaigerDesktop.Connect
                 return false;
             }
         }
-
+       
         public void Logout()
         {
             CurrentLogin = string.Empty;
             IsAuthenticated = false;
         }
+        public async Task<bool> LoginAdminAAsync(string login, string password)
+        {
+            try
+            {
+                var formData = new Dictionary<string, string>
+        {
+            { "login", login },
+            { "password", password }
+        };
 
+                var content = new FormUrlEncodedContent(formData);
+                var response = await _httpClient.PostAsync("AdminController/GetLoginAndNick", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseJson = await response.Content.ReadAsStringAsync();
+                    var result = JsonSerializer.Deserialize<AdminLoginResponse>(responseJson, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (result != null)
+                    {
+                        CurrentLogin = result.Login;
+                        IsAuthenticated = true;
+
+                        // Передаём данные в App для привязки
+                        App.SetAdminData(result.Login, result.Nickname);
+                        return true;
+                    }
+                }
+
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Ошибка входа: {error}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка авторизации: {ex.Message}");
+                return false;
+            }
+        }
 
 
         public async Task<Admin> AddAdminAsync(Admin user)
@@ -203,7 +245,14 @@ namespace TaigerDesktop.Connect
             public string Login { get; set; }
             public byte[] PhotoData { get; set; }
         }
-        
+
+        private class AdminLoginResponse
+        {
+            public int AdminId { get; set; }
+            public string Login { get; set; }
+            public string Nickname { get; set; }
+        }
+
     }
 
 }
