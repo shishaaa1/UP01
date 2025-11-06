@@ -65,7 +65,7 @@ public interface ApiService {
             @Part("UserId") RequestBody userId,
             @Part MultipartBody.Part photoFile
     );
-
+///
     @DELETE("api/PhotoController/DeletePhoto")
     Call<ResponseBody> deletePhoto(@Query("id") int photoId);
 
