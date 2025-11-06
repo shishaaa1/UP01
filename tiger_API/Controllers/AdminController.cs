@@ -45,5 +45,36 @@ namespace tiger_API.Controllers
 
             return Ok(new { AdminId = result });
         }
+
+        /// <summary>
+        /// Метод что бы узнать ник админа
+        /// </summary>
+        /// <remarks></remarks>
+        /// <returns></returns>
+        [HttpPost("LoginAdminName")]
+        public async Task<IActionResult> LoginAdminName([FromForm] string login, [FromForm] string password)
+        {
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
+                return BadRequest("Логин и пароль обязательны");
+
+            var result = await _admin.LoginAdminName(login, password);
+
+            return Ok(result);
+        }
+        /// <summary>
+        /// Метод что бы узнать Login админа
+        /// </summary>
+        /// <remarks></remarks>
+        /// <returns></returns>
+        [HttpPost("LoginAdminLogin")]
+        public async Task<IActionResult> LoginAdminLogin([FromForm] string login, [FromForm] string password)
+        {
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
+                return BadRequest("Логин и пароль обязательны");
+
+            var result = await _admin.LoginAdminLogin(login, password);
+
+            return Ok(result);
+        }
     }
 }

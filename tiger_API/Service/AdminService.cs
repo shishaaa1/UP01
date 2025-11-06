@@ -24,5 +24,15 @@ namespace tiger_API.Service
             Admin admin = _Adnmincontext.Admin.Where(x => x.Login == login && x.Password == password).First();
             return admin.Id;
         }
+        public async Task<string> LoginAdminLogin(string login, string password)
+        {
+            Admin admin = _Adnmincontext.Admin.Where(x => x.Login == login && x.Password == password).First();
+            return admin.Login;
+        }
+        public async Task<string> LoginAdminName(string login, string password)
+        {
+            Admin admin = _Adnmincontext.Admin.Where(x => x.Login == login && x.Password == password).First();
+            return admin.Nickname;
+        }
     }
 }

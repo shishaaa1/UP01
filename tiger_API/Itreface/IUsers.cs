@@ -12,5 +12,6 @@ namespace tiger_API.Itreface
         Task<List<Users>> GetListUser();
         Task<List<Users>> GetAllUsersAsync();
         Task<bool> UpdateUserAsync(int userId, UpdateUserDto dto);
+        Task<List<Users>> GetUsersOfOppositeSexAsync(int userId);
     }
 }

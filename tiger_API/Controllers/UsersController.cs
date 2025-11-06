@@ -191,6 +191,17 @@ namespace tiger_API.Controllers
             return Ok();
         }
 
-
+        /// <summary>
+        /// Получение всех пользователей противоположного пола по ID текущего пользователя
+        /// </summary>
+        /// <param name="userId">ID текущего пользователя</param>
+        /// <returns>Список пользователей противоположного пола</returns>
+        [Route("GetOppositeSexUsers")]
+        [HttpGet]
+        public async Task<ActionResult<List<Users>>> GetOppositeSexUsers([FromQuery] int userId)
+        {
+            var users = await _tigger.GetUsersOfOppositeSexAsync(userId);
+            return Ok(users);
+        }
     }
 }

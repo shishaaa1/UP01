@@ -101,6 +101,15 @@ namespace tiger_API.Service
             return stats;
         }
 
-        
+        public async Task<List<Users>> GetUsersOfOppositeSexAsync(int userId)
+        {
+            var currentUser = await _Userscontext.Users.FindAsync(userId);
+            if (currentUser == null)
+                return new List<Users>();
+            return await _Userscontext.Users
+                .Where(u => u.Id != userId && u.Sex != currentUser.Sex)
+                .ToListAsync();
+        }
+
     }
 }
