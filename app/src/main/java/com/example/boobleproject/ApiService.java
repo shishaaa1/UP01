@@ -1,6 +1,7 @@
 package com.example.boobleproject;
 
 import java.util.Date;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -47,13 +48,16 @@ public interface ApiService {
 
 
     @Multipart
-    @PUT("api/UserController/{userId}")
+    @PUT("api/UserController/UpdateUsers")
     Call<Void> updateUser(
-            @Path("userId") int userId,
+            @Query("userId") int userId,
             @Part("FirstName") RequestBody firstName,
             @Part("LastName") RequestBody lastName,
             @Part("BIO") RequestBody bio
     );
+
+    @GET("api/UserController/GetUserById")
+    Call<Profile> getUserById(@Query("id") int id);
 
     @Multipart
     @POST("api/PhotoController/UploadPhoto")
@@ -64,6 +68,12 @@ public interface ApiService {
 
     @DELETE("api/PhotoController/DeletePhoto")
     Call<ResponseBody> deletePhoto(@Query("id") int photoId);
+
+    @GET("api/UserController/GetUsers")
+    Call<List<Profile>> getAllUsers();
+
+    @GET("api/UserController/GetAllUsersWithPhoto")
+    Call<List<Profile>> getAllUsersWithPhoto();
 
     @GET("api/PhotoController/GetUserPhotoId")
     Call<Integer> getUserPhotoId(@Query("userId") int userId);

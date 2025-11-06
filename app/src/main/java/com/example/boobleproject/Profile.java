@@ -1,5 +1,6 @@
 package com.example.boobleproject;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class Profile {
@@ -39,7 +40,21 @@ public class Profile {
     public int getPhotoRes() { return photoRes; }
     public String getPhotoBytes() { return photoBytes; }
 
+    public int getAge() {
+        if (birthday == null) return 0;
 
+        Calendar today = Calendar.getInstance();
+        Calendar birthDate = Calendar.getInstance();
+        birthDate.setTime(birthday);
+
+        int age = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < birthDate.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+
+        return age;
+    }
     public String getFullName() {
         return firstName + " " + lastName;
     }

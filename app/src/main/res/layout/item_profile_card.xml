@@ -6,10 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
+
     app:cardCornerRadius="24dp"
     app:cardElevation="24dp">
 
     <RelativeLayout
+        android:minHeight="560dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

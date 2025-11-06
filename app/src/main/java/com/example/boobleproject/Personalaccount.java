@@ -146,11 +146,8 @@ public class Personalaccount extends AppCompatActivity {
                         byte[] bytes = android.util.Base64.decode(user.getPhotoBytes(), android.util.Base64.DEFAULT);
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         profilePhoto.setImageBitmap(bitmap);
-                        // Получаем ID фото пользователя
                         loadUserPhotoId(userId);
                     } else {
-                        // УБИРАЕМ loadSavedPhoto()
-                        // Ставим дефолтную картинку если фото нет в API
                         profilePhoto.setImageResource(R.drawable.alt1); // или другая дефолтная картинка
                     }
 
