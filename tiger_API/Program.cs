@@ -11,16 +11,24 @@ using tiger_API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(
+            System.Text.Unicode.UnicodeRanges.BasicLatin,
+            System.Text.Unicode.UnicodeRanges.Cyrillic); 
+    });
 
 builder.Services.AddScoped<IUsers, UsersService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IAdmin, AdminService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IPhotosUsers, PhotosUsersService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IIsLike, iSLikeService>();
 builder.Services.AddScoped<UsersContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<AdminContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<PhotosUserContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<MessegeContext>(); // реализация интерфейса и сервиса
+builder.Services.AddScoped<iSLikeContext>(); // реализация интерфейса и сервиса
 
 
 builder.Services.AddSignalR();

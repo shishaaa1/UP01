@@ -3,18 +3,16 @@ using tiger_API.Modell;
 
 namespace tiger_API.Context
 {
-    public class MessegeContext : DbContext
+    public class iSLikeContext:DbContext
     {
-        public DbSet<Message> Message { get; set; }
-        public DbSet<Users> Users { get; set; }
-        public DbSet<PhotosUsers> Photos {get;set;} 
+        public DbSet<Islike> Islike { get; set; }
+        public DbSet<Users> Users{ get; set; }
 
-        public MessegeContext()
+        public iSLikeContext()
         {
             Database.EnsureCreated();
-            Message.Load();
             Users.Load();
-            Photos.Load();
+            Islike.Load();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -26,7 +26,7 @@ namespace tiger_API.Controllers
         public async Task<IActionResult> WriteMessage(
             [FromQuery] int senderId,
             [FromQuery] int recipientId,
-            [FromBody] string text)
+            [FromForm] string text)
         {
             try
             {
@@ -67,6 +67,53 @@ namespace tiger_API.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, "Не удалось загрузить переписку.");
+            }
+        }
+
+        /// <summary>
+        /// Удалить конкретное сообщение по ID
+        /// </summary>
+        /// <param name="messageId">ID сообщения</param>
+        /// <returns></returns>
+        [HttpDelete("DeleteMessage")]
+        public async Task<IActionResult> DeleteMessage([FromQuery] int messageId)
+        {
+            try
+            {
+                await _messageService.DeleteMessageAsync(messageId);
+                return Ok("Сообщение успешно удалено.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Произошла внутренняя ошибка при удалении сообщения.");
+            }
+        }
+
+        /// <summary>
+        /// Удалить всю переписку между двумя пользователями
+        /// </summary>
+        /// <param name="userId1">ID первого пользователя</param>
+        /// <param name="userId2">ID второго пользователя</param>
+        /// <returns></returns>
+        [HttpDelete("DeleteConversation")]
+        public async Task<IActionResult> DeleteConversation([FromQuery] int userId1, [FromQuery] int userId2)
+        {
+            try
+            {
+                await _messageService.DeleteConversationAsync(userId1, userId2);
+                return Ok($"Переписка между пользователем {userId1} и {userId2} успешно удалена.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Произошла внутренняя ошибка при удалении переписки.");
             }
         }
     }

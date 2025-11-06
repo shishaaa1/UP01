@@ -2,12 +2,12 @@
 
 namespace tiger_API.Modell
 {
-    public class IsLike
+    public class Islike
     {
         public int Id {  get; set; }
-        public int FromUser { get; set; }
-        public int ToUser { get; set; }
-        public bool isLike { get; set; }
-        public DateTime CreateAt { get; set; }
+        public int FromUserid { get; set; }
+        public int ToUserid { get; set; }
+        public bool IsLike { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
