@@ -9,9 +9,10 @@ namespace tiger_API.Service
     {
         private readonly PhotosUserContext _photosUserContext;
         private readonly UsersContext _usersContext;
-        public PhotosUsersService(PhotosUserContext photosUserContext)
+        public PhotosUsersService(PhotosUserContext photosUserContext, UsersContext usersContext)
         {
             _photosUserContext = photosUserContext;
+            _usersContext = usersContext;
         }
 
         public async Task<int> UploadPhotoAsync(int userId, byte[] photoData)
@@ -63,11 +64,17 @@ namespace tiger_API.Service
             
         }
 
+        public async Task<int> GetUserPhotoIdAsync(int userId)
+        {
+            var photo= await _photosUserContext.Photos.FirstOrDefaultAsync(x=>x.UserId == userId);
+            return photo.Id;
+        }
+
         public async Task<List<PhotosUsers>> GetAllPhotosAsync()
         {
             return await _photosUserContext.Photos.ToListAsync();
         }
-        // Service/PhotosUsersService.cs
+        
 
         public async Task<List<UserPhotoDto>> GetAllPhotosWithUserDataAsync()
         {
