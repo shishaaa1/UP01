@@ -5,8 +5,7 @@ namespace tiger_API.Itreface
     public interface IAdmin
     {
         Task ReginA(Admin admin);
-        Task<int> LoginAdmin(string login, string password);
-        Task<string> LoginAdminName(string login, string password);
-        Task<string> LoginAdminLogin(string login, string password);
+        Task<int> LoginAdmin(string login, string password); 
+        Task<Admin> LoginAdminFull(string login, string password);
     }
 }

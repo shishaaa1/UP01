@@ -1,4 +1,5 @@
-﻿using tiger_API.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using tiger_API.Context;
 using tiger_API.Itreface;
 using tiger_API.Modell;
 
@@ -24,15 +25,12 @@ namespace tiger_API.Service
             Admin admin = _Adnmincontext.Admin.Where(x => x.Login == login && x.Password == password).First();
             return admin.Id;
         }
-        public async Task<string> LoginAdminLogin(string login, string password)
+        public async Task<Admin> LoginAdminFull(string login, string password)
         {
-            Admin admin = _Adnmincontext.Admin.Where(x => x.Login == login && x.Password == password).First();
-            return admin.Login;
-        }
-        public async Task<string> LoginAdminName(string login, string password)
-        {
-            Admin admin = _Adnmincontext.Admin.Where(x => x.Login == login && x.Password == password).First();
-            return admin.Nickname;
+            var admin = await _Adnmincontext.Admin
+                .FirstOrDefaultAsync(x => x.Login == login && x.Password == password);
+
+            return admin; // Вернёт null, если не найден
         }
     }
 }
