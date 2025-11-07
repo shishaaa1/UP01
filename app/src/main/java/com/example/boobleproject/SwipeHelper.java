@@ -57,6 +57,7 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
             animateNextCardAppearance();
 
             if (direction == ItemTouchHelper.LEFT) {
+
                 onSwipeLeft.run();
             } else {
                 onSwipeRight.run();

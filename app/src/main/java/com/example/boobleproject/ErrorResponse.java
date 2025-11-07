@@ -6,10 +6,10 @@ public class ErrorResponse {
     @SerializedName("message")
     private String message;
 
-    @SerializedName("field")  // Опционально, если есть поле с ошибкой
+    @SerializedName("field")
     private String field;
 
-    // Геттеры
+
     public String getMessage() { return message; }
     public String getField() { return field; }
 }

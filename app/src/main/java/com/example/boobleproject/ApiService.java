@@ -79,4 +79,13 @@ public interface ApiService {
     Call<ResponseBody> getPhotoByUserId(@Query("userId") int userId);
     @GET("api/PhotoController/GetUserPhotoId")
     Call<Integer> getUserPhotoId(@Query("userId") int userId);
+
+    @FormUrlEncoded
+    @POST("api/islike/send")
+    Call<Void> sendLike(
+            @Field("FromUserId") int fromUserId,
+            @Field("ToUserId") int toUserId,
+            @Field("IsLike") boolean isLike
+    );
 }
+

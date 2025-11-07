@@ -33,6 +33,7 @@ public class Mainpage extends AppCompatActivity {
 
     private RecyclerView rvProfiles;
     private ProfileAdapter adapter;
+    private LikeManager likeManager;
     private List<Profile> profileQueue;
     private ImageView swipeIndicator;
     private ImageButton btnProfile;
@@ -45,7 +46,7 @@ public class Mainpage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mainpage);
-
+        likeManager = new LikeManager(this);
         apiService = ApiClient.getApiService();
 
         // Получаем ID текущего пользователя
@@ -227,12 +228,10 @@ public class Mainpage extends AppCompatActivity {
                 rvProfiles,
                 swipeIndicator,
                 () -> {
-                    Toast.makeText(this, "Не нравится", Toast.LENGTH_SHORT).show();
-                    removeTopCardAndCheckQueue();
+                    sendSwipeAction(false);
                 },
                 () -> {
-                    Toast.makeText(this, "Лайк!", Toast.LENGTH_SHORT).show();
-                    removeTopCardAndCheckQueue();
+                    sendSwipeAction(true);
                 }
         );
 
@@ -259,12 +258,12 @@ public class Mainpage extends AppCompatActivity {
         }
     }
 
-    public void loadMoreProfiles(View view) {
-        if (!allFilteredProfiles.isEmpty()) {
-            addNextProfilesToQueue(3);
-            Toast.makeText(this, "Загружаем новые профили...", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Больше нет пользователей", Toast.LENGTH_SHORT).show();
+    private void sendSwipeAction(boolean isLike) {
+        if (adapter != null && adapter.getItemCount() > 0) {
+            Profile topProfile = adapter.profiles.get(0);
+            likeManager.sendLike(topProfile.id, isLike);
+            Toast.makeText(this, isLike ? "Лайк!" : "Не нравится", Toast.LENGTH_SHORT).show();
         }
+        removeTopCardAndCheckQueue();
     }
 }

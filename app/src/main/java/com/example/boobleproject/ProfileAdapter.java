@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder> {
 
-    private List<Profile> profiles;
+    List<Profile> profiles;
 
     public ProfileAdapter(List<Profile> profiles) {
         this.profiles = new ArrayList<>(profiles);

@@ -24,7 +24,9 @@ public class Profile {
         this.photoRes = photoRes;
     }
 
-
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getId() { return id; }
     public String getFirstName() { return firstName; }
