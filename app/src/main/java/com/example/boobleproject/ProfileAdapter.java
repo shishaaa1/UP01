@@ -107,6 +107,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
             Log.d("DEBUG_ADAPTER", "Position: " + getAdapterPosition());
             Log.d("DEBUG_ADAPTER", "ID: " + profile.id);
             Log.d("DEBUG_ADAPTER", "Name: " + profile.getFullName());
+            Log.d("DEBUG_ADAPTER","SEX" + profile.getGenderAsString());
             Log.d("DEBUG_ADAPTER", "PhotoBytes null: " + (profile.photoBytes == null));
             Log.d("DEBUG_ADAPTER", "PhotoBytes empty: " + (profile.photoBytes != null && profile.photoBytes.isEmpty()));
             Log.d("DEBUG_ADAPTER", "PhotoBytes length: " + (profile.photoBytes != null ? profile.photoBytes.length() : 0));

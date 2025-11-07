@@ -14,7 +14,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
-
     private EditText loginEditText;
     private EditText passwordEditText;
 
@@ -23,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Инициализация полей для ввода логина и пароля
         loginEditText = findViewById(R.id.loginEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
     }
@@ -32,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Registation.class);
         startActivity(intent);
     }
-
 
     public void onLoginClick(View view) {
         String login = loginEditText.getText().toString();
@@ -50,9 +47,11 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && response.body() > 0) {
                     int userId = response.body();
 
-                    // Сохраняем ID пользователя
-                    SharedPreferences sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
-                    sharedPreferences.edit().putInt("userId", userId).apply();
+                    // ПРОСТО СОХРАНЯЕМ ID, ПОЛ НЕ НУЖЕН
+                    SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+                    sharedPreferences.edit().putInt("current_user_id", userId).apply();
+
+                    Log.d("LOGIN_DEBUG", "Сохранен пользователь ID: " + userId);
 
                     // Переход на главную страницу
                     Intent intent = new Intent(MainActivity.this, Mainpage.class);

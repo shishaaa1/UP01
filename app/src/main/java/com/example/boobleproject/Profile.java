@@ -8,18 +8,18 @@ public class Profile {
     public String firstName;
     public String lastName;
     public Date birthday;
-    public boolean gender;
+    public boolean sex;
     public String bio;
     public int photoRes;
     public String photoBytes;
 
     public Profile(int id, String firstName, String lastName, Date birthday,
-                  boolean gender, String bio,int photoRes) {
+                  boolean sex, String bio,int photoRes) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
-        this.gender = gender;
+        this.sex = sex;
         this.bio = bio;
         this.photoRes = photoRes;
     }
@@ -31,10 +31,10 @@ public class Profile {
     public String getLastName() { return lastName; }
     public Date getBirthday() { return birthday; }
     public String getGenderAsString() {
-        return gender ? "Мужской" : "Женский";
+        return sex ? "Мужской" : "Женский"; // true = Мужской, false = Женский
     }
     public void setGender(boolean gender) {
-        this.gender = gender;
+        this.sex = gender;
     }
     public String getBio() { return bio; }
     public int getPhotoRes() { return photoRes; }

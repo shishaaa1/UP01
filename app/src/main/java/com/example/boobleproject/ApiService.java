@@ -40,7 +40,8 @@ public interface ApiService {
             @Field("login") String login,
             @Field("password") String password
     );
-
+    @GET("api/UserController/GetOppositeSexUsers")
+    Call<List<Profile>> getOppositeSexUsers(@Query("userId") int userId);
     @GET("api/UserController/GetUsersAndPhoto")
     Call<Profile> getUserWithPhoto(@Query("id") int id);
     @GET("api/PhotoController/GetPhotoByUser")
@@ -74,7 +75,8 @@ public interface ApiService {
 
     @GET("api/UserController/GetAllUsersWithPhoto")
     Call<List<Profile>> getAllUsersWithPhoto();
-
+    @GET("api/PhotoController/GetPhotoByUsersId")
+    Call<ResponseBody> getPhotoByUserId(@Query("userId") int userId);
     @GET("api/PhotoController/GetUserPhotoId")
     Call<Integer> getUserPhotoId(@Query("userId") int userId);
 }
