@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
                     int userId = response.body();
 
                     // ПРОСТО СОХРАНЯЕМ ID, ПОЛ НЕ НУЖЕН
-                    SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-                    sharedPreferences.edit().putInt("current_user_id", userId).apply();
+                    SharedPreferences sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
+                    sharedPreferences.edit().putInt("userId", userId).apply();
 
                     Log.d("LOGIN_DEBUG", "Сохранен пользователь ID: " + userId);
 

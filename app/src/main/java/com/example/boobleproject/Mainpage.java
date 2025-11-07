@@ -49,8 +49,8 @@ public class Mainpage extends AppCompatActivity {
         apiService = ApiClient.getApiService();
 
         // Получаем ID текущего пользователя
-        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
-        currentUserId = prefs.getInt("current_user_id", -1);
+        SharedPreferences userPrefs = getSharedPreferences("userPrefs", MODE_PRIVATE);
+        currentUserId = userPrefs.getInt("userId", -1); // Сохраняем в поле класса
 
         if (currentUserId == -1) {
             Toast.makeText(this, "Ошибка авторизации", Toast.LENGTH_SHORT).show();
