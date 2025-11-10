@@ -75,6 +75,11 @@ public class Mainpage extends AppCompatActivity {
         });
     }
 
+
+    public void goToIsLike(View view) {
+        Intent intent = new Intent(this, Islike.class);
+        startActivity(intent);
+    }
     private void loadOppositeSexUsers() {
         Call<List<Profile>> call = apiService.getOppositeSexUsers(currentUserId);
         call.enqueue(new Callback<List<Profile>>() {

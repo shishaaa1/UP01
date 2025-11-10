@@ -2,6 +2,7 @@ package com.example.boobleproject;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -87,5 +88,14 @@ public interface ApiService {
             @Field("ToUserId") int toUserId,
             @Field("IsLike") boolean isLike
     );
+
+    @GET("api/islIke/mutual/{user1Id}/{user2Id}")
+    Call<Map<String, Object>> checkMutualLike(
+            @Path("user1Id") int user1Id,
+            @Path("user2Id") int user2Id
+    );
+
+    @GET("api/islIke/user/{userId}/matches")
+    Call<Map<String, Object>> getUserMatches(@Path("userId") int userId);
 }
 
