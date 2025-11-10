@@ -36,7 +36,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:padding="40dp"
-                android:text="Пока нет взаимных лайков 😊"
+                android:text="У вас нет взаимных лайков, пока что😊"
                 android:textSize="18sp"
                 android:textColor="@color/white"
                 android:visibility="gone" />
