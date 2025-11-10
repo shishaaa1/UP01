@@ -69,5 +69,65 @@ namespace tiger_API.Controllers
                 Nickname = result.Nickname
             });
         }
+
+        /// <summary>
+        /// Получить всех администраторов (без паролей)
+        /// </summary>
+        [Route("GetAllAdmins")]
+        [HttpGet]
+        public async Task<ActionResult<List<Admin>>> GetAllAdmins()
+        {
+            var admins = await _admin.GetAllAdmins();
+            return Ok(admins);
+        }
+
+        /// <summary>
+        /// Получить администратора по ID (без пароля)
+        /// </summary>
+        [Route("GetAdminById")]
+        [HttpGet]
+        public async Task<ActionResult<Admin>> GetAdminById(int id)
+        {
+            var admin = await _admin.GetAdminById(id);
+            if (admin == null) return NotFound(new { message = $"Админ с ID {id} не найден." });
+            return Ok(admin);
+        }
+
+        /// <summary>
+        /// Обновить данные администратора
+        /// </summary>
+        /// <remarks>
+        /// Передавайте Id, Login, Nickname. Пароль — только если нужно сменить (иначе оставьте пустым/не передавайте).
+        /// </remarks>
+        [Route("UpdateAdmin")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateAdmins([FromBody] Admin admin)
+        {
+            if (admin?.Id <= 0)
+                return BadRequest("Некорректный ID администратора.");
+
+            var success = await _admin.UpdateAdmin(admin);
+            if (!success)
+                return NotFound(new { message = $"Админ с ID {admin.Id} не найден или ошибка обновления." });
+
+            return Ok(new { message = "Администратор успешно обновлён." });
+        }
+
+        /// <summary>
+        /// Удалить администратора по ID
+        /// </summary>
+        [Route("DeleteAdmin")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAdminByID(int id)
+        {
+            if (id <= 0)
+                return BadRequest("Некорректный ID.");
+
+            var success = await _admin.DeleteAdmin(id);
+            if (!success)
+                return NotFound(new { message = $"Админ с ID {id} не найден." });
+
+            return Ok(new { message = $"Администратор с ID {id} удалён." });
+        }
     }
 }

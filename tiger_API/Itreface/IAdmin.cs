@@ -7,5 +7,9 @@ namespace tiger_API.Itreface
         Task ReginA(Admin admin);
         Task<int> LoginAdmin(string login, string password); 
         Task<Admin> LoginAdminFull(string login, string password);
+        Task<List<Admin>> GetAllAdmins();
+        Task<Admin?> GetAdminById(int id);   
+        Task<bool> UpdateAdmin(Admin admin);     
+        Task<bool> DeleteAdmin(int id);
     }
 }
