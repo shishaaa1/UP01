@@ -206,7 +206,7 @@ namespace TaigerDesktop.Connect
         {
             try
             {
-                var response = await _httpClient.GetAsync("AdminController/GetAdmins");
+                var response = await _httpClient.GetAsync("AdminController/GetAllAdmins");
 
                 if (response.IsSuccessStatusCode)
                 {

@@ -26,11 +26,8 @@ namespace TaigerDesktop.Pages
     public partial class CheckAdministrator : Page
     {
         private ObservableCollection<Admin> _allAdmins;
+        private ObservableCollection<Admin> _filteredAdmins;
         private string _searchQuery;
-        public CheckAdministrator()
-        {
-            InitializeComponent();
-        }
         public ObservableCollection<Admin> AllAdmins
         {
             get => _allAdmins;
@@ -38,36 +35,92 @@ namespace TaigerDesktop.Pages
             {
                 _allAdmins = value;
                 OnPropertyChanged();
+                ApplyFilter(); // Обновляем фильтр при загрузке
             }
         }
-        public void RemoveAdmin(Admin admin)
+
+        public ObservableCollection<Admin> FilteredAdmins
         {
-            AllAdmins?.Remove(admin);
+            get => _filteredAdmins;
+            set
+            {
+                _filteredAdmins = value;
+                OnPropertyChanged();
+            }
         }
-        public async void LoadUsers()
+
+        public string SearchQuery
+        {
+            get => _searchQuery;
+            set
+            {
+                _searchQuery = value;
+                OnPropertyChanged();
+                ApplyFilter();
+            }
+        }
+
+        public CheckAdministrator()
+        {
+            InitializeComponent();
+            DataContext = this;
+            LoadAdmins();
+
+        }
+        private async void LoadAdmins()
         {
             try
             {
                 var api = new ApiContext();
                 var admins = await api.GetAllAdminsAsync();
 
-
-                AllAdmins = admins != null
-                    ? new ObservableCollection<Admin>(admins)
-                    : new ObservableCollection<Admin>();
+                AllAdmins = new ObservableCollection<Admin>(admins ?? new List<Admin>());
+                ApplyFilter();
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Ошибка загрузки: {ex.Message}", "Ошибка",
-                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка загрузки администраторов: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
                 AllAdmins = new ObservableCollection<Admin>();
             }
         }
+
+        private void ApplyFilter()
+        {
+            if (AllAdmins == null)
+            {
+                FilteredAdmins = new ObservableCollection<Admin>();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                FilteredAdmins = new ObservableCollection<Admin>(AllAdmins);
+            }
+            else
+            {
+                var filtered = AllAdmins.Where(a =>
+                    (a.Login?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (a.Nickname?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true) ||
+                    (a.Id.ToString().Contains(SearchQuery))
+                ).ToList();
+
+                FilteredAdmins = new ObservableCollection<Admin>(filtered);
+            }
+        }
+
+        public void RemoveAdmin(Admin admin)
+        {
+            AllAdmins?.Remove(admin);
+            FilteredAdmins?.Remove(admin);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
     }
 }

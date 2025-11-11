@@ -4,31 +4,63 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:TaigerDesktop.View"
-      
       mc:Ignorable="d" 
-         d:DesignHeight="900" d:DesignWidth="1000"
-Title="Проверка пользователей"
-Background="{StaticResource LightBackgroundBrush}"
-      >
+      d:DesignHeight="900" 
+      d:DesignWidth="1000"
+      Title="Проверка пользователей"
+      Background="{StaticResource LightBackgroundBrush}"
+      FocusManager.FocusedElement="{Binding ElementName=SearchBox}">
+
     <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Заголовок -->
             <RowDefinition Height="Auto"/>
+            <!-- Поиск -->
             <RowDefinition Height="Auto"/>
+            <!-- Отступ -->
             <RowDefinition Height="*"/>
+            <!-- Список -->
         </Grid.RowDefinitions>
 
+        <!-- Заголовок -->
         <TextBlock Text="Список администраторов"
-               Style="{StaticResource PageTitleStyle}"
-               Grid.Row="0"
-               Margin="0,0,0,10"/>
+                  Style="{StaticResource PageTitleStyle}"
+                  Grid.Row="0"
+                  Margin="0,0,0,10"/>
 
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding FilteredUsers}">
+        <!-- Поле поиска с плейсхолдером -->
+        <Grid Grid.Row="1" Margin="0,0,0,15">
+            <TextBox x:Name="SearchBox"
+                     Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                     Height="40"
+                     FontSize="15"
+                     Padding="10"
+                     Background="White"
+                     BorderBrush="#D0D0D0"
+                     BorderThickness="1"
+                     VerticalContentAlignment="Center"/>
+        </Grid>
+
+        <!-- Список админов -->
+        <ScrollViewer Grid.Row="3"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Focusable="False">
+
+            <ItemsControl ItemsSource="{Binding FilteredAdmins}"
+                          Margin="0"
+                          HorizontalContentAlignment="Stretch">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <!-- Убрали некорректную привязку UserDeleted -->
-                        <local:AdministratorCard DataContext="{Binding}" Margin="0,0,0,16"/>
+                        <local:AdministratorCard Margin="0,0,0,16"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

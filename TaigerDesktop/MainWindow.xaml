@@ -84,6 +84,9 @@
                 <Button x:Name="BtnAddAdmin" Content="Добавить администратора"
                     Style="{StaticResource MenuItemButtonStyle}"
                     Click="NavigateToPage"/>
+                <Button x:Name="BtnAllAdmin" Content="Посмотреть всех администратора"
+    Style="{StaticResource MenuItemButtonStyle}"
+    Click="NavigateToPage"/>
                 <Separator Height="1" Margin="20,20" Background="{StaticResource SoftLavenderBrush}"/>
                 <Button x:Name="BtnLogout" Content="Выйти из аккаунта"
                     Style="{StaticResource MenuItemButtonStyle}"

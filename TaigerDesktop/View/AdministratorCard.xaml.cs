@@ -27,10 +27,14 @@ namespace TaigerDesktop.View
             InitializeComponent();
             this.Loaded += AdminCard_Loaded;
         }
+
         private void AdminCard_Loaded(object sender, RoutedEventArgs e)
         {
-            // Подписываемся на событие удаления
-            AdministratorDeleted += ((CheckAdministrator)ParentPage()).RemoveAdmin;
+            // Подписываемся на событие удаления через родительскую страницу
+            if (ParentPage() is CheckAdministrator checkAdmin)
+            {
+                AdministratorDeleted += checkAdmin.RemoveAdmin;
+            }
         }
 
         private void EditAdministrator(object sender, RoutedEventArgs e)
@@ -39,61 +43,10 @@ namespace TaigerDesktop.View
             {
                 var editPage = new AddAdministrator(admin);
 
-                // Попробуем получить Frame из родительской страницы
-                var parentPage = ParentPage();
-                if (parentPage != null && parentPage.NavigationService != null)
-                {
-                    parentPage.NavigationService.Navigate(editPage);
-                }
-                else
-                {
-                    // Попробуем получить Frame напрямую из окна
-                    var window = Window.GetWindow(this);
-                    if (window != null)
-                    {
-                        // Предположим, в окне есть Frame с именем MainFrame
-                        var frame = window.FindName("MainFrame") as Frame;
-                        if (frame != null)
-                        {
-                            frame.Navigate(editPage);
-                        }
-                        else
-                        {
-                            // Если Frame не найден, ищем через визуальное дерево
-                            frame = FindFrameInVisualTree(window);
-                            if (frame != null)
-                            {
-                                frame.Navigate(editPage);
-                            }
-                            else
-                            {
-                                MessageBox.Show("Не удалось найти Frame для навигации.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Не удалось найти окно для навигации.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
-                }
+                NavigateTo(editPage);
             }
         }
-        private Frame FindFrameInVisualTree(DependencyObject parent)
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-            {
-                var child = VisualTreeHelper.GetChild(parent, i) as DependencyObject;
-                if (child is Frame frame)
-                {
-                    return frame;
-                }
 
-                frame = FindFrameInVisualTree(child);
-                if (frame != null)
-                    return frame;
-            }
-            return null;
-        }
         private async void DeleteAdmin(object sender, RoutedEventArgs e)
         {
             if (DataContext is Admin admin)
@@ -121,15 +74,54 @@ namespace TaigerDesktop.View
                 }
             }
         }
-        private Page ParentPage()
+
+        // Единый метод для навигации — как в UserCard, но вынесем отдельно
+        private void NavigateTo(Page page)
         {
-            // Сначала ищем окно, потом его Content как Page
-            if (Window.GetWindow(this) is Window window && window.Content is Page page)
+            var parentPage = ParentPage();
+            if (parentPage?.NavigationService != null)
             {
-                return page;
+                parentPage.NavigationService.Navigate(page);
+                return;
             }
 
-            // Если не нашли — ищем вверх по визуальному дереву
+            var window = Window.GetWindow(this);
+            if (window == null) return;
+
+            // Ищем Frame в визуальном дереве
+            var frame = FindFrame(window);
+            if (frame != null)
+            {
+                frame.Navigate(page);
+            }
+            else
+            {
+                MessageBox.Show("Не удалось найти Frame для навигации.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private Frame FindFrame(DependencyObject root)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+            {
+                var child = VisualTreeHelper.GetChild(root, i);
+                if (child is Frame frame)
+                    return frame;
+
+                frame = FindFrame(child);
+                if (frame != null)
+                    return frame;
+            }
+            return null;
+        }
+
+        // Общий метод поиска родительской страницы
+        private Page ParentPage()
+        {
+            var window = Window.GetWindow(this);
+            if (window?.Content is Page page)
+                return page;
+
             DependencyObject parent = this;
             while (parent != null)
             {
@@ -140,7 +132,10 @@ namespace TaigerDesktop.View
 
             return null;
         }
-        public event Action<Admin> AdministratorDeleted;
 
+        // Событие удаления
+        public event Action<Admin> AdministratorDeleted;
     }
+
 }
+

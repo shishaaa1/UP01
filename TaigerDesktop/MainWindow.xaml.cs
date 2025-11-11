@@ -81,6 +81,9 @@ namespace TaigerDesktop
                     case "BtnAddAdmin":
                         MainFrame.Navigate(new Pages.AddAdministrator());
                         break;
+                    case "BtnAllAdmin":
+                        MainFrame.Navigate(new Pages.CheckAdministrator());
+                        break;
                 }
             }
         }
