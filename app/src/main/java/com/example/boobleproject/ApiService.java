@@ -32,9 +32,6 @@ public interface ApiService {
             @Field("Login") String login,
             @Field("Password") String password
     );
-
-
-
     @FormUrlEncoded
     @POST("api/UserController/LoginUsers")
     Call<Integer> loginUser(
@@ -90,5 +87,7 @@ public interface ApiService {
 
     @GET("api/islIke/user/{userId}/matches")
     Call<Map<String, Object>> getUserMatches(@Path("userId") int userId);
+
+
 }
 

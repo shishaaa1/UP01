@@ -82,7 +82,6 @@ public class Personalaccount extends AppCompatActivity {
         bthAddPhoto.setOnClickListener(v -> openGallery());
         btnEditProfile.setOnClickListener(v -> EditProfile());
 
-        // Загружаем userId из SharedPreferences
         SharedPreferences userPrefs = getSharedPreferences("userPrefs", MODE_PRIVATE);
         currentUserId = userPrefs.getInt("userId", -1); // Сохраняем в поле класса
 
@@ -104,8 +103,6 @@ public class Personalaccount extends AppCompatActivity {
             selectedImageUri = uri;
             photoChanged = true;
 
-            // УБИРАЕМ сохранение на устройство
-            // Просто показываем выбранное фото
             InputStream inputStream = getContentResolver().openInputStream(uri);
             if (inputStream != null) {
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
@@ -118,18 +115,6 @@ public class Personalaccount extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
-
-
-    private void savePhotoPath(String filePath) {
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PHOTO_PATH_KEY, filePath);
-        editor.apply();
-    }
-
-
-
 
     private void loadUserProfile(int userId) {
         ApiService apiService = ApiClient.getApiService();
@@ -148,7 +133,7 @@ public class Personalaccount extends AppCompatActivity {
                         profilePhoto.setImageBitmap(bitmap);
                         loadUserPhotoId(userId);
                     } else {
-                        profilePhoto.setImageResource(R.drawable.alt1); // или другая дефолтная картинка
+                        profilePhoto.setImageResource(R.drawable.alt1);
                     }
 
                     currentUserId = userId;
