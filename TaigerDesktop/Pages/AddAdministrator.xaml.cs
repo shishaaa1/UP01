@@ -23,15 +23,48 @@ namespace TaigerDesktop.Pages
     public partial class AddAdministrator : Page
     {
         private readonly ApiContext _apiContext;
+        private Admin _editingAdmin = null;
         public AddAdministrator()
         {
             InitializeComponent();
             _apiContext = new ApiContext();
+            InitializeAddMode();
+        }
+        public AddAdministrator(Admin adminToEdit) : this()
+        {
+            _editingAdmin = adminToEdit;
+            InitializeEditMode();
+        }
+        private void InitializeAddMode()
+        {
+            Title = "Добавить администратора";
+            addButt.Content = "Добавить администратора";
+            // Очищаем поля
+            Name.Clear();
+            Login.Clear();
+            Password.Clear();
         }
 
+        private void InitializeEditMode()
+        {
+            Title = "Редактировать администратора";
+            addButt.Content = "Сохранить изменения";
+
+            // Заполняем поля текущими значениями
+            Name.Text = _editingAdmin.Nickname;
+            Login.Text = _editingAdmin.Login;
+            Password.Password = _editingAdmin.Password; // Не рекомендуется, если пароль хешируется
+        }
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            await AddAdmin();
+            if (_editingAdmin != null)
+            {
+                await EditAdmin();
+            }
+            else
+            {
+                await AddAdmin();
+            }
         }
         private async Task AddAdmin()
         {
@@ -89,6 +122,59 @@ namespace TaigerDesktop.Pages
             finally
             {
                 addButt.IsEnabled = true; // Включаем кнопку обратно
+            }
+        }
+        private async Task EditAdmin()
+        {
+            // Валидация
+            if (string.IsNullOrWhiteSpace(Name.Text))
+            {
+                MessageBox.Show("Введите имя (никнейм).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(Login.Text))
+            {
+                MessageBox.Show("Введите логин.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(Password.Password))
+            {
+                MessageBox.Show("Введите пароль.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Обновляем данные администратора
+            _editingAdmin.Nickname = Name.Text.Trim();
+            _editingAdmin.Login = Login.Text.Trim();
+            _editingAdmin.Password = Password.Password.Trim();
+
+            addButt.IsEnabled = false;
+
+            try
+            {
+                bool success = await _apiContext.EditAdminAsync(_editingAdmin);
+
+                if (success)
+                {
+                    MessageBox.Show("Администратор успешно обновлён!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    // Здесь можно, например, вернуться на предыдущую страницу:
+                    if (NavigationService.CanGoBack)
+                        NavigationService.GoBack();
+                }
+                else
+                {
+                    MessageBox.Show("Не удалось обновить администратора.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                addButt.IsEnabled = true;
             }
         }
     }

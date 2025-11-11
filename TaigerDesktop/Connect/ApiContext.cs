@@ -141,6 +141,47 @@ namespace TaigerDesktop.Connect
                 return null;
             }
         }
+        public async Task<bool> EditAdminAsync(Admin admin)
+        {
+            try
+            {
+                // Убедимся, что Id передан
+                if (admin.Id <= 0)
+                {
+                    Console.WriteLine("Ошибка: Id администратора не указан.");
+                    return false;
+                }
+
+                // Подготовим данные для отправки
+                var formData = new Dictionary<string, string>
+        {
+            { "Id", admin.Id.ToString() },
+            { "Nickname", admin.Nickname },
+            { "Login", admin.Login },
+            { "Password", admin.Password }
+        };
+
+                var content = new FormUrlEncodedContent(formData);
+
+                // Отправляем PUT-запрос (или POST — в зависимости от API)
+                var response = await _httpClient.PostAsync("AdminController/EditAdmin", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Администратор успешно обновлён.");
+                    return true;
+                }
+
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Ошибка обновления админа: {error}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Исключение при обновлении админа: {ex.Message}");
+                return false;
+            }
+        }
         public async Task<List<Users>> GetAllUsersAsync()
         {
             try
@@ -159,6 +200,26 @@ namespace TaigerDesktop.Connect
             {
                 Console.WriteLine($"Ошибка получения пользователей: {ex.Message}");
                 return new List<Users>();
+            }
+        }
+        public async Task<List<Admin>> GetAllAdminsAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("AdminController/GetAdmins");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var users = await response.Content.ReadFromJsonAsync<List<Admin>>();
+                    return users ?? new List<Admin>();
+                }
+
+                return new List<Admin>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка получения пользователей: {ex.Message}");
+                return new List<Admin>();
             }
         }
         public async Task<List<PhotosUsers>> GetPhotosByUsersIdAsync()
@@ -200,6 +261,20 @@ namespace TaigerDesktop.Connect
                 return new List<PhotosUsers>();
             }
         }
+        public async Task<bool> DeleteAdminAsync(int adminId)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"AdminController/DeleteAdmin/{adminId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка удаления пользователя: {ex.Message}");
+                return false;
+            }
+        }
+        
         public async Task<bool> DeleteUserAsync(int userId)
         {
             try
