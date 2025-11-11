@@ -45,8 +45,7 @@ public interface ApiService {
     Call<List<Profile>> getOppositeSexUsers(@Query("userId") int userId);
     @GET("api/UserController/GetUsersAndPhoto")
     Call<Profile> getUserWithPhoto(@Query("id") int id);
-    @GET("api/PhotoController/GetPhotoByUser")
-    Call<ResponseBody> getPhotoByUser(@Query("userId") int userId);
+
 
 
     @Multipart
@@ -67,15 +66,9 @@ public interface ApiService {
             @Part("UserId") RequestBody userId,
             @Part MultipartBody.Part photoFile
     );
-///
     @DELETE("api/PhotoController/DeletePhoto")
     Call<ResponseBody> deletePhoto(@Query("id") int photoId);
 
-    @GET("api/UserController/GetUsers")
-    Call<List<Profile>> getAllUsers();
-
-    @GET("api/UserController/GetAllUsersWithPhoto")
-    Call<List<Profile>> getAllUsersWithPhoto();
     @GET("api/PhotoController/GetPhotoByUsersId")
     Call<ResponseBody> getPhotoByUserId(@Query("userId") int userId);
     @GET("api/PhotoController/GetUserPhotoId")
