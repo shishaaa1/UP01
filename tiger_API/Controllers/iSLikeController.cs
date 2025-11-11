@@ -149,6 +149,34 @@ namespace tiger_API.Controllers
                 return StatusCode(500, new { success = false, message = "Ошибка сервера" });
             }
         }
+        [Route("revokeLike")]
+        [HttpPost]
+        public async Task<IActionResult> RevokeLike([FromForm] RevokeLikeRequest request)
+        {
+            try
+            {
+                var result = await _likeService.RevokeLikeAsync(request.FromUserId, request.ToUserId);
+                return Ok(new { success = true, message = "Лайк успешно отозван" });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "Ошибка сервера" });
+            }
+        }
+
+        public class RevokeLikeRequest
+        {
+            public int FromUserId { get; set; }
+            public int ToUserId { get; set; }
+        }
     }
 
     public class SendLikeRequest

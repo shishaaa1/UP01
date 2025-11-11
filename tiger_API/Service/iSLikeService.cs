@@ -84,6 +84,37 @@ namespace tiger_API.Service
 
             return like1 && like2;
         }
+        public async Task<bool> RevokeLikeAsync(int fromUserId, int toUserId)
+        {
+            var fromUser = await _context.Users.FindAsync(fromUserId);
+            var toUser = await _context.Users.FindAsync(toUserId);
 
+            if (fromUser == null || toUser == null)
+            {
+                throw new ArgumentException("Пользователь не найден");
+            }
+
+            if (fromUser.Sex == toUser.Sex)
+            {
+                throw new InvalidOperationException("Лайки могут отправляться только между пользователями разного пола");
+            }
+
+            var existingLike = await _context.Islike
+                .FirstOrDefaultAsync(l => l.FromUserid == fromUserId && l.ToUserid == toUserId);
+
+            if (existingLike != null)
+            {
+                if (existingLike.IsLike) // Если лайк был true
+                {
+                    existingLike.IsLike = false; // Меняем на false
+                    existingLike.CreatedAt = DateTime.Now;
+                    await _context.SaveChangesAsync();
+                }
+                return true;
+            }
+
+            // Если лайка не было, просто возвращаем true (ничего не делаем)
+            return true;
+        }
     }
 }

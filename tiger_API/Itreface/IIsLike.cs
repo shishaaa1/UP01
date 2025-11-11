@@ -8,5 +8,6 @@ namespace tiger_API.Itreface
         Task<List<Islike>> GetUserLikesAsync(int userId);
         Task<bool> CheckMutualLikeAsync(int user1Id, int user2Id);
         Task<List<Islike>> GetLikesSentByUserAsync(int userId);
+        Task<bool> RevokeLikeAsync(int fromUserId, int toUserId);
     }
 }
