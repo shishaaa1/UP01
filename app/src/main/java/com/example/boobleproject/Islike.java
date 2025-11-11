@@ -1,6 +1,5 @@
 package com.example.boobleproject;
 
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +24,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Islike extends AppCompatActivity {
+public class Islike extends AppCompatActivity implements MutualLikeAdapter.OnProfileClickListener {
     private RecyclerView rvMutualLikes;
     private MutualLikeAdapter adapter;
     private ApiService apiService;
@@ -70,13 +69,27 @@ public class Islike extends AppCompatActivity {
     private void setupRecyclerView() {
         rvMutualLikes.setLayoutManager(new GridLayoutManager(this, 2));
         mutualProfiles = new ArrayList<>();
-        adapter = new MutualLikeAdapter(mutualProfiles);
+
+        // ПЕРЕДАЕМ ДВА ПАРАМЕТРА: список профилей И listener
+        adapter = new MutualLikeAdapter(mutualProfiles, this);
         rvMutualLikes.setAdapter(adapter);
 
         rvMutualLikes.setClipToPadding(false);
         rvMutualLikes.setPadding(24, 100, 24, 200);
     }
 
+    // Реализация метода интерфейса - открытие чата при клике
+    @Override
+    public void onMessageClick(Profile profile) {
+        Log.d("MUTUAL_CLICK", "Открыть чат с пользователем: " + profile.getFullName() + ", ID: " + profile.id);
+
+        // Передаем только ID получателя
+        Intent intent = new Intent(this, Messages.class);
+        intent.putExtra("RECIPIENT_ID", profile.id);
+        startActivity(intent);
+    }
+
+    // Остальные методы без изменений
     private void loadMutualMatches() {
         Call<Map<String, Object>> call = apiService.getUserMatches(currentUserId);
 
