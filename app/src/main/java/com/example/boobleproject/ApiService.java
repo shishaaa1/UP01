@@ -87,6 +87,21 @@ public interface ApiService {
 
     @GET("api/islIke/user/{userId}/matches")
     Call<Map<String, Object>> getUserMatches(@Path("userId") int userId);
+    @FormUrlEncoded
+    @POST("api/MessageController/WriteMessage")
+    Call<ResponseBody> sendMessage(
+            @Query("senderId") int senderId,
+            @Query("recipientId") int recipientId,
+            @Field("text") String text
+    );
+
+    // Получение переписки
+    @GET("api/MessageController/Conversation")
+    Call<List<Message>> getConversation(
+            @Query("u1") int user1Id,
+            @Query("u2") int user2Id
+    );
+
 
 
 }

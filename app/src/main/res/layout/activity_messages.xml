@@ -1,96 +1,119 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/light_background"
-    tools:context=".Messages">
+    android:orientation="vertical"
+    android:background="@color/white">
 
-    <ScrollView
+    <!-- Верхняя панель с информацией о пользователе -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:contentPadding="8dp">
 
-        <!-- Фон + верхняя панель + RecyclerView -->
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/gradient_background">
+            android:layout_height="wrap_content"
+            android:padding="8dp">
 
-            <!-- RecyclerView - занимает всё пространство -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="10dp"
-                android:id="@+id/rv_likes"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:clipToPadding="false"
-                android:padding="24dp"
-                android:scrollbars="none"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="2"/>
+            <!-- Кнопка назад -->
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:src="@drawable/backend"/>
 
+            <!-- Фото пользователя -->
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_user_avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/btn_back"
+                android:layout_marginStart="12dp"
+                tools:src="@drawable/alt1" />
+
+            <!-- Имя и фамилия -->
             <TextView
-                android:id="@+id/tv_empty_state"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:padding="40dp"
-                android:text="У вас нет взаимных лайков, пока что😊"
+                android:layout_toEndOf="@id/iv_user_avatar"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:text="Анна Смирнова"
+                android:textColor="@color/black"
                 android:textSize="18sp"
-                android:textColor="@color/white"
-                android:visibility="gone" />
+                android:textStyle="bold" />
 
-            <!-- Панель с кнопками поверх RecyclerView -->
-            <LinearLayout
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Список сообщений с возможностью скролла -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="8dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
+
+    <!-- Панель ввода сообщения -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <!-- Поле ввода сообщения с авто-растягиванием -->
+            <EditText
+                android:id="@+id/et_message_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:background="@android:color/transparent">
+                android:layout_toStartOf="@id/btn_send"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_marginEnd="8dp"
+                android:background="@null"
+                android:hint="Введите сообщение..."
+                android:maxLines="10"
+                android:minHeight="40dp"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:paddingStart="16dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="12dp"
+                android:scrollbars="vertical" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp">
+            <!-- Кнопка отправки -->
+            <ImageButton
+                android:id="@+id/btn_send"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/et_message_input"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="12dp"
+                android:src="@drawable/sendic"/>
 
-                    <ImageButton
-                        android:id="@+id/btn_back"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:onClick="Main"
-                        android:background="@drawable/backs" />
+        </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:background="@drawable/view_panel"
-                        android:layout_weight="1" />
+    </com.google.android.material.card.MaterialCardView>
 
-                    <ImageButton
-                        android:id="@+id/btn_message"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/message"
-                        android:scaleType="center"
-                        android:src="@drawable/messages" />
-                </LinearLayout>
-            </LinearLayout>
-        </FrameLayout>
-    </ScrollView>
-
-    <!-- ИКОНКА СВАЙПА — ПОВЕРХ ВСЕГО -->
-    <ImageView
-        android:id="@+id/iv_swipe_indicator"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:alpha="0"
-        android:scaleType="centerInside" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

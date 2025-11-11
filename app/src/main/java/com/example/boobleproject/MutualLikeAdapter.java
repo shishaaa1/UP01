@@ -16,9 +16,15 @@ import java.util.List;
 public class MutualLikeAdapter extends RecyclerView.Adapter<MutualLikeAdapter.MutualLikeViewHolder> {
 
     private List<Profile> mutualProfiles;
+    private OnProfileClickListener listener;
 
-    public MutualLikeAdapter(List<Profile> mutualProfiles) {
+    public interface OnProfileClickListener {
+        void onMessageClick(Profile profile);
+    }
+
+    public MutualLikeAdapter(List<Profile> mutualProfiles, OnProfileClickListener listener) {
         this.mutualProfiles = new ArrayList<>(mutualProfiles);
+        this.listener = listener;
     }
 
     @NonNull
@@ -26,7 +32,7 @@ public class MutualLikeAdapter extends RecyclerView.Adapter<MutualLikeAdapter.Mu
     public MutualLikeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.activity_adapter_is_like, parent, false);
-        return new MutualLikeViewHolder(view);
+        return new MutualLikeViewHolder(view, listener);
     }
 
     @Override
@@ -49,9 +55,11 @@ public class MutualLikeAdapter extends RecyclerView.Adapter<MutualLikeAdapter.Mu
         ImageView ivPhoto;
         TextView tvName;
         TextView tvAge;
+        OnProfileClickListener listener;
 
-        MutualLikeViewHolder(View itemView) {
+        MutualLikeViewHolder(View itemView, OnProfileClickListener listener) {
             super(itemView);
+            this.listener = listener;
             ivPhoto = itemView.findViewById(R.id.iv_profile_photo);
             tvName = itemView.findViewById(R.id.tv_name);
             tvAge = itemView.findViewById(R.id.tv_age);
@@ -101,6 +109,13 @@ public class MutualLikeAdapter extends RecyclerView.Adapter<MutualLikeAdapter.Mu
             tvAge.setText(profile.getAge() + " лет");
 
             Log.d("MUTUAL_ADAPTER", "=== BIND COMPLETE ===");
+
+            // Обработчик клика на кнопку "Написать сообщение"
+            itemView.findViewById(R.id.btn_send_message).setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onMessageClick(profile);
+                }
+            });
         }
     }
 }

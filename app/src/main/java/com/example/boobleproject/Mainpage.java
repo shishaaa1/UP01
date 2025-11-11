@@ -76,7 +76,7 @@ public class Mainpage extends AppCompatActivity {
     }
 
 
-    public void goToIsLike(View view) {
+    public void goMessages(View view) {
         Intent intent = new Intent(this, Islike.class);
         startActivity(intent);
     }

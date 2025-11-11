@@ -54,11 +54,11 @@
                 android:layout_weight="1" />
 
             <ImageButton
-                android:id="@+id/btn_islike"
-                android:onClick="goToIsLike"
+                android:id="@+id/btn_messages"
+                android:onClick="goMessages"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/heart"
+                android:background="@drawable/message"
                 android:scaleType="center"
                 android:src="@drawable/heart" />
         </LinearLayout>

@@ -4,14 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="160dp"
-    android:layout_height="160dp"
+    android:layout_height="220dp"
     android:layout_margin="8dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <!-- Фото профиля -->
         <ImageView
@@ -21,44 +22,19 @@
             android:scaleType="centerCrop"
             tools:src="@drawable/alt1" />
 
-        <!-- Градиентный оверлей снизу -->
+        <!-- Градиентный оверлей снизу фото -->
         <View
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
+            android:layout_alignTop="@id/iv_profile_photo"
+            android:layout_alignBottom="@id/iv_profile_photo"
             android:background="@drawable/gradient_overlay" />
-
-        <!-- Бейдж "Вас лайкнули" -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp">
-
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_marginEnd="4dp"
-                android:src="@drawable/ic_heart" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Лайк!"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-        </LinearLayout>
 
         <!-- Информация о пользователе -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignBottom="@id/iv_profile_photo"
             android:layout_margin="8dp"
             android:orientation="vertical">
 
@@ -79,7 +55,23 @@
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:alpha="0.9" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_send_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_profile_photo"
+                android:layout_margin="0dp"
+                android:text="Написать сообщение"
+                android:textSize="12sp"
+                android:textAllCaps="false"
+                android:padding="0dp"
+                app:cornerRadius="12dp"
+                app:backgroundTint="@color/white"
+                android:textColor="@color/black" />
         </LinearLayout>
+
+        <!-- Кнопка "Написать сообщение" -->
+
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
