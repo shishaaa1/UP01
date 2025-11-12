@@ -109,33 +109,31 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
 
         private void setUserAvatar(CircleImageView imageView, Profile profile) {
+            Log.d("MESSAGE_ADAPTER", "Устанавливаем аватар для: " + (profile != null ? profile.getFullName() : "null"));
+
             if (profile != null && profile.photoBytes != null && !profile.photoBytes.isEmpty()) {
                 try {
-                    Log.d("MESSAGE_ADAPTER", "Setting avatar for user: " + profile.getFullName());
+                    Log.d("MESSAGE_ADAPTER", "PhotoBytes доступны, длина: " + profile.photoBytes.length());
 
                     byte[] decodedString = android.util.Base64.decode(profile.photoBytes, android.util.Base64.DEFAULT);
                     android.graphics.Bitmap decodedByte = android.graphics.BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
                     if (decodedByte != null) {
-                        Log.d("MESSAGE_ADAPTER", "Avatar bitmap created: " + decodedByte.getWidth() + "x" + decodedByte.getHeight());
+                        Log.d("MESSAGE_ADAPTER", "Битмап создан: " + decodedByte.getWidth() + "x" + decodedByte.getHeight());
                         imageView.setImageBitmap(decodedByte);
-                        Log.d("MESSAGE_ADAPTER", "Avatar set successfully");
+                        Log.d("MESSAGE_ADAPTER", "Аватар установлен успешно");
+                        return;
                     } else {
-                        Log.e("MESSAGE_ADAPTER", "BitmapFactory returned null");
-                        imageView.setImageResource(R.drawable.alt1);
+                        Log.e("MESSAGE_ADAPTER", "BitmapFactory вернул null");
                     }
-
-                } catch (IllegalArgumentException e) {
-                    Log.e("MESSAGE_ADAPTER", "Base64 decoding error: " + e.getMessage());
-                    imageView.setImageResource(R.drawable.alt1);
                 } catch (Exception e) {
-                    Log.e("MESSAGE_ADAPTER", "Other error: " + e.getMessage());
-                    imageView.setImageResource(R.drawable.alt1);
+                    Log.e("MESSAGE_ADAPTER", "Ошибка установки аватара: " + e.getMessage());
                 }
             } else {
-                Log.d("MESSAGE_ADAPTER", "No photo bytes available for user");
-                imageView.setImageResource(R.drawable.alt1);
+                Log.d("MESSAGE_ADAPTER", "PhotoBytes недоступны или пусты");
             }
+
+            imageView.setImageResource(R.drawable.alt1);
         }
     }
 }

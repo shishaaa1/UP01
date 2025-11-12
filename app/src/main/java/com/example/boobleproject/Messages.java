@@ -3,6 +3,7 @@ package com.example.boobleproject;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,6 +27,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Messages extends AppCompatActivity {
+
+    private Handler refreshHandler;
+    private Runnable refreshRunnable;
+    private static final long REFRESH_INTERVAL = 2000;
 
     private RecyclerView rvMessages;
     private EditText etMessageInput;
@@ -80,7 +85,7 @@ public class Messages extends AppCompatActivity {
         setupRecyclerView();
         loadUserProfiles();
         setupClickListeners();
-
+        setupAutoRefresh();
         // УБЕДИТЕСЬ ЧТО messageList ИНИЦИАЛИЗИРОВАН
         if (messageList == null) {
             messageList = new ArrayList<>();
@@ -121,11 +126,11 @@ public class Messages extends AppCompatActivity {
                     currentUserProfile = response.body();
                     Log.d("MESSAGES", "Загружен профиль текущего пользователя: " + currentUserProfile.getFullName());
 
-                    // После загрузки текущего пользователя загружаем получателя
-                    loadRecipientProfile();
+                    // ЗАГРУЖАЕМ ФОТО ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ
+                    loadCurrentUserPhoto();
+
                 } else {
                     Log.e("MESSAGES", "Ошибка загрузки профиля текущего пользователя");
-                    // Все равно пытаемся загрузить получателя
                     loadRecipientProfile();
                 }
             }
@@ -133,7 +138,35 @@ public class Messages extends AppCompatActivity {
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
                 Log.e("MESSAGES", "Ошибка сети при загрузке текущего пользователя: " + t.getMessage());
-                // Все равно пытаемся загрузить получателя
+                loadRecipientProfile();
+            }
+        });
+    }
+
+    private void loadCurrentUserPhoto() {
+        Call<ResponseBody> call = apiService.getPhotoByUserId(currentUserId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        byte[] photoBytes = response.body().bytes();
+                        String base64Photo = android.util.Base64.encodeToString(photoBytes, android.util.Base64.DEFAULT);
+                        currentUserProfile.photoBytes = base64Photo;
+                        Log.d("MESSAGES", "Фото текущего пользователя загружено");
+                    } catch (Exception e) {
+                        Log.e("MESSAGES", "Ошибка загрузки фото текущего пользователя: " + e.getMessage());
+                    }
+                } else {
+                    Log.d("MESSAGES", "Фото текущего пользователя не найдено");
+                }
+                // После загрузки фото текущего пользователя загружаем получателя
+                loadRecipientProfile();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("MESSAGES", "Ошибка сети при загрузке фото текущего пользователя: " + t.getMessage());
                 loadRecipientProfile();
             }
         });
@@ -149,13 +182,9 @@ public class Messages extends AppCompatActivity {
 
                     // Устанавливаем имя и фото получателя в верхней панели
                     tvUserName.setText(recipientProfile.getFullName());
-                    setUserAvatar(ivUserAvatar, recipientProfile);
 
-                    Log.d("MESSAGES", "Загружен профиль получателя: " + recipientProfile.getFullName());
-
-                    // НЕ ВЫЗЫВАЕМ updateAdapterWithProfiles() - адаптер уже создан
-                    // Просто загружаем переписку
-                    loadConversation();
+                    // ЗАГРУЖАЕМ ФОТО ДЛЯ ПОЛУЧАТЕЛЯ
+                    loadRecipientPhoto();
 
                 } else {
                     Toast.makeText(Messages.this, "Ошибка загрузки профиля собеседника", Toast.LENGTH_SHORT).show();
@@ -170,7 +199,53 @@ public class Messages extends AppCompatActivity {
             }
         });
     }
+    private void loadRecipientPhoto() {
+        Call<ResponseBody> call = apiService.getPhotoByUserId(recipientId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        byte[] photoBytes = response.body().bytes();
+                        String base64Photo = android.util.Base64.encodeToString(photoBytes, android.util.Base64.DEFAULT);
+                        recipientProfile.photoBytes = base64Photo;
+                        Log.d("MESSAGES", "Фото получателя загружено");
 
+                        // ОБНОВЛЯЕМ АВАТАР ПОСЛЕ ЗАГРУЗКИ ФОТО
+                        runOnUiThread(() -> {
+                            setUserAvatar(ivUserAvatar, recipientProfile);
+                            // ОБНОВЛЯЕМ АДАПТЕР С НОВЫМИ ПРОФИЛЯМИ
+                            updateAdapterWithProfiles();
+                        });
+
+                    } catch (Exception e) {
+                        Log.e("MESSAGES", "Ошибка загрузки фото получателя: " + e.getMessage());
+                    }
+                } else {
+                    Log.d("MESSAGES", "Фото получателя не найдено");
+                }
+                loadConversation();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("MESSAGES", "Ошибка сети при загрузке фото получателя: " + t.getMessage());
+                loadConversation();
+            }
+        });
+    }
+
+    private void updateAdapterWithProfiles() {
+        runOnUiThread(() -> {
+            // ПЕРЕСОЗДАЕМ АДАПТЕР С АКТУАЛЬНЫМИ ПРОФИЛЯМИ
+            messageAdapter = new MessageAdapter(messageList, currentUserId, recipientProfile, currentUserProfile);
+            rvMessages.setAdapter(messageAdapter);
+
+            if (!messageList.isEmpty()) {
+                messageAdapter.notifyDataSetChanged();
+            }
+        });
+    }
 
 
     private void loadConversation() {
@@ -392,5 +467,39 @@ public class Messages extends AppCompatActivity {
         }
         // Если фото не загружено, используем дефолтное
         imageView.setImageResource(R.drawable.alt1);
+    }
+
+    private void setupAutoRefresh() {
+        refreshHandler = new Handler();
+        refreshRunnable = new Runnable() {
+            @Override
+            public void run() {
+                loadConversation();
+                refreshHandler.postDelayed(this, REFRESH_INTERVAL);
+            }
+        };
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Запускаем автообновление при открытии чата
+        refreshHandler.postDelayed(refreshRunnable, REFRESH_INTERVAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Останавливаем автообновление когда чат не активен
+        refreshHandler.removeCallbacks(refreshRunnable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (refreshHandler != null) {
+            refreshHandler.removeCallbacks(refreshRunnable);
+        }
     }
 }
