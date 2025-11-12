@@ -62,6 +62,8 @@ namespace TaigerDesktop.Pages
 
         public CheckAdministrator()
         {
+            _filteredAdmins = new ObservableCollection<Admin>();
+            _allAdmins = new ObservableCollection<Admin>();
             InitializeComponent();
             DataContext = this;
             LoadAdmins();
@@ -74,38 +76,39 @@ namespace TaigerDesktop.Pages
                 var api = new ApiContext();
                 var admins = await api.GetAllAdminsAsync();
 
-                AllAdmins = new ObservableCollection<Admin>(admins ?? new List<Admin>());
-                ApplyFilter();
+                Dispatcher.Invoke(() =>
+                {
+                    AllAdmins = new ObservableCollection<Admin>(admins ?? new List<Admin>());
+                    ApplyFilter();
+                });
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка загрузки администраторов: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
-                AllAdmins = new ObservableCollection<Admin>();
             }
         }
 
         private void ApplyFilter()
         {
-            if (AllAdmins == null)
-            {
-                FilteredAdmins = new ObservableCollection<Admin>();
-                return;
-            }
+            FilteredAdmins.Clear();
+            if (AllAdmins == null) return;
 
             if (string.IsNullOrWhiteSpace(SearchQuery))
             {
-                FilteredAdmins = new ObservableCollection<Admin>(AllAdmins);
+                foreach (var admin in AllAdmins)
+                    FilteredAdmins.Add(admin);
             }
             else
             {
                 var filtered = AllAdmins.Where(a =>
                     (a.Login?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true) ||
                     (a.Nickname?.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase) == true) ||
-                    (a.Id.ToString().Contains(SearchQuery))
-                ).ToList();
+                    (a.Id.ToString().Contains(SearchQuery, StringComparison.OrdinalIgnoreCase))
+                );
 
-                FilteredAdmins = new ObservableCollection<Admin>(filtered);
+                foreach (var admin in filtered)
+                    FilteredAdmins.Add(admin);
             }
         }
 
