@@ -63,15 +63,18 @@ namespace tiger_API.Service
         }
         public async Task<bool> UpdateAdmin(Admin admin)
         {
-            var existing = await _Adnmincontext.Admin.FindAsync(admin.Id);
+            var existing = await _Adnmincontext.Admin.FirstOrDefaultAsync(a => a.Login == admin.Login);
             if (existing == null) return false;
 
-            // Защита: нельзя оставить пустой пароль, если не обновляется
-            // (лучше — вынести логику смены пароля отдельно с проверкой старого пароля)
-            existing.Login = admin.Login;
+            // Обновляем Nickname
             existing.Nickname = admin.Nickname;
+
+            // Обновляем пароль, только если он передан
             if (!string.IsNullOrWhiteSpace(admin.Password))
-                existing.Password = admin.Password; // ⚠️ В продакшене — хэшируйте пароль!
+            {
+                // ⚠️ Не забудьте захэшировать пароль в продакшене!
+                existing.Password = admin.Password;
+            }
 
             try
             {

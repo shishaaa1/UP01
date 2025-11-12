@@ -97,18 +97,18 @@ namespace tiger_API.Controllers
         /// Обновить данные администратора
         /// </summary>
         /// <remarks>
-        /// Передавайте Id, Login, Nickname. Пароль — только если нужно сменить (иначе оставьте пустым/не передавайте).
+        /// Передавайте Login, Nickname. Пароль — только если нужно сменить (иначе оставьте пустым/не передавайте).
         /// </remarks>
         [Route("UpdateAdmin")]
         [HttpPut]
-        public async Task<IActionResult> UpdateAdmins([FromBody] Admin admin)
+        public async Task<IActionResult> UpdateAdmins([FromForm] Admin admin)
         {
-            if (admin?.Id <= 0)
-                return BadRequest("Некорректный ID администратора.");
+            if (string.IsNullOrWhiteSpace(admin.Login))
+                return BadRequest("Логин обязателен для обновления администратора.");
 
             var success = await _admin.UpdateAdmin(admin);
             if (!success)
-                return NotFound(new { message = $"Админ с ID {admin.Id} не найден или ошибка обновления." });
+                return NotFound(new { message = $"Админ с логином {admin.Login} не найден или ошибка обновления." });
 
             return Ok(new { message = "Администратор успешно обновлён." });
         }
