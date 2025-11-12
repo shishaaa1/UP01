@@ -164,7 +164,7 @@ namespace TaigerDesktop.Connect
                 var content = new FormUrlEncodedContent(formData);
 
                 // Отправляем PUT-запрос (или POST — в зависимости от API)
-                var response = await _httpClient.PostAsync("AdminController/EditAdmin", content);
+                var response = await _httpClient.PutAsync("AdminController/UpdateAdmin", content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -265,7 +265,7 @@ namespace TaigerDesktop.Connect
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"AdminController/DeleteAdmin/{adminId}");
+                var response = await _httpClient.DeleteAsync($"AdminController/DeleteAdmin?id={adminId}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
