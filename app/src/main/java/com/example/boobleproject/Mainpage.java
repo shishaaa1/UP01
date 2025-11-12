@@ -80,6 +80,11 @@ public class Mainpage extends AppCompatActivity {
         Intent intent = new Intent(this, Islike.class);
         startActivity(intent);
     }
+
+    public void goLike(View view) {
+        Intent intent = new Intent(this, LikesOrNo.class);
+        startActivity(intent);
+    }
     private void loadOppositeSexUsers() {
         Call<List<Profile>> call = apiService.getOppositeSexUsers(currentUserId);
         call.enqueue(new Callback<List<Profile>>() {
@@ -142,6 +147,8 @@ public class Mainpage extends AppCompatActivity {
         Collections.shuffle(allFilteredProfiles);
         addNextProfilesToQueue(5);
     }
+
+
     private void logResponseBody(Response<List<Profile>> response) {
         try {
             // Получаем сырой JSON ответ

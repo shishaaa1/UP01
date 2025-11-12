@@ -95,14 +95,20 @@ public interface ApiService {
             @Field("text") String text
     );
 
-    // Получение переписки
     @GET("api/Message/Conversation")
     Call<ResponseBody> getConversationRaw(
             @Query("u1") int user1Id,
             @Query("u2") int user2Id
     );
 
-
+    @GET("api/islike/received/{userId}")
+    Call<Map<String, Object>> getUserLikes(@Path("userId") int userId);
+    @Multipart
+    @POST("api/islike/revokeLike")
+    Call<ResponseBody> revokeLike(
+            @Part("FromUserId") int fromUserId,
+            @Part("ToUserId") int toUserId
+    );
 
 }
 
