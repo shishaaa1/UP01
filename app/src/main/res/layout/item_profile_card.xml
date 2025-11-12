@@ -2,44 +2,57 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="560dp"
     android:layout_margin="20dp"
-
     app:cardCornerRadius="24dp"
     app:cardElevation="24dp">
 
-    <RelativeLayout
-        android:minHeight="560dp"
+    <!-- Используем ConstraintLayout, чтобы точно контролировать размеры -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:minHeight="560dp">
 
+        <!-- Фото -->
         <ImageView
             android:id="@+id/iv_profile_photo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:scaleType="centerCrop"
-            tools:src="@drawable/alt1" />
+            android:src="@drawable/alt1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Градиент -->
         <View
-            android:layout_width="match_parent"
+            android:id="@+id/overlay"
+            android:layout_width="0dp"
             android:layout_height="200dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/gradient_overlay" />
+            android:background="@drawable/gradient_overlay"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Текст -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/text_container"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
             android:padding="24dp"
-            android:orientation="vertical">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Анна Смирнова"
+                android:text="Настя Лаптева"
                 android:textSize="32sp"
                 android:textStyle="bold"
                 android:textColor="@color/white" />
@@ -48,20 +61,20 @@
                 android:id="@+id/tv_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="25 лет • Москва"
+                android:text="23 года • Женский"
                 android:textSize="18sp"
                 android:textColor="@color/white"
                 android:alpha="0.9" />
 
             <TextView
                 android:id="@+id/tv_bio"
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:alpha="0.9"
-                android:text=""
+                android:layout_marginTop="10dp"
+                android:text="ЛУЧШАЯ ВО ВСЕМ"
+                android:textSize="18sp"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:alpha="0.9" />
         </LinearLayout>
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
