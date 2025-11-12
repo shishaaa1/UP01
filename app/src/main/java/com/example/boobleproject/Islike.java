@@ -86,6 +86,7 @@ public class Islike extends AppCompatActivity implements MutualLikeAdapter.OnPro
         // Передаем только ID получателя
         Intent intent = new Intent(this, Messages.class);
         intent.putExtra("RECIPIENT_ID", profile.id);
+        Log.d("ISLIKE_DEBUG", "Передаем в Intent RECIPIENT_ID: " + profile.id);
         startActivity(intent);
     }
 

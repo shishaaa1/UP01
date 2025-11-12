@@ -24,6 +24,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         this.currentUserId = currentUserId;
         this.recipientProfile = recipientProfile;
         this.currentUserProfile = currentUserProfile;
+
+        Log.d("MESSAGE_ADAPTER", "Конструктор адаптера вызван");
+        Log.d("MESSAGE_ADAPTER", "Сообщений: " + this.messages.size());
+        Log.d("MESSAGE_ADAPTER", "currentUserId: " + currentUserId);
+        Log.d("MESSAGE_ADAPTER", "recipientProfile: " + (recipientProfile != null ? recipientProfile.getFullName() : "null"));
+        Log.d("MESSAGE_ADAPTER", "currentUserProfile: " + (currentUserProfile != null ? currentUserProfile.getFullName() : "null"));
     }
 
     @NonNull
@@ -36,19 +42,31 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        Message message = messages.get(position);
-        holder.bind(message);
+        Log.d("MESSAGE_ADAPTER", "onBindViewHolder позиция: " + position);
+        if (position < messages.size()) {
+            Message message = messages.get(position);
+            holder.bind(message);
+        } else {
+            Log.e("MESSAGE_ADAPTER", "Позиция " + position + " выходит за пределы списка (" + messages.size() + ")");
+        }
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        int count = messages.size();
+        Log.d("MESSAGE_ADAPTER", "getItemCount: " + count);
+        return count;
     }
 
     public void setMessages(List<Message> newMessages) {
-        this.messages.clear();
-        this.messages.addAll(newMessages);
+        Log.d("MESSAGE_ADAPTER", "setMessages вызван, новых сообщений: " + newMessages.size());
+
+        // СОЗДАЕМ НОВЫЙ СПИСОК вместо очистки существующего
+        this.messages = new ArrayList<>(newMessages); // ВАЖНО: создаем копию!
+
+        Log.d("MESSAGE_ADAPTER", "Адаптер теперь содержит: " + this.messages.size() + " сообщений");
         notifyDataSetChanged();
+        Log.d("MESSAGE_ADAPTER", "notifyDataSetChanged вызван");
     }
 
     public void addMessage(Message message) {
@@ -72,7 +90,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
 
         void bind(Message message) {
-            boolean isSentByMe = message.senderId == currentUserId;
+            boolean isSentByMe = message.userid1 == currentUserId;
 
             if (isSentByMe) {
                 // Мое сообщение (правая сторона) - показываем мое фото

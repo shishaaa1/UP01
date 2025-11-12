@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class Message {
     public int id;
-    public int senderId;
-    public int recipientId;
+    public int userid1;
+    public int userid2;
     public String text;
     public String timestamp;
     public boolean isRead;
@@ -13,14 +13,14 @@ public class Message {
     public Message() {
     }
 
-    public Message(int senderId, int recipientId, String text) {
-        this.senderId = senderId;
-        this.recipientId = recipientId;
+    public Message(int userid1, int userid2, String text) {
+        this.userid1 = userid1;
+        this.userid2 = userid2;
         this.text = text;
         this.timestamp = new java.util.Date().toString();
     }
 
     public boolean isSentByMe(int currentUserId) {
-        return senderId == currentUserId;
+        return userid1 == currentUserId;
     }
 }

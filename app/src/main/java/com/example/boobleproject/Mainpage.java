@@ -188,9 +188,10 @@ public class Mainpage extends AppCompatActivity {
     }
 
     private void updateAdapterIfNeeded(Profile updatedUser) {
-        // Проверяем, находится ли обновленный пользователь в текущей очереди отображения
-        for (int i = 0; i < profileQueue.size(); i++) {
-            if (profileQueue.get(i).id == updatedUser.id) {
+        // Ищем в списке адаптера, а не в profileQueue
+        for (int i = 0; i < adapter.profiles.size(); i++) {
+            if (adapter.profiles.get(i).id == updatedUser.id) {
+                Log.d("PHOTO_DEBUG", "Обновляем фото в адаптере для позиции: " + i + ", пользователь: " + updatedUser.getFullName());
                 adapter.notifyItemChanged(i);
                 break;
             }

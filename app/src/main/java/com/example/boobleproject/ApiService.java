@@ -88,7 +88,7 @@ public interface ApiService {
     @GET("api/islIke/user/{userId}/matches")
     Call<Map<String, Object>> getUserMatches(@Path("userId") int userId);
     @FormUrlEncoded
-    @POST("api/MessageController/WriteMessage")
+    @POST("api/Message/WriteMessage")
     Call<ResponseBody> sendMessage(
             @Query("senderId") int senderId,
             @Query("recipientId") int recipientId,
@@ -96,8 +96,8 @@ public interface ApiService {
     );
 
     // Получение переписки
-    @GET("api/MessageController/Conversation")
-    Call<List<Message>> getConversation(
+    @GET("api/Message/Conversation")
+    Call<ResponseBody> getConversationRaw(
             @Query("u1") int user1Id,
             @Query("u2") int user2Id
     );

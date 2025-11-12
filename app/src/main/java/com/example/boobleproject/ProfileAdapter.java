@@ -35,7 +35,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
 
     @Override
     public void onBindViewHolder(@NonNull ProfileViewHolder holder, int position) {
-        holder.bind(profiles.get(position));
+        Profile profile = profiles.get(position);
+        holder.bind(profile);
 
         if (position == 0) {
             // Только верхняя карточка видима и нормального размера
@@ -49,6 +50,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
             ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             holder.itemView.setLayoutParams(params);
+
+            Log.d("DEBUG_ADAPTER", "Позиция 0 - карточка видима: " + profile.getFullName());
         } else {
             // Все остальные карточки невидимы и с нулевой высотой
             holder.itemView.setVisibility(View.INVISIBLE);
@@ -57,6 +60,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
             ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
             params.height = 0;
             holder.itemView.setLayoutParams(params);
+
+            Log.d("DEBUG_ADAPTER", "Позиция " + position + " - карточка скрыта: " + profile.getFullName());
         }
     }
 
