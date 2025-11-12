@@ -1,4 +1,4 @@
-package com.example.boobleproject;
+package com.example.boobleproject.Logins;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.boobleproject.Api.ApiClient;
+import com.example.boobleproject.Api.ApiService;
+import com.example.boobleproject.Mainpage;
+import com.example.boobleproject.R;
+import com.example.boobleproject.Registration.Registation;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

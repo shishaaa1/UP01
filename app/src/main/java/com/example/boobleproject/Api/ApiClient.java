@@ -1,4 +1,4 @@
-package com.example.boobleproject;
+package com.example.boobleproject.Api;
 
 import com.google.gson.GsonBuilder;
 

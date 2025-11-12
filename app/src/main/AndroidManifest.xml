@@ -19,28 +19,28 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".LikesOrNo"
+            android:name=".LikesOrNot.LikesOrNo"
             android:exported="false" />
         <activity
-            android:name=".Messages"
+            android:name=".MessageMatch.Messages"
             android:exported="false" />
         <activity
             android:name=".adapter_isLike"
             android:exported="false" />
         <activity
-            android:name=".Islike"
+            android:name=".MessageMatch.Islike"
             android:exported="false" />
         <activity
-            android:name=".Personalaccount"
+            android:name=".Account.Personalaccount"
             android:exported="false" />
         <activity
-            android:name=".Registation"
+            android:name=".Registration.Registation"
             android:exported="false" />
         <activity
             android:name=".Mainpage"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Logins.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

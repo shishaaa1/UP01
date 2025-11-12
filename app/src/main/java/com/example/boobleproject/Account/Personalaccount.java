@@ -1,7 +1,5 @@
-package com.example.boobleproject;
+package com.example.boobleproject.Account;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,13 +15,12 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.boobleproject.Api.ApiClient;
+import com.example.boobleproject.Api.ApiService;
+import com.example.boobleproject.Profile;
+import com.example.boobleproject.R;
 import com.google.android.material.button.MaterialButton;
-import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
@@ -35,10 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Personalaccount extends AppCompatActivity {
 

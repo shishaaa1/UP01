@@ -1,6 +1,7 @@
-package com.example.boobleproject;
+package com.example.boobleproject.Api;
 
-import java.util.Date;
+import com.example.boobleproject.Profile;
+
 import java.util.List;
 import java.util.Map;
 

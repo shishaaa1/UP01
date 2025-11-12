@@ -1,6 +1,4 @@
-package com.example.boobleproject;
-
-import java.util.Date;
+package com.example.boobleproject.MessageMatch;
 
 public class Message {
     public int id;

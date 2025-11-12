@@ -1,4 +1,4 @@
-package com.example.boobleproject;
+package com.example.boobleproject.MessageMatch;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +16,11 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.boobleproject.Api.ApiClient;
+import com.example.boobleproject.Api.ApiService;
+import com.example.boobleproject.Profile;
+import com.example.boobleproject.R;
 
 import java.util.ArrayList;
 import java.util.List;

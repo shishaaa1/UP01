@@ -33,7 +33,7 @@ public class Profile {
     public String getLastName() { return lastName; }
     public Date getBirthday() { return birthday; }
     public String getGenderAsString() {
-        return sex ? "Мужской" : "Женский"; // true = Мужской, false = Женский
+        return sex ? "Мужской" : "Женский";
     }
     public void setGender(boolean gender) {
         this.sex = gender;

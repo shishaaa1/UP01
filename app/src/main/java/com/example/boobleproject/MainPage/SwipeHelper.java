@@ -1,4 +1,4 @@
-package com.example.boobleproject;
+package com.example.boobleproject.MainPage;
 
 import android.graphics.Canvas;
 import android.os.Looper;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.boobleproject.ProfileAdapter;
+import com.example.boobleproject.R;
 
 
 public class SwipeHelper extends ItemTouchHelper.SimpleCallback {

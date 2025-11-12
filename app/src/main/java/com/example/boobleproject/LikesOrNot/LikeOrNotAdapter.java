@@ -1,4 +1,4 @@
-package com.example.boobleproject;
+package com.example.boobleproject.LikesOrNot;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +15,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.boobleproject.Api.ApiClient;
+import com.example.boobleproject.Api.ApiService;
+import com.example.boobleproject.Profile;
+import com.example.boobleproject.R;
 
 import java.util.ArrayList;
 import java.util.List;

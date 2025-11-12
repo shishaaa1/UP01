@@ -17,6 +17,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.boobleproject.Account.Personalaccount;
+import com.example.boobleproject.Api.ApiClient;
+import com.example.boobleproject.Api.ApiService;
+import com.example.boobleproject.LikesOrNot.LikesOrNo;
+import com.example.boobleproject.MainPage.SwipeHelper;
+import com.example.boobleproject.MessageMatch.Islike;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,8 +32,6 @@ import retrofit2.Response;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-
 
 
 public class Mainpage extends AppCompatActivity {
@@ -48,8 +53,6 @@ public class Mainpage extends AppCompatActivity {
         setContentView(R.layout.activity_mainpage);
         likeManager = new LikeManager(this);
         apiService = ApiClient.getApiService();
-
-        // Получаем ID текущего пользователя
         SharedPreferences userPrefs = getSharedPreferences("userPrefs", MODE_PRIVATE);
         currentUserId = userPrefs.getInt("userId", -1); // Сохраняем в поле класса
 
@@ -59,7 +62,7 @@ public class Mainpage extends AppCompatActivity {
             return;
         }
 
-        Log.d("MAINPAGE_DEBUG", "Текущий пользователь ID: " + currentUserId);
+
 
         rvProfiles = findViewById(R.id.rv_profiles);
         swipeIndicator = findViewById(R.id.iv_swipe_indicator);
@@ -91,13 +94,11 @@ public class Mainpage extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
                 logResponseBody(response);
-                Log.d("DEBUG_MAINPAGE", "Response code: " + response.code());
-                Log.d("DEBUG_MAINPAGE", "Response isSuccessful: " + response.isSuccessful());
+
 
                 if (response.isSuccessful() && response.body() != null) {
                     List<Profile> oppositeSexUsers = response.body();
-                    Log.d("DEBUG_MAINPAGE", "Получено пользователей противоположного пола: " + oppositeSexUsers.size());
-                    Log.d("GENDER_DEBUG", "=== ОТЛАДКА ПОЛА ===");
+
                     for (Profile user : oppositeSexUsers) {
                         Log.d("GENDER_DEBUG",
                                 "ID: " + user.id +
@@ -105,7 +106,7 @@ public class Mainpage extends AppCompatActivity {
                                         " | Sex: " + user.sex +
                                         " | getGenderAsString(): " + user.getGenderAsString());
                     }
-                    // Логируем первых нескольких пользователей для проверки
+
                     for (int i = 0; i < Math.min(3, oppositeSexUsers.size()); i++) {
                         Profile user = oppositeSexUsers.get(i);
 
@@ -119,18 +120,17 @@ public class Mainpage extends AppCompatActivity {
                     allFilteredProfiles.clear();
                     allFilteredProfiles.addAll(oppositeSexUsers);
 
-                    // Загружаем фото для пользователей у которых их нет
                     loadMissingPhotos();
 
                 } else {
-                    Log.d("DEBUG_MAINPAGE", "Response error body: " + response.errorBody());
+
                     Toast.makeText(Mainpage.this, "Ошибка загрузки пользователей: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Profile>> call, Throwable t) {
-                Log.e("DEBUG_MAINPAGE", "Network error: " + t.getMessage());
+
                 Toast.makeText(Mainpage.this, "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -143,7 +143,6 @@ public class Mainpage extends AppCompatActivity {
             }
         }
 
-        // После загрузки пользователей добавляем их в очередь
         Collections.shuffle(allFilteredProfiles);
         addNextProfilesToQueue(5);
     }
@@ -153,9 +152,7 @@ public class Mainpage extends AppCompatActivity {
         try {
             // Получаем сырой JSON ответ
             String rawJson = response.raw().body().string();
-            Log.d("RAW_JSON_DEBUG", "=== СЫРОЙ JSON ОТВЕТ ===");
-            Log.d("RAW_JSON_DEBUG", rawJson);
-            Log.d("RAW_JSON_DEBUG", "=== КОНЕЦ JSON ===");
+
         } catch (Exception e) {
             Log.e("RAW_JSON_DEBUG", "Ошибка чтения response body: " + e.getMessage());
         }
@@ -167,16 +164,13 @@ public class Mainpage extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        // Конвертируем ResponseBody в byte array
                         byte[] photoBytes = response.body().bytes();
 
-                        // Конвертируем byte array в base64 строку
                         String base64Photo = Base64.encodeToString(photoBytes, Base64.DEFAULT);
                         user.photoBytes = base64Photo;
 
                         Log.d("PHOTO_DEBUG", "Фото загружено для пользователя ID: " + user.id + ", размер: " + base64Photo.length());
 
-                        // Обновляем адаптер если этот пользователь сейчас отображается
                         updateAdapterIfNeeded(user);
 
                     } catch (Exception e) {
@@ -195,7 +189,6 @@ public class Mainpage extends AppCompatActivity {
     }
 
     private void updateAdapterIfNeeded(Profile updatedUser) {
-        // Ищем в списке адаптера, а не в profileQueue
         for (int i = 0; i < adapter.profiles.size(); i++) {
             if (adapter.profiles.get(i).id == updatedUser.id) {
                 Log.d("PHOTO_DEBUG", "Обновляем фото в адаптере для позиции: " + i + ", пользователь: " + updatedUser.getFullName());
@@ -223,7 +216,6 @@ public class Mainpage extends AppCompatActivity {
         }
     }
 
-    // Остальные методы без изменений
     private void setupRecyclerView() {
         rvProfiles.setLayoutManager(new LinearLayoutManager(this));
         profileQueue = new ArrayList<>();

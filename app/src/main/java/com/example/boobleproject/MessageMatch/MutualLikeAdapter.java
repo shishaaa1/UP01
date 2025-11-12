@@ -1,4 +1,4 @@
-package com.example.boobleproject;
+package com.example.boobleproject.MessageMatch;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.boobleproject.Profile;
+import com.example.boobleproject.R;
 
 import java.util.ArrayList;
 import java.util.List;

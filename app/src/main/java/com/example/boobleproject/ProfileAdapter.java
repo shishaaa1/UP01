@@ -39,29 +39,28 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         holder.bind(profile);
 
         if (position == 0) {
-            // Только верхняя карточка видима и нормального размера
+
             holder.itemView.setAlpha(1f);
             holder.itemView.setScaleX(1f);
             holder.itemView.setScaleY(1f);
             holder.itemView.setTranslationY(0f);
             holder.itemView.setVisibility(View.VISIBLE);
 
-            // Устанавливаем нормальную высоту
             ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
             params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             holder.itemView.setLayoutParams(params);
 
-            Log.d("DEBUG_ADAPTER", "Позиция 0 - карточка видима: " + profile.getFullName());
+
         } else {
-            // Все остальные карточки невидимы и с нулевой высотой
+
             holder.itemView.setVisibility(View.INVISIBLE);
 
-            // Устанавливаем нулевую высоту чтобы нельзя было прокрутить
+
             ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
             params.height = 0;
             holder.itemView.setLayoutParams(params);
 
-            Log.d("DEBUG_ADAPTER", "Позиция " + position + " - карточка скрыта: " + profile.getFullName());
+
         }
     }
 
@@ -75,7 +74,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
             profiles.remove(position);
             notifyItemRemoved(position);
 
-            // Обновляем новую верхнюю карточку
             if (!profiles.isEmpty()) {
                 notifyItemChanged(0);
             }
@@ -83,11 +81,11 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
     }
 
     public void addProfiles(List<Profile> newProfiles) {
-        Log.d("DEBUG_ADAPTER", "addProfiles called with " + newProfiles.size() + " profiles");
+
         int start = profiles.size();
         profiles.addAll(newProfiles);
         notifyItemRangeInserted(start, newProfiles.size());
-        Log.d("DEBUG_ADAPTER", "Now total profiles: " + profiles.size());
+
     }
 
     public boolean isEmpty() {
@@ -107,60 +105,46 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileV
         }
 
         void bind(Profile profile) {
-            // Детальная отладка
-            Log.d("DEBUG_ADAPTER", "=== BIND PROFILE ===");
-            Log.d("DEBUG_ADAPTER", "Position: " + getAdapterPosition());
-            Log.d("DEBUG_ADAPTER", "ID: " + profile.id);
-            Log.d("DEBUG_ADAPTER", "Name: " + profile.getFullName());
-            Log.d("DEBUG_ADAPTER","SEX" + profile.getGenderAsString());
-            Log.d("DEBUG_ADAPTER", "PhotoBytes null: " + (profile.photoBytes == null));
-            Log.d("DEBUG_ADAPTER", "PhotoBytes empty: " + (profile.photoBytes != null && profile.photoBytes.isEmpty()));
-            Log.d("DEBUG_ADAPTER", "PhotoBytes length: " + (profile.photoBytes != null ? profile.photoBytes.length() : 0));
 
-            // Пробуем установить фото
+
             if (profile.photoBytes != null && !profile.photoBytes.isEmpty()) {
                 try {
-                    Log.d("DEBUG_ADAPTER", "Starting photo decoding...");
 
-                    // Проверяем Base64 строку
                     if (!profile.photoBytes.startsWith("/9j/") && !profile.photoBytes.startsWith("iVBOR")) {
-                        Log.d("DEBUG_ADAPTER", "Base64 doesn't look like JPEG/PNG, starts with: " +
-                                profile.photoBytes.substring(0, Math.min(10, profile.photoBytes.length())));
+
                     }
 
                     byte[] decodedString = Base64.decode(profile.photoBytes, Base64.DEFAULT);
-                    Log.d("DEBUG_ADAPTER", "Decoded bytes length: " + decodedString.length);
+
 
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
                     if (decodedByte != null) {
-                        Log.d("DEBUG_ADAPTER", "Bitmap created: " + decodedByte.getWidth() + "x" + decodedByte.getHeight());
+
                         ivPhoto.setImageBitmap(decodedByte);
-                        Log.d("DEBUG_ADAPTER", "Photo set successfully");
+
                     } else {
-                        Log.e("DEBUG_ADAPTER", "BitmapFactory returned null");
+
                         ivPhoto.setImageResource(profile.getPhotoRes());
                     }
 
                 } catch (IllegalArgumentException e) {
-                    Log.e("DEBUG_ADAPTER", "Base64 decoding error: " + e.getMessage());
+
                     ivPhoto.setImageResource(profile.getPhotoRes());
                 } catch (Exception e) {
-                    Log.e("DEBUG_ADAPTER", "Other error: " + e.getMessage());
+
                     ivPhoto.setImageResource(profile.getPhotoRes());
                 }
             } else {
-                Log.d("DEBUG_ADAPTER", "No photo bytes available");
+
                 ivPhoto.setImageResource(profile.getPhotoRes());
             }
 
-            // Устанавливаем остальные данные
             tvName.setText(profile.getFullName());
             String ageAndGender = profile.getAge() + " лет • " + profile.getGenderAsString();
             tvAge.setText(ageAndGender);
             tvBio.setText(profile.getBio());
 
-            Log.d("DEBUG_ADAPTER", "=== BIND COMPLETE ===");
         }
     }
 }

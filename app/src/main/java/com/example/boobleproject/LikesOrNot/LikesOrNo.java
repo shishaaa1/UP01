@@ -1,4 +1,4 @@
-package com.example.boobleproject;
+package com.example.boobleproject.LikesOrNot;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +13,11 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.boobleproject.Api.ApiClient;
+import com.example.boobleproject.Api.ApiService;
+import com.example.boobleproject.Profile;
+import com.example.boobleproject.R;
 
 import java.util.ArrayList;
 import java.util.List;
