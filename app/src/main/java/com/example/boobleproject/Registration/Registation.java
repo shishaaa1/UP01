@@ -19,6 +19,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import okhttp3.ResponseBody;
@@ -65,7 +66,7 @@ public class Registation extends AppCompatActivity {
                     Calendar cal = Calendar.getInstance();
                     cal.set(year, month, dayOfMonth);
                     SimpleDateFormat iso = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                    selectedBirthday = iso.format(cal.getTime()); // ← ISO для сервера!
+                    selectedBirthday = iso.format(cal.getTime());
 
                 }
         );
@@ -83,15 +84,17 @@ public class Registation extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
         String bio = etBio.getText().toString().trim();
 
+        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        String createdAt = isoFormat.format(new Date());
+
         if (firstName.isEmpty() || lastName.isEmpty() || selectedBirthday.isEmpty() ||
                 login.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show();
             return;
         }
-
         ApiService apiService = ApiClient.getApiService();
         Call<Void> call = apiService.registerUser(
-                firstName, lastName, selectedBirthday, bio, isMale, login, password
+                firstName, lastName, selectedBirthday, bio, isMale, login, password,createdAt
         );
 
         call.enqueue(new Callback<Void>() {

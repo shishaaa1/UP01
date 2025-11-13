@@ -31,7 +31,8 @@ public interface ApiService {
             @Field("BIO") String bio,
             @Field("Sex") boolean sex,
             @Field("Login") String login,
-            @Field("Password") String password
+            @Field("Password") String password,
+            @Field("CreatedAt") String createdAt
     );
     @FormUrlEncoded
     @POST("api/UserController/LoginUsers")
