@@ -27,7 +27,7 @@ public interface ApiService {
     Call<Void> registerUser(
             @Field("FirstName") String firstName,
             @Field("LastName") String lastName,
-            @Field("Birthday") String birthday, // формат "yyyy-MM-dd"
+            @Field("Birthday") String birthday,
             @Field("BIO") String bio,
             @Field("Sex") boolean sex,
             @Field("Login") String login,

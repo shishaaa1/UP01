@@ -32,7 +32,7 @@ public class Registation extends AppCompatActivity {
     private MaterialButtonToggleGroup genderGroup;
     private Button btnRegister;
     private String selectedBirthday = "";
-    private DatePicker datePicker; // 👈 добавляем поле
+    private DatePicker datePicker;
 
     private final Calendar calendar = Calendar.getInstance();
     private boolean isMale = true;
@@ -66,13 +66,13 @@ public class Registation extends AppCompatActivity {
                     cal.set(year, month, dayOfMonth);
                     SimpleDateFormat iso = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                     selectedBirthday = iso.format(cal.getTime()); // ← ISO для сервера!
-                    Toast.makeText(this, "Выбрано: " + selectedBirthday, Toast.LENGTH_SHORT).show();
+
                 }
         );
 
         btnRegister.setOnClickListener(v -> {
 
-            registerUser(); // ← твой метод
+            registerUser();
         });
     }
 
@@ -101,12 +101,12 @@ public class Registation extends AppCompatActivity {
                     Toast.makeText(Registation.this, "Регистрация успешна!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    String errorMessage = "Неизвестная ошибка";  // Fallback
+                    String errorMessage = "Неизвестная ошибка";
                     ResponseBody errorBody = response.errorBody();
                     if (errorBody != null) {
                         try {
-                            errorMessage = errorBody.string();  // Читаем тело ошибки
-                            // Опционально: если JSON, распарсите (пример ниже)
+                            errorMessage = errorBody.string();
+
                         } catch (IOException e) {
                             Log.e("RegistrationError", "Ошибка чтения ответа: " + e.getMessage());
                             errorMessage = "Ошибка чтения ответа сервера";

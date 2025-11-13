@@ -77,9 +77,8 @@ public class Personalaccount extends AppCompatActivity {
         btnEditProfile.setOnClickListener(v -> EditProfile());
 
         SharedPreferences userPrefs = getSharedPreferences("userPrefs", MODE_PRIVATE);
-        currentUserId = userPrefs.getInt("userId", -1); // Сохраняем в поле класса
+        currentUserId = userPrefs.getInt("userId", -1);
 
-        Log.d("PersonalAccount", "Загружен userId: " + currentUserId); // Добавьте логирование
 
         if (currentUserId != -1) {
             loadUserProfile(currentUserId);
@@ -96,7 +95,6 @@ public class Personalaccount extends AppCompatActivity {
         try {
             selectedImageUri = uri;
             photoChanged = true;
-
             InputStream inputStream = getContentResolver().openInputStream(uri);
             if (inputStream != null) {
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
@@ -131,14 +129,13 @@ public class Personalaccount extends AppCompatActivity {
                     }
 
                     currentUserId = userId;
-                    Log.d("PersonalAccount", "currentUserId установлен: " + currentUserId);
+
                 }
             }
 
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
-                Log.e("PersonalAccount", "Ошибка при загрузке профиля", t);
-                Toast.makeText(Personalaccount.this, "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -152,23 +149,21 @@ public class Personalaccount extends AppCompatActivity {
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     currentPhotoId = response.body();
-                    Log.d("PersonalAccount", "Получен photoId: " + currentPhotoId);
+
                 } else {
                     currentPhotoId = -1;
-                    Log.d("PersonalAccount", "Фото не найдено, photoId: " + currentPhotoId);
+
                 }
             }
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
-                Log.e("PersonalAccount", "Ошибка при загрузке ID фото", t);
                 currentPhotoId = -1;
             }
         });
     }
 
     private void updatePhoto() {
-        Log.d("PersonalAccount", "updatePhoto: currentPhotoId = " + currentPhotoId);
         if (currentPhotoId != -1) {
             deleteOldPhoto();
         } else {
@@ -183,17 +178,17 @@ public class Personalaccount extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d("PersonalAccount", "Старое фото удалено, ID: " + currentPhotoId);
+
                     uploadNewPhoto();
                 } else {
-                    Log.e("PersonalAccount", "Ошибка при удалении старого фото: " + response.code());
+
                     Toast.makeText(Personalaccount.this, "Ошибка при удалении старого фото", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("PersonalAccount", "Ошибка при удалении фото", t);
+
                 Toast.makeText(Personalaccount.this, "Ошибка при удалении фото: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

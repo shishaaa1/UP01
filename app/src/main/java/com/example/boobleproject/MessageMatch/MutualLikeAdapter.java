@@ -69,51 +69,46 @@ public class MutualLikeAdapter extends RecyclerView.Adapter<MutualLikeAdapter.Mu
         }
 
         void bind(Profile profile) {
-            // Детальная отладка
-            Log.d("MUTUAL_ADAPTER", "=== BIND MUTUAL PROFILE ===");
-            Log.d("MUTUAL_ADAPTER", "Position: " + getAdapterPosition());
-            Log.d("MUTUAL_ADAPTER", "ID: " + profile.id);
-            Log.d("MUTUAL_ADAPTER", "Name: " + profile.getFullName());
-            Log.d("MUTUAL_ADAPTER", "PhotoBytes null: " + (profile.photoBytes == null));
 
-            // Устанавливаем фото
+
+
             if (profile.photoBytes != null && !profile.photoBytes.isEmpty()) {
                 try {
-                    Log.d("MUTUAL_ADAPTER", "Starting photo decoding...");
+
 
                     byte[] decodedString = android.util.Base64.decode(profile.photoBytes, android.util.Base64.DEFAULT);
-                    Log.d("MUTUAL_ADAPTER", "Decoded bytes length: " + decodedString.length);
+
 
                     android.graphics.Bitmap decodedByte = android.graphics.BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
                     if (decodedByte != null) {
-                        Log.d("MUTUAL_ADAPTER", "Bitmap created: " + decodedByte.getWidth() + "x" + decodedByte.getHeight());
+
                         ivPhoto.setImageBitmap(decodedByte);
-                        Log.d("MUTUAL_ADAPTER", "Photo set successfully");
+
                     } else {
-                        Log.e("MUTUAL_ADAPTER", "BitmapFactory returned null");
+
                         ivPhoto.setImageResource(profile.getPhotoRes());
                     }
 
                 } catch (IllegalArgumentException e) {
-                    Log.e("MUTUAL_ADAPTER", "Base64 decoding error: " + e.getMessage());
+
                     ivPhoto.setImageResource(profile.getPhotoRes());
                 } catch (Exception e) {
                     Log.e("MUTUAL_ADAPTER", "Other error: " + e.getMessage());
                     ivPhoto.setImageResource(profile.getPhotoRes());
                 }
             } else {
-                Log.d("MUTUAL_ADAPTER", "No photo bytes available");
+
                 ivPhoto.setImageResource(profile.getPhotoRes());
             }
 
-            // Устанавливаем имя и возраст
+
             tvName.setText(profile.getFullName());
             tvAge.setText(profile.getAge() + " лет");
 
-            Log.d("MUTUAL_ADAPTER", "=== BIND COMPLETE ===");
 
-            // Обработчик клика на кнопку "Написать сообщение"
+
+
             itemView.findViewById(R.id.btn_send_message).setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onMessageClick(profile);

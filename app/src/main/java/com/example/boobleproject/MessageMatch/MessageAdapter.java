@@ -20,8 +20,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     private List<Message> messages;
     private int currentUserId;
-    private Profile recipientProfile;  // Профиль собеседника
-    private Profile currentUserProfile; // Профиль текущего пользователя
+    private Profile recipientProfile;
+    private Profile currentUserProfile;
 
     public MessageAdapter(List<Message> messages, int currentUserId, Profile recipientProfile, Profile currentUserProfile) {
         this.messages = messages != null ? messages : new ArrayList<>();
@@ -29,11 +29,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         this.recipientProfile = recipientProfile;
         this.currentUserProfile = currentUserProfile;
 
-        Log.d("MESSAGE_ADAPTER", "Конструктор адаптера вызван");
-        Log.d("MESSAGE_ADAPTER", "Сообщений: " + this.messages.size());
-        Log.d("MESSAGE_ADAPTER", "currentUserId: " + currentUserId);
-        Log.d("MESSAGE_ADAPTER", "recipientProfile: " + (recipientProfile != null ? recipientProfile.getFullName() : "null"));
-        Log.d("MESSAGE_ADAPTER", "currentUserProfile: " + (currentUserProfile != null ? currentUserProfile.getFullName() : "null"));
+
     }
 
     @NonNull
@@ -46,7 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        Log.d("MESSAGE_ADAPTER", "onBindViewHolder позиция: " + position);
+
         if (position < messages.size()) {
             Message message = messages.get(position);
             holder.bind(message);
@@ -58,19 +54,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public int getItemCount() {
         int count = messages.size();
-        Log.d("MESSAGE_ADAPTER", "getItemCount: " + count);
         return count;
     }
 
     public void setMessages(List<Message> newMessages) {
-        Log.d("MESSAGE_ADAPTER", "setMessages вызван, новых сообщений: " + newMessages.size());
-
-        // СОЗДАЕМ НОВЫЙ СПИСОК вместо очистки существующего
-        this.messages = new ArrayList<>(newMessages); // ВАЖНО: создаем копию!
-
-        Log.d("MESSAGE_ADAPTER", "Адаптер теперь содержит: " + this.messages.size() + " сообщений");
+        this.messages = new ArrayList<>(newMessages);
         notifyDataSetChanged();
-        Log.d("MESSAGE_ADAPTER", "notifyDataSetChanged вызван");
     }
 
     public void addMessage(Message message) {
@@ -97,18 +86,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             boolean isSentByMe = message.userid1 == currentUserId;
 
             if (isSentByMe) {
-                // Мое сообщение (правая сторона) - показываем мое фото
+
                 layoutSent.setVisibility(View.VISIBLE);
                 layoutReceived.setVisibility(View.GONE);
                 tvSentMessage.setText(message.text);
-                setUserAvatar(ivSentAvatar, currentUserProfile); // Мое фото
+                setUserAvatar(ivSentAvatar, currentUserProfile);
 
             } else {
-                // Полученное сообщение (левая сторона) - показываем фото собеседника
+
                 layoutSent.setVisibility(View.GONE);
                 layoutReceived.setVisibility(View.VISIBLE);
                 tvReceivedMessage.setText(message.text);
-                setUserAvatar(ivReceivedAvatar, recipientProfile); // Фото собеседника
+                setUserAvatar(ivReceivedAvatar, recipientProfile);
             }
         }
 
@@ -127,16 +116,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         imageView.setImageBitmap(decodedByte);
                         Log.d("MESSAGE_ADAPTER", "Аватар установлен успешно");
                         return;
-                    } else {
-                        Log.e("MESSAGE_ADAPTER", "BitmapFactory вернул null");
                     }
                 } catch (Exception e) {
                     Log.e("MESSAGE_ADAPTER", "Ошибка установки аватара: " + e.getMessage());
                 }
-            } else {
-                Log.d("MESSAGE_ADAPTER", "PhotoBytes недоступны или пусты");
             }
-
             imageView.setImageResource(R.drawable.alt1);
         }
     }

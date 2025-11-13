@@ -54,13 +54,9 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && response.body() > 0) {
                     int userId = response.body();
 
-                    // ПРОСТО СОХРАНЯЕМ ID, ПОЛ НЕ НУЖЕН
                     SharedPreferences sharedPreferences = getSharedPreferences("userPrefs", Context.MODE_PRIVATE);
                     sharedPreferences.edit().putInt("userId", userId).apply();
 
-                    Log.d("LOGIN_DEBUG", "Сохранен пользователь ID: " + userId);
-
-                    // Переход на главную страницу
                     Intent intent = new Intent(MainActivity.this, Mainpage.class);
                     startActivity(intent);
                     finish();
@@ -71,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
-                Log.e("API_ERROR", "Ошибка сети", t);
+
                 Toast.makeText(MainActivity.this, "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

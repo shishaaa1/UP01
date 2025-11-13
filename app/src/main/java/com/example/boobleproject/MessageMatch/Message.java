@@ -18,7 +18,5 @@ public class Message {
         this.timestamp = new java.util.Date().toString();
     }
 
-    public boolean isSentByMe(int currentUserId) {
-        return userid1 == currentUserId;
-    }
+
 }

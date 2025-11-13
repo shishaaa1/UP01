@@ -18,25 +18,22 @@ public class ApiClient {
 
 
         if (retrofit == null) {
-            // 🔹 ЛОГИРОВАНИЕ — увидишь ВСЁ: редиректы, тело, ошибки
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-            // 🔹 OkHttp клиент с редиректами
             OkHttpClient client = new OkHttpClient.Builder()
-                    .followRedirects(true)        // ← Редиректы ВКЛ!
-                    .followSslRedirects(true)     // ← HTTP → HTTPS
-                    .addInterceptor(logging)      // ← Логи в Logcat
+                    .followRedirects(true)
+                    .followSslRedirects(true)
+                    .addInterceptor(logging)
                     .connectTimeout(15, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .build();
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .client(client)               // ← Используем наш клиент
+                    .client(client)
                     .addConverterFactory(GsonConverterFactory.create(
                             new GsonBuilder()
-                                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss") // <-- сюда
+                                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                                     .create()
                     ))
                     .build();

@@ -60,38 +60,27 @@ public class Messages extends AppCompatActivity {
 
         apiService = ApiClient.getApiService();
 
-        // Получаем ID текущего пользователя
         SharedPreferences userPrefs = getSharedPreferences("userPrefs", MODE_PRIVATE);
         currentUserId = userPrefs.getInt("userId", -1);
 
-        // Получаем ID получателя из Intent
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("RECIPIENT_ID")) {
             recipientId = intent.getIntExtra("RECIPIENT_ID", -1);
         }
-        // ДОБАВЬТЕ ЭТИ ЛОГИ ДЛЯ ОТЛАДКИ
-        Log.d("MESSAGES_DEBUG", "=== DEBUG USER IDs ===");
-        Log.d("MESSAGES_DEBUG", "Current User ID from SharedPreferences: " + currentUserId);
-        Log.d("MESSAGES_DEBUG", "Recipient ID from Intent: " + recipientId);
-        Log.d("MESSAGES_DEBUG", "=== END DEBUG ===");
+
 
         if (currentUserId == -1 || recipientId == -1) {
             Toast.makeText(this, "Ошибка данных пользователя", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-        // ДОБАВЬТЕ ЭТИ ЛОГИ ДЛЯ ОТЛАДКИ
-        Log.d("MESSAGES_DEBUG", "=== DEBUG USER IDs ===");
-        Log.d("MESSAGES_DEBUG", "Current User ID from SharedPreferences: " + currentUserId);
-        Log.d("MESSAGES_DEBUG", "Recipient ID from Intent: " + recipientId);
-        Log.d("MESSAGES_DEBUG", "=== END DEBUG ===");
 
         initViews();
         setupRecyclerView();
         loadUserProfiles();
         setupClickListeners();
         setupAutoRefresh();
-        // УБЕДИТЕСЬ ЧТО messageList ИНИЦИАЛИЗИРОВАН
+
         if (messageList == null) {
             messageList = new ArrayList<>();
             Log.d("MESSAGES_DEBUG", "messageList инициализирован");
@@ -108,7 +97,7 @@ public class Messages extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        // Временно создаем адаптер без профилей
+
         messageAdapter = new MessageAdapter(messageList, currentUserId, null, null);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
@@ -118,7 +107,7 @@ public class Messages extends AppCompatActivity {
     }
 
     private void loadUserProfiles() {
-        // Сначала загружаем профиль текущего пользователя
+
         loadCurrentUserProfile();
     }
 
@@ -129,13 +118,11 @@ public class Messages extends AppCompatActivity {
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     currentUserProfile = response.body();
-                    Log.d("MESSAGES", "Загружен профиль текущего пользователя: " + currentUserProfile.getFullName());
 
-                    // ЗАГРУЖАЕМ ФОТО ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ
                     loadCurrentUserPhoto();
 
                 } else {
-                    Log.e("MESSAGES", "Ошибка загрузки профиля текущего пользователя");
+
                     loadRecipientProfile();
                 }
             }
@@ -158,14 +145,14 @@ public class Messages extends AppCompatActivity {
                         byte[] photoBytes = response.body().bytes();
                         String base64Photo = android.util.Base64.encodeToString(photoBytes, android.util.Base64.DEFAULT);
                         currentUserProfile.photoBytes = base64Photo;
-                        Log.d("MESSAGES", "Фото текущего пользователя загружено");
+
                     } catch (Exception e) {
                         Log.e("MESSAGES", "Ошибка загрузки фото текущего пользователя: " + e.getMessage());
                     }
                 } else {
                     Log.d("MESSAGES", "Фото текущего пользователя не найдено");
                 }
-                // После загрузки фото текущего пользователя загружаем получателя
+
                 loadRecipientProfile();
             }
 
@@ -185,10 +172,8 @@ public class Messages extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     recipientProfile = response.body();
 
-                    // Устанавливаем имя и фото получателя в верхней панели
                     tvUserName.setText(recipientProfile.getFullName());
 
-                    // ЗАГРУЖАЕМ ФОТО ДЛЯ ПОЛУЧАТЕЛЯ
                     loadRecipientPhoto();
 
                 } else {
@@ -216,15 +201,14 @@ public class Messages extends AppCompatActivity {
                         recipientProfile.photoBytes = base64Photo;
                         Log.d("MESSAGES", "Фото получателя загружено");
 
-                        // ОБНОВЛЯЕМ АВАТАР ПОСЛЕ ЗАГРУЗКИ ФОТО
                         runOnUiThread(() -> {
                             setUserAvatar(ivUserAvatar, recipientProfile);
-                            // ОБНОВЛЯЕМ АДАПТЕР С НОВЫМИ ПРОФИЛЯМИ
+
                             updateAdapterWithProfiles();
                         });
 
                     } catch (Exception e) {
-                        Log.e("MESSAGES", "Ошибка загрузки фото получателя: " + e.getMessage());
+
                     }
                 } else {
                     Log.d("MESSAGES", "Фото получателя не найдено");
@@ -242,7 +226,7 @@ public class Messages extends AppCompatActivity {
 
     private void updateAdapterWithProfiles() {
         runOnUiThread(() -> {
-            // ПЕРЕСОЗДАЕМ АДАПТЕР С АКТУАЛЬНЫМИ ПРОФИЛЯМИ
+
             messageAdapter = new MessageAdapter(messageList, currentUserId, recipientProfile, currentUserProfile);
             rvMessages.setAdapter(messageAdapter);
 
@@ -254,22 +238,20 @@ public class Messages extends AppCompatActivity {
 
 
     private void loadConversation() {
-        Log.d("MESSAGES_DEBUG", "Загружаем переписку между: currentUserId=" + currentUserId + " и recipientId=" + recipientId);
+
 
         Call<ResponseBody> call = apiService.getConversationRaw(currentUserId, recipientId);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d("MESSAGES_DEBUG", "Response code: " + response.code());
-                Log.d("MESSAGES_DEBUG", "Response isSuccessful: " + response.isSuccessful());
+
 
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        // Получаем сырой JSON
-                        String jsonResponse = response.body().string();
-                        Log.d("MESSAGES_DEBUG", "Raw JSON response: " + jsonResponse);
 
-                        // Парсим JSON вручную
+                        String jsonResponse = response.body().string();
+
+
                         parseMessagesManually(jsonResponse);
 
                     } catch (Exception e) {
@@ -295,7 +277,6 @@ public class Messages extends AppCompatActivity {
             org.json.JSONArray jsonArray = new org.json.JSONArray(jsonResponse);
             List<Message> receivedMessages = new ArrayList<>();
 
-            Log.d("MESSAGES_DEBUG", "Найдено сообщений в JSON: " + jsonArray.length());
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 org.json.JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -308,38 +289,28 @@ public class Messages extends AppCompatActivity {
                 message.timestamp = jsonObject.getString("sendAt");
 
                 receivedMessages.add(message);
-                Log.d("MESSAGES_DEBUG", "Добавлено в receivedMessages: " + receivedMessages.size());
+
             }
 
-            // ДЕТАЛЬНЫЕ ЛОГИ ДЛЯ ОТЛАДКИ
-            Log.d("MESSAGES_DEBUG", "=== ДЕТАЛЬНАЯ ОТЛАДКА ===");
-            Log.d("MESSAGES_DEBUG", "receivedMessages size: " + receivedMessages.size());
-            Log.d("MESSAGES_DEBUG", "messageList до очистки: " + messageList.size());
+
 
             messageList.clear();
-            Log.d("MESSAGES_DEBUG", "messageList после очистки: " + messageList.size());
 
-            // ИСПОЛЬЗУЙТЕ ЦИКЛ ВМЕСТО addAll
             for (Message msg : receivedMessages) {
                 messageList.add(msg);
                 Log.d("MESSAGES_DEBUG", "Добавлено в messageList: " + msg.text);
             }
 
-            Log.d("MESSAGES_DEBUG", "messageList после добавления: " + messageList.size());
 
-            // ПРОВЕРЬТЕ КАЖДОЕ СООБЩЕНИЕ В messageList
             for (int i = 0; i < messageList.size(); i++) {
                 Message msg = messageList.get(i);
                 Log.d("MESSAGES_DEBUG", "messageList[" + i + "]: userid1=" + msg.userid1 + ", text=" + msg.text);
             }
 
-            Log.d("MESSAGES_DEBUG", "=== КОНЕЦ ОТЛАДКИ ===");
-
-            // ОБНОВИТЕ АДАПТЕР
             updateAdapter();
 
         } catch (Exception e) {
-            Log.e("MESSAGES_DEBUG", "Ошибка ручного парсинга JSON: " + e.getMessage());
+
             e.printStackTrace();
         }
     }
@@ -348,10 +319,7 @@ public class Messages extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.d("MESSAGES_DEBUG", "Обновляем адаптер в UI потоке");
-                Log.d("MESSAGES_DEBUG", "messageList size в updateAdapter: " + messageList.size());
 
-                // Убедитесь что адаптер существует
                 if (messageAdapter == null) {
                     Log.d("MESSAGES_DEBUG", "Создаем новый адаптер");
                     messageAdapter = new MessageAdapter(messageList, currentUserId, recipientProfile, currentUserProfile);
@@ -361,13 +329,12 @@ public class Messages extends AppCompatActivity {
                     messageAdapter.setMessages(messageList);
                 }
 
-                // Принудительно обновите RecyclerView
+
                 messageAdapter.notifyDataSetChanged();
                 Log.d("MESSAGES_DEBUG", "notifyDataSetChanged вызван");
 
                 scrollToBottom();
 
-                // Проверьте видимость RecyclerView
                 if (rvMessages.getVisibility() != View.VISIBLE) {
                     rvMessages.setVisibility(View.VISIBLE);
                     Log.d("MESSAGES_DEBUG", "RecyclerView теперь видим");
@@ -376,13 +343,8 @@ public class Messages extends AppCompatActivity {
         });
     }
     private void setupClickListeners() {
-        // Кнопка назад
         btnBack.setOnClickListener(v -> finish());
-
-        // Кнопка отправки сообщения
         btnSend.setOnClickListener(v -> sendMessage());
-
-        // Отправка по Enter
         etMessageInput.setOnKeyListener((v, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 sendMessage();
@@ -405,31 +367,24 @@ public class Messages extends AppCompatActivity {
             return;
         }
 
-        // Сразу добавляем сообщение в список для мгновенного отображения
         Message newMessage = new Message(currentUserId, recipientId, messageText);
         messageList.add(newMessage);
         messageAdapter.notifyItemInserted(messageList.size() - 1);
 
-        // Очищаем поле ввода
         etMessageInput.setText("");
 
-        // Скроллим к последнему сообщению
         scrollToBottom();
 
-        // Отправляем сообщение на сервер
         Call<ResponseBody> call = apiService.sendMessage(currentUserId, recipientId, messageText);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d("MESSAGES", "Сообщение успешно отправлено на сервер");
-                    // ОБНОВЛЯЕМ переписку чтобы получить сообщение с сервера
+
                     loadConversation();
                 } else {
                     Toast.makeText(Messages.this, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
-                    Log.e("MESSAGES", "Ошибка отправки сообщения: " + response.code());
 
-                    // УДАЛЯЕМ сообщение из списка при ошибке
                     messageList.remove(newMessage);
                     messageAdapter.notifyDataSetChanged();
                     Toast.makeText(Messages.this, "Сообщение не отправлено", Toast.LENGTH_SHORT).show();
@@ -439,9 +394,6 @@ public class Messages extends AppCompatActivity {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(Messages.this, "Ошибка сети при отправке", Toast.LENGTH_SHORT).show();
-                Log.e("MESSAGES", "Ошибка сети при отправке: " + t.getMessage());
-
-                // УДАЛЯЕМ сообщение из списка при ошибке сети
                 messageList.remove(newMessage);
                 messageAdapter.notifyDataSetChanged();
                 Toast.makeText(Messages.this, "Сообщение не отправлено из-за ошибки сети", Toast.LENGTH_SHORT).show();
@@ -470,7 +422,6 @@ public class Messages extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        // Если фото не загружено, используем дефолтное
         imageView.setImageResource(R.drawable.alt1);
     }
 
@@ -489,14 +440,12 @@ public class Messages extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Запускаем автообновление при открытии чата
         refreshHandler.postDelayed(refreshRunnable, REFRESH_INTERVAL);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // Останавливаем автообновление когда чат не активен
         refreshHandler.removeCallbacks(refreshRunnable);
     }
 

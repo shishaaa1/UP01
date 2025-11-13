@@ -52,10 +52,9 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
         int iconRes = direction == ItemTouchHelper.LEFT ? R.drawable.krest : R.drawable.heart;
         showSwipeIconWithDelay(iconRes, () -> {
-            // Удаляем верхнюю карточку (всегда позиция 0)
+
             adapter.removeItemAt(0);
 
-            // Анимируем появление следующей карточки
             animateNextCardAppearance();
 
             if (direction == ItemTouchHelper.LEFT) {
@@ -75,13 +74,11 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
             if (nextViewHolder != null) {
                 View nextCard = nextViewHolder.itemView;
 
-                // Устанавливаем начальное состояние (карточка снизу)
                 nextCard.setTranslationY(300f);
                 nextCard.setAlpha(0f);
                 nextCard.setScaleX(0.8f);
                 nextCard.setScaleY(0.8f);
 
-                // Анимация появления снизу
                 nextCard.animate()
                         .translationY(0f)
                         .alpha(1f)
@@ -100,9 +97,8 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
                             float dX, float dY,
                             int actionState, boolean isCurrentlyActive) {
 
-        // Разрешаем свайп только для верхней карточки (позиция 0)
         if (viewHolder.getBindingAdapterPosition() != 0) {
-            // Для неверхних карточек блокируем любой свайп
+
             viewHolder.itemView.setTranslationX(0);
             viewHolder.itemView.setTranslationY(0);
             return;
@@ -139,13 +135,12 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
         }
     }
 
-    // Блокируем свайп для неверхних карточек
     @Override
     public int getSwipeDirs(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         if (viewHolder.getBindingAdapterPosition() == 0) {
             return super.getSwipeDirs(recyclerView, viewHolder);
         }
-        return 0; // Запрещаем свайп для всех кроме позиции 0
+        return 0;
     }
 
     private void showSwipeIconWithDelay(int iconRes, Runnable onComplete) {

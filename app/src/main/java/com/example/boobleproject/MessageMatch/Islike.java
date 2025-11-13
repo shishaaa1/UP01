@@ -54,7 +54,7 @@ public class Islike extends AppCompatActivity implements MutualLikeAdapter.OnPro
             return;
         }
 
-        Log.d("MUTUAL_DEBUG", "Текущий пользователь ID: " + currentUserId);
+
 
         initViews();
         setupRecyclerView();
