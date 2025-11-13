@@ -52,17 +52,14 @@ public class SwipeHelper extends ItemTouchHelper.SimpleCallback {
 
         int iconRes = direction == ItemTouchHelper.LEFT ? R.drawable.krest : R.drawable.heart;
         showSwipeIconWithDelay(iconRes, () -> {
-
-            adapter.removeItemAt(0);
-
-            animateNextCardAppearance();
-
             if (direction == ItemTouchHelper.LEFT) {
-
                 onSwipeLeft.run();
             } else {
                 onSwipeRight.run();
             }
+
+            adapter.removeItemAt(0);
+            animateNextCardAppearance();
 
             isSwiping = false;
         });

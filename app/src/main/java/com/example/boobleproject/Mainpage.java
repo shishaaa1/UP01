@@ -266,9 +266,11 @@ public class Mainpage extends AppCompatActivity {
     private void sendSwipeAction(boolean isLike) {
         if (adapter != null && adapter.getItemCount() > 0) {
             Profile topProfile = adapter.profiles.get(0);
-            likeManager.sendLike(topProfile.id, isLike);
+            int currentProfileId = topProfile.id;
+            likeManager.sendLike(currentProfileId, isLike);
             Toast.makeText(this, isLike ? "Лайк!" : "Не нравится", Toast.LENGTH_SHORT).show();
+
+            removeTopCardAndCheckQueue();
         }
-        removeTopCardAndCheckQueue();
     }
 }
