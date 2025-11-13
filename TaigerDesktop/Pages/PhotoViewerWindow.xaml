@@ -1,13 +1,31 @@
-﻿<!-- PhotoViewerWindow.xaml -->
-<Window x:Class="TaigerDesktop.Pages.PhotoViewerWindow"
+﻿<Window x:Class="TaigerDesktop.Pages.PhotoViewerWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Просмотр фото" Height="600" Width="600"
-        WindowStartupLocation="CenterOwner">
-    <Grid>
-        <Image x:Name="imageControl" Stretch="Uniform" Margin="10"/>
-        <Button Content="Закрыть" Width="100" Height="40"
-                HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Margin="20" Click="Close_Click"/>
+        Title="Просмотр фото"
+        MinWidth="400"
+        MinHeight="300"
+        Width="600"
+        Height="600"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource LightBackgroundBrush}">
+
+    <Grid Margin="20">
+        <!-- Изображение растягивается, сохраняя пропорции -->
+        <Image x:Name="imageControl"
+               Stretch="Uniform"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}"
+               MaxHeight="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}" />
+
+        <!-- Кнопка "Закрыть" в правом нижнем углу -->
+        <Button Content="Закрыть"
+                Style="{StaticResource PrimaryButtonStyle}"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Width="120"
+                Height="40"
+                Margin="0,0,0,0"
+                Click="Close_Click" />
     </Grid>
 </Window>

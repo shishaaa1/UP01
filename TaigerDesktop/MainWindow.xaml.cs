@@ -21,33 +21,22 @@ namespace TaigerDesktop
         public MainWindow()
         {
             InitializeComponent();
-            // Загружаем начальную страницу, например, статистику
             HideMenu();
-
-            // Переходим на страницу авторизации
             MainFrame.Navigate(new Authorisation());
         }
-
-        // Метод для выхода (можно привязать к кнопке выхода)
         public void Logout()
         {
             ApiContext.Logout();
             HideMenu();
             MainFrame.Navigate(new Authorisation());
         }
-
-        // Показываем меню после авторизации
         public void ShowMenu()
         {
-            // Показываем элементы меню
             MenuBorder.Visibility = Visibility.Visible;
             BthHome.Visibility = Visibility.Visible;
             BtnUsers.Visibility = Visibility.Visible;
             BtnAddAdmin.Visibility = Visibility.Visible;
-            // Добавьте другие кнопки меню по необходимости
         }
-
-        // Скрываем меню при выходе
         public void HideMenu()
         {
             MenuBorder.Visibility = Visibility.Collapsed;
@@ -55,9 +44,6 @@ namespace TaigerDesktop
             BtnUsers.Visibility = Visibility.Collapsed;
             BtnAddAdmin.Visibility = Visibility.Collapsed;
         }
-
-        // Показать меню после авторизации
-       
 
         private void NavigateToPage(object sender, RoutedEventArgs e)
         {
@@ -94,7 +80,7 @@ namespace TaigerDesktop
         MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                Logout(); // Используем единый метод выхода
+                Logout(); 
             }
         }
 

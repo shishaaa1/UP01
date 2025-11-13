@@ -46,7 +46,7 @@ namespace TaigerDesktop.Pages
             set
             {
                 _filteredUsers = value;
-                OnPropertyChanged(); // ← критически важно!
+                OnPropertyChanged(); 
             }
         }
 
@@ -73,9 +73,6 @@ namespace TaigerDesktop.Pages
             {
                 var api = new ApiContext();
                 var users = await api.GetAllUsersAsync();
-
-                // Для отладки — можно убрать после проверки
-                // System.Windows.MessageBox.Show($"Загружено: {users?.Count ?? 0} пользователей");
 
                 AllUsers = users != null
                     ? new ObservableCollection<Users>(users)
@@ -114,14 +111,12 @@ namespace TaigerDesktop.Pages
             }
         }
 
-        // Метод вызывается из UserCard через FindParent
         public void RemoveUser(Users user)
         {
             AllUsers?.Remove(user);
             FilteredUsers?.Remove(user);
         }
 
-        // INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -25,7 +25,7 @@ namespace TaigerDesktop.Pages
     {
         private readonly ApiContext _apiContext;
         public ObservableCollection<KpiCard> KpiCards { get; set; }
-        private List<DailyStat> _statsData; // храним данные для графика
+        private List<DailyStat> _statsData; 
         public CheckStat()
         {
             InitializeComponent();
@@ -47,7 +47,6 @@ namespace TaigerDesktop.Pages
                 var stats = await _apiContext.GetStatsLast30DaysAsync();
                 _statsData = stats;
 
-                // === KPI ===
                 KpiCards.Clear();
                 if (stats.Any())
                 {
@@ -63,7 +62,6 @@ namespace TaigerDesktop.Pages
                 }
                 else
                 {
-                    // Заглушка
                     KpiCards.Add(new KpiCard { Label = "Сегодня", Value = "0" });
                     KpiCards.Add(new KpiCard { Label = "Вчера", Value = "—" });
                     KpiCards.Add(new KpiCard { Label = "Неделя", Value = "0" });
@@ -124,7 +122,6 @@ namespace TaigerDesktop.Pages
                 ChartPath.Data = null;
             }
 
-            // Точки
             PointsCanvas.Children.Clear();
             foreach (var p in points)
             {
@@ -142,7 +139,7 @@ namespace TaigerDesktop.Pages
 
         private void ChartCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            DrawChart(); // перерисовываем при изменении размера
+            DrawChart();
         }
 
         private void ChartCanvas_MouseMove(object sender, MouseEventArgs e)

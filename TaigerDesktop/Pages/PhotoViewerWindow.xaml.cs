@@ -33,7 +33,7 @@ namespace TaigerDesktop.Pages
                     bitmap.EndInit();
                     bitmap.Freeze();
                 }
-                imageControl.Source = bitmap; // imageControl — имя Image в XAML
+                imageControl.Source = bitmap; 
             }
         }
 

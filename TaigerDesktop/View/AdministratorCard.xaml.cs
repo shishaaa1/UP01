@@ -30,7 +30,6 @@ namespace TaigerDesktop.View
 
         private void AdminCard_Loaded(object sender, RoutedEventArgs e)
         {
-            // Подписываемся на событие удаления через родительскую страницу
             if (ParentPage() is CheckAdministrator checkAdmin)
             {
                 AdministratorDeleted += checkAdmin.RemoveAdmin;
@@ -74,8 +73,6 @@ namespace TaigerDesktop.View
                 }
             }
         }
-
-        // Единый метод для навигации — как в UserCard, но вынесем отдельно
         private void NavigateTo(Page page)
         {
             var parentPage = ParentPage();
@@ -87,8 +84,6 @@ namespace TaigerDesktop.View
 
             var window = Window.GetWindow(this);
             if (window == null) return;
-
-            // Ищем Frame в визуальном дереве
             var frame = FindFrame(window);
             if (frame != null)
             {
@@ -114,8 +109,6 @@ namespace TaigerDesktop.View
             }
             return null;
         }
-
-        // Общий метод поиска родительской страницы
         private Page ParentPage()
         {
             var window = Window.GetWindow(this);
@@ -132,8 +125,6 @@ namespace TaigerDesktop.View
 
             return null;
         }
-
-        // Событие удаления
         public event Action<Admin> AdministratorDeleted;
     }
 

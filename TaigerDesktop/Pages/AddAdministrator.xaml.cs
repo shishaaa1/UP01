@@ -41,7 +41,6 @@ namespace TaigerDesktop.Pages
             addButt.Content = "Добавить администратора";
             tName.Text = "Имя";
             tPassword.Text = "Пароль";
-            // Очищаем поля
             Name.Clear();
             Login.Clear();
             Password.Clear();
@@ -56,7 +55,6 @@ namespace TaigerDesktop.Pages
             addButt.Content = "Сохранить изменения";
             tName.Text = "Имя(Введите новый Nickname)";
             tPassword.Text = "Пароль(Введите новый пароль)";
-            // Заполняем поля текущими значениями
             Name.Text = _editingAdmin.Nickname;
             Login.Text = _editingAdmin.Login;
             Password.Password = _editingAdmin.Password;
@@ -77,7 +75,6 @@ namespace TaigerDesktop.Pages
         }
         private async Task AddAdmin()
         {
-            // Валидация
             if (string.IsNullOrWhiteSpace(Name.Text))
             {
                 MessageBox.Show("Введите имя (никнейм).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -95,16 +92,12 @@ namespace TaigerDesktop.Pages
                 MessageBox.Show("Введите пароль.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
-            // Создаём объект
             var newAdmin = new Admin
             {
                 Nickname = Name.Text.Trim(),
                 Login = Login.Text.Trim(),
                 Password = Password.Password.Trim()
             };
-
-            // Отключаем кнопку, чтобы избежать повторных нажатий
             addButt.IsEnabled = false;
 
             try
@@ -114,7 +107,6 @@ namespace TaigerDesktop.Pages
                 if (result != null)
                 {
                     MessageBox.Show("Администратор успешно добавлен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                    // Очищаем форму
                     Name.Clear();
                     Login.Clear();
                     Password.Clear();
@@ -130,12 +122,11 @@ namespace TaigerDesktop.Pages
             }
             finally
             {
-                addButt.IsEnabled = true; // Включаем кнопку обратно
+                addButt.IsEnabled = true;
             }
         }
         private async Task EditAdmin()
         {
-            // Валидация
             if (string.IsNullOrWhiteSpace(Name.Text))
             {
                 MessageBox.Show("Введите имя (никнейм).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -153,8 +144,6 @@ namespace TaigerDesktop.Pages
                 MessageBox.Show("Введите пароль.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
-            // Обновляем данные администратора
             _editingAdmin.Nickname = Name.Text.Trim();
             _editingAdmin.Login = Login.Text.Trim();
             _editingAdmin.Password = Password.Password.Trim();
@@ -168,7 +157,6 @@ namespace TaigerDesktop.Pages
                 if (success)
                 {
                     MessageBox.Show("Администратор успешно обновлён!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                    // Здесь можно, например, вернуться на предыдущую страницу:
                     if (NavigationService.CanGoBack)
                         NavigationService.GoBack();
                 }

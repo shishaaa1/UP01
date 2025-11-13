@@ -35,7 +35,7 @@ namespace TaigerDesktop.Pages
             {
                 _allAdmins = value;
                 OnPropertyChanged();
-                ApplyFilter(); // Обновляем фильтр при загрузке
+                ApplyFilter(); 
             }
         }
 

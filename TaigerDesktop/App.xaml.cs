@@ -7,11 +7,8 @@ namespace TaigerDesktop
 {
     public partial class App : Application, INotifyPropertyChanged
     {
-        // Экземплярные поля (будут храниться в App.Instance)
-        private string _currentAdminLogin;
-        private string _currentAdminName;
-
-        // ЭКЗЕМПЛЯРНЫЕ СВОЙСТВА — видны для привязки
+        private string _currentAdminLogin = string.Empty;
+        private string _currentAdminName = string.Empty;
         public string CurrentAdminLogin
         {
             get => _currentAdminLogin;
@@ -31,11 +28,7 @@ namespace TaigerDesktop
                 OnPropertyChanged();
             }
         }
-
-        // Статический доступ к экземпляру
         public static App Instance { get; private set; }
-
-        // Контекст API
         public static ApiContext ApiContext { get; private set; }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -50,8 +43,6 @@ namespace TaigerDesktop
             ApiContext?.Logout();
             base.OnExit(e);
         }
-
-        // Статический метод для установки данных из любого места
         public static void SetAdminData(string login, string nickname)
         {
             if (Instance != null)
@@ -69,8 +60,6 @@ namespace TaigerDesktop
                 Instance.CurrentAdminName = null;
             }
         }
-
-        // Реализация INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

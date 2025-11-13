@@ -30,20 +30,14 @@ namespace TaigerDesktop.View
 
         private void UserCard_Loaded(object sender, RoutedEventArgs e)
         {
-            // Подписываемся на событие удаления
             UserDeleted += ((CheckUsers)ParentPage()).RemoveUser;
         }
-
-        // Вспомогательный метод — находим родительскую страницу
         private Page ParentPage()
         {
-            // Сначала ищем окно, потом его Content как Page
             if (Window.GetWindow(this) is Window window && window.Content is Page page)
             {
                 return page;
             }
-
-            // Если не нашли — ищем вверх по визуальному дереву
             DependencyObject parent = this;
             while (parent != null)
             {

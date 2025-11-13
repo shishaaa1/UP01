@@ -50,7 +50,6 @@ namespace TaigerDesktop.View
                     if (success)
                     {
                         MessageBox.Show("Фото удалено.");
-                        // Уведомить родителя
                         if (VisualTreeHelper.GetParent(this) is DependencyObject parent)
                         {
                             var page = FindParent<CheckPhotos>(parent);
@@ -64,8 +63,6 @@ namespace TaigerDesktop.View
                 }
             }
         }
-
-        // Вспомогательный метод поиска родителя
         private static T FindParent<T>(DependencyObject child) where T : DependencyObject
         {
             while (child != null && !(child is T))
