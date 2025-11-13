@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaigerDesktop"
         mc:Ignorable="d"
-        Title="TaigerDesktop" Height="600" Width="1000"
+        Title="TaigerDesktop" Height="800" Width="1200"
         Background="{StaticResource LightBackgroundBrush}"
         Icon="Images/icon.ico">
 

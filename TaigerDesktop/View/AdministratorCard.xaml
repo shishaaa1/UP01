@@ -60,7 +60,8 @@
                     Height="42"
                     FontSize="15"
                     Cursor="Hand"
-                    Click="DeleteAdmin">
+                    Click="DeleteAdmin"
+                        Margin="0,0,0,10">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border x:Name="border"
@@ -82,12 +83,12 @@
                     </Button.Template>
                 </Button>
                 <Button Content="Изменить"
-            Background="#FCA5A5"
-            Height="42"
-            FontSize="15"
-            Cursor="Hand"
-            Click="EditAdministrator">
-                            <Button.Template>
+                    Background="#FCA5A5"
+                    Height="42"
+                    FontSize="15"
+                    Cursor="Hand"
+                    Click="EditAdministrator">  
+                    <Button.Template>
                                 <ControlTemplate TargetType="Button">
                             <Border x:Name="border"
                         Background="{TemplateBinding Background}"

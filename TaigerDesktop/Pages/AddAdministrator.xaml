@@ -37,6 +37,7 @@
 
         <!-- Заголовок -->
         <TextBlock Grid.Row="0" Grid.Column="1"
+                   x:Name="title"
                    Text="Добавить администратора"
                    Style="{StaticResource PageTitleStyle}"
                    HorizontalAlignment="Center"
@@ -52,11 +53,15 @@
 
             <!-- Логин -->
             <StackPanel Margin="0,0,0,0">
-                <TextBlock Text="Имя:"
+                <TextBlock
+                    x:Name="tName"
+                    Text="Имя:"
                            Style="{StaticResource FieldLabelStyle}"
                            Margin="0,0,0,0"/>
                 <TextBox x:Name="Name"
-                         Style="{StaticResource ModernTextBoxStyle}"/>
+                         Style="{StaticResource ModernTextBoxStyle}">
+                    
+                </TextBox>
             </StackPanel>
 
             <!-- Имя -->
@@ -70,11 +75,14 @@
 
             <!-- Пароль -->
             <StackPanel Margin="0,0,0,0">
-                <TextBlock Text="Пароль:"
+                <TextBlock x:Name="tPassword"
+                    Text="Пароль:"
                            Style="{StaticResource FieldLabelStyle}"
                            Margin="0,0,0,0"/>
                 <PasswordBox x:Name="Password"
-                             Style="{StaticResource ModernPasswordBoxStyle}"/>
+                             Style="{StaticResource ModernPasswordBoxStyle}">
+                    
+                </PasswordBox>
             </StackPanel>
         </StackPanel>
 

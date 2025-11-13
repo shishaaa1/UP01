@@ -37,23 +37,32 @@ namespace TaigerDesktop.Pages
         }
         private void InitializeAddMode()
         {
-            Title = "Добавить администратора";
+            title.Text = "Добавить администратора";
             addButt.Content = "Добавить администратора";
+            tName.Text = "Имя";
+            tPassword.Text = "Пароль";
             // Очищаем поля
             Name.Clear();
             Login.Clear();
             Password.Clear();
+            ToolTipService.SetToolTip(Name, "Введите имя нового администратора");
+            ToolTipService.SetToolTip(Login, "Введите уникальный логин");
+            ToolTipService.SetToolTip(Password, "Введите пароль (минимум 8 символов)");
         }
 
         private void InitializeEditMode()
         {
-            Title = "Редактировать администратора";
+            title.Text = "Редактировать администратора";
             addButt.Content = "Сохранить изменения";
-
+            tName.Text = "Имя(Введите новый Nickname)";
+            tPassword.Text = "Пароль(Введите новый пароль)";
             // Заполняем поля текущими значениями
             Name.Text = _editingAdmin.Nickname;
             Login.Text = _editingAdmin.Login;
-            Password.Password = _editingAdmin.Password; // Не рекомендуется, если пароль хешируется
+            Password.Password = _editingAdmin.Password;
+            ToolTipService.SetToolTip(Name, "Если не хотите менять Nickname — оставьте старый");
+            ToolTipService.SetToolTip(Login, "Изменение логина может повлиять на авторизацию");
+            ToolTipService.SetToolTip(Password, "Если не хотите менять пароль — введите старый");// Не рекомендуется, если пароль хешируется
         }
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
