@@ -75,7 +75,12 @@ public class Registation extends AppCompatActivity {
 
             registerUser();
         });
+
+
+
     }
+
+
 
     private void registerUser() {
         String firstName = etFirstName.getText().toString().trim();
@@ -83,6 +88,11 @@ public class Registation extends AppCompatActivity {
         String login = etLogin.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String bio = etBio.getText().toString().trim();
+
+        if (!isUser18OrOlder(selectedBirthday)) {
+            Toast.makeText(this, "Вам должно быть 18 лет или больше!", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         String createdAt = isoFormat.format(new Date());
@@ -129,5 +139,34 @@ public class Registation extends AppCompatActivity {
                 Log.e("REGISTRATION_ERROR", errorMessage, t);  // ← ПОЛНЫЙ СТЭК-ТРЕЙС!
             }
         });
+    }
+
+    private boolean isUser18OrOlder(String birthday) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            Date birthDate = sdf.parse(birthday);
+
+            if (birthDate == null) {
+                return false;
+            }
+
+            Calendar today = Calendar.getInstance();
+            Calendar birthCalendar = Calendar.getInstance();
+            birthCalendar.setTime(birthDate);
+
+            int age = today.get(Calendar.YEAR) - birthCalendar.get(Calendar.YEAR);
+
+            if (today.get(Calendar.MONTH) < birthCalendar.get(Calendar.MONTH)) {
+                age--;
+            } else if (today.get(Calendar.MONTH) == birthCalendar.get(Calendar.MONTH) &&
+                    today.get(Calendar.DAY_OF_MONTH) < birthCalendar.get(Calendar.DAY_OF_MONTH)) {
+                age--;
+            }
+
+            return age >= 18;
+        } catch (Exception e) {
+            Log.e("AgeCheck", "Ошибка при проверке возраста: " + e.getMessage());
+            return false;
+        }
     }
 }
