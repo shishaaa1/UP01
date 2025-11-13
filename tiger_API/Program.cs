@@ -7,7 +7,6 @@ using tiger_API.Context;
 using System.Data.Common;
 using tiger_API;
 using Microsoft.AspNetCore.SignalR;
-using tiger_API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 

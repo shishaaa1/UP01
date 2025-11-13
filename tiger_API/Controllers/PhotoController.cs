@@ -30,6 +30,12 @@ namespace tiger_API.Controllers
             var id = await _photosUsers.UploadPhotoAsync(request.UserId, photoBytes);
             return Ok(new { PhotoId = id });
         }
+
+        /// <summary>
+        /// Получение всех фото пользователя
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [Route("GetPhotoByUsersId")]
         [HttpGet]
         public async Task<IActionResult> GetPhotoByUser(int userId)
@@ -65,6 +71,12 @@ namespace tiger_API.Controllers
             return Ok(new {PhotoId = id });
         }
 
+
+        /// <summary>
+        /// Получение 1 фото по id пользователя
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [Route("GetUserPhotoId")]
         [HttpGet]
         public async Task<IActionResult> GetPhotoIdByUserId(int userId)

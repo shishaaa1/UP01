@@ -31,6 +31,8 @@ namespace tiger_API.Controllers
             var res= _tigger.ReginU(users);
             return res;
         }
+
+
         /// <summary>
         /// Авторизация пользователя
         /// </summary>
@@ -43,6 +45,8 @@ namespace tiger_API.Controllers
             var res = _tigger.LoginUsers(login, password);
             return res;
         }
+
+
 
         /// <summary>
         /// Удаление пользователя
@@ -71,6 +75,7 @@ namespace tiger_API.Controllers
             }
         }
 
+
         /// <summary>
         /// Считываение новых пользователей за сегодня
         /// </summary>
@@ -84,6 +89,12 @@ namespace tiger_API.Controllers
             return Ok(res);
         }
 
+
+        /// <summary>
+        /// Получение информации пользователя по его id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Route("GetUserById")]
         [HttpGet]
         public async Task<Users> GetUsersToDay(int id)
@@ -91,7 +102,10 @@ namespace tiger_API.Controllers
             var res= await _tigger.GetUserById(id);
             return res;
         }
-
+        /// <summary>
+        /// получение всех пользователей
+        /// </summary>
+        /// <returns></returns>
         [Route("GetUsers")]
         [HttpGet]
         public async Task<ActionResult<List<Users>>> GetUsers()
@@ -183,6 +197,14 @@ namespace tiger_API.Controllers
 
             return Ok(result);
         }
+
+
+        /// <summary>
+        /// Метод обнавление данных пользователя
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
         [Route("UpdateUsers")]
         [HttpPut]
         public async Task<IActionResult> UpdateUser(int userId, [FromForm] UpdateUserDto dto)

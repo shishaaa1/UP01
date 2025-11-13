@@ -18,7 +18,11 @@ namespace tiger_API.Controllers
             _likeService = likeService;
             _userService = userService;
         }
-
+        /// <summary>
+        /// Метод для действия лайка(true and false)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("send")]
         public async Task<IActionResult> SendLike([FromForm] SendLikeRequest request)
         {
@@ -41,6 +45,13 @@ namespace tiger_API.Controllers
             }
         }
 
+
+
+        /// <summary>
+        /// Метод для получение всех лайков пользователю
+        /// </summary>
+        /// <param name="userId">Id пользователя</param>
+        /// <returns></returns>
         [HttpGet("received/{userId}")]
         public async Task<IActionResult> GetUserLikes(int userId)
         {
@@ -73,6 +84,12 @@ namespace tiger_API.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Метод для получение лайков отправленые пользователем
+        /// </summary>
+        /// <param name="userId">Id пользователя</param>
+        /// <returns></returns>
         [HttpGet("sent/{userId}")]
         public async Task<IActionResult> GetLikesSentByUser(int userId)
         {
@@ -104,6 +121,13 @@ namespace tiger_API.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Метод проверки взаимности 2 пользователей
+        /// </summary>
+        /// <param name="user1Id">Id пользователя в системе</param>
+        /// <param name="user2Id">id пользовтаеля которго проверяем</param>
+        /// <returns></returns>
         [HttpGet("mutual/{user1Id}/{user2Id}")]
         public async Task<IActionResult> CheckMutualLike(int user1Id, int user2Id)
         {
@@ -118,6 +142,12 @@ namespace tiger_API.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Метод вывода всех с взаимными лайками
+        /// </summary>
+        /// <param name="userId">id пользователя</param>
+        /// <returns></returns>
         [HttpGet("user/{userId}/matches")]
         public async Task<IActionResult> GetUserMatches(int userId)
         {
@@ -149,6 +179,13 @@ namespace tiger_API.Controllers
                 return StatusCode(500, new { success = false, message = "Ошибка сервера" });
             }
         }
+
+
+        /// <summary>
+        /// Метод для того что бы убрать лайк
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [Route("revokeLike")]
         [HttpPost]
         public async Task<IActionResult> RevokeLike([FromForm] RevokeLikeRequest request)
