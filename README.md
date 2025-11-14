@@ -16,27 +16,45 @@ BoobleProject --- Android-приложение на Java с функционал
 
 ## 🧩 Архитектура проекта
 
-    app/
-     └── src/main/java/com/example/boobleproject/
-          ├── Account/
-          ├── Api/
-          ├── LikesOrNot/
-          ├── Logins/
-          ├── MainPage/
-          ├── MessageMatch/
-          ├── Registration/
-          ├── LikeManager.java
-          ├── Mainpage.java
-          ├── Profile.java
-          └── ProfileAdapter.java
+    BoobleProject
+│
+├── app/
+│   ├── src/
+│   │   ├── androidTest/java/com/example/boobleproject/
+│   │   ├── main/
+│   │   │   ├── java/com/example/boobleproject/
+│   │   │   │   ├── Account/
+│   │   │   │   ├── Api/
+│   │   │   │   ├── LikesOrNot/
+│   │   │   │   ├── Logins/
+│   │   │   │   ├── MainPage/
+│   │   │   │   ├── MessageMatch/
+│   │   │   │   ├── Registration/
+│   │   │   │   ├── LikeManager.java
+│   │   │   │   ├── Mainpage.java
+│   │   │   │   ├── Profile.java
+│   │   │   │   └── ProfileAdapter.java
+│   │   │   ├── res/
+│   │   │   │   ├── anim/
+│   │   │   │   ├── drawable/
+│   │   │   │   ├── layout/
+│   │   │   │   ├── mipmap-*/ 
+│   │   │   │   ├── values/
+│   │   │   │   └── xml/
+│   │   │   ├── AndroidManifest.xml
+│   │   ├── test/java/com/example/boobleproject/
+│   │
+│   ├── build.gradle
+│   ├── proguard-rules.pro
+│
+├── gradle/
+│   ├── wrapper/
+│   │   ├── gradle-wrapper.jar
+│   │   └── gradle-wrapper.properties
+│   └── libs.versions.toml
+│
+└── .idea (служебные файлы Android Studio)
 
-    res/
-     ├── layout/
-     ├── drawable/
-     ├── values/
-     ├── anim/
-     ├── xml/
-     └── mipmap/
 
 ## 🔗 API
 
