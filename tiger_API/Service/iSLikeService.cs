@@ -8,7 +8,7 @@ namespace tiger_API.Service
     public class iSLikeService:IIsLike
     {
         private readonly iSLikeContext _context;
-
+        private readonly IAuditService _audit;
         public iSLikeService(iSLikeContext context)
         {
             _context = context;
@@ -55,6 +55,8 @@ namespace tiger_API.Service
             }
 
             await _context.SaveChangesAsync();
+            await _audit.LogAsync(fromUserId, isLike ? "LIKE" : "DISLIKE", "User", $"Target:{toUserId}");
+
             return true;
         }
 

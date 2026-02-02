@@ -12,7 +12,7 @@ namespace tiger_API.Service
     {
         private readonly UsersContext _Userscontext;
         private readonly IPhotosUsers _photosUsers;
-
+        private readonly IAuditService _audit;
         public UsersService(UsersContext Userscontext, IPhotosUsers photosUsers)
         {
             _Userscontext = Userscontext;
@@ -29,7 +29,9 @@ namespace tiger_API.Service
         public async Task<int> LoginUsers(string login, string password)
         {
             Users User = _Userscontext.Users.Where(x => x.Login == login && x.Password == password).First();
+            await _audit.LogAsync(User.Id, "LOGIN", "Auth");
             return User.Id;
+
         }
 
         public async Task<Users> GetUserById(int id)
@@ -47,6 +49,8 @@ namespace tiger_API.Service
             if (user != null)
             {
                 _Userscontext.Users.Remove(user);
+                await _audit.LogAsync(id, "DELETE_ACCOUNT", "User");
+
                 await _Userscontext.SaveChangesAsync(); 
             }
         }
@@ -106,10 +110,20 @@ namespace tiger_API.Service
             var currentUser = await _Userscontext.Users.FindAsync(userId);
             if (currentUser == null)
                 return new List<Users>();
+            int currentYear = DateTime.UtcNow.Year;
+            int currentUserBirthYear = currentUser.Birthday.Year;
+            int currentUserAge = currentYear - currentUserBirthYear;
+            int minAllowedBirthYear = currentYear - (currentUserAge + 4);
+            int maxAllowedBirthYear = currentYear - (currentUserAge - 4);
+
             return await _Userscontext.Users
-                .Where(u => u.Id != userId && u.Sex != currentUser.Sex)
+                .Where(u => u.Id != userId
+                            && u.Sex != currentUser.Sex
+                            && u.Birthday.Year >= minAllowedBirthYear
+                            && u.Birthday.Year <= maxAllowedBirthYear)
                 .ToListAsync();
         }
+
 
     }
 }

@@ -9,10 +9,12 @@ namespace tiger_API.Service
     {
         private readonly PhotosUserContext _photosUserContext;
         private readonly UsersContext _usersContext;
-        public PhotosUsersService(PhotosUserContext photosUserContext, UsersContext usersContext)
+        private readonly IAuditService _audit;
+        public PhotosUsersService(PhotosUserContext photosUserContext, UsersContext usersContext, IAuditService audit)
         {
             _photosUserContext = photosUserContext;
             _usersContext = usersContext;
+            _audit = audit;
         }
 
         public async Task<int> UploadPhotoAsync(int userId, byte[] photoData)
@@ -27,6 +29,7 @@ namespace tiger_API.Service
             };
 
             _photosUserContext.Photos.Add(photo);
+            await _audit.LogAsync(userId, "UPLOAD_PHOTO", "Photo", $"PhotoId:{photo.Id}, Size:{photoData.Length} bytes");
             await _photosUserContext.SaveChangesAsync();
             return photo.Id;
         }
@@ -38,6 +41,7 @@ namespace tiger_API.Service
 
             if (photo?.Photobill == null)
                 throw new FileNotFoundException("Фото для пользователя не найдено");
+            await _audit.LogAsync(userId, "VIEW_PHOTO", "Photo", $"PhotoId:{photo.Id}");
 
             return photo.Photobill;
         }
@@ -46,23 +50,28 @@ namespace tiger_API.Service
         {
             var photo = await _photosUserContext.Photos.FindAsync(photoId);
             if (photo == null)
-                return false; 
+                return false;
 
             _photosUserContext.Photos.Remove(photo);
             await _photosUserContext.SaveChangesAsync();
+
+            await _audit.LogAsync(photo.UserId, "DELETE_PHOTO", "Photo", $"PhotoId:{photoId}");
+
             return true;
         }
+
         public async Task DeletePhotosByUserIdAsync(int userId)
         {
             var photos = await _photosUserContext.Photos
                 .Where(p => p.UserId == userId)
                 .ToListAsync();
 
-            
-                _photosUserContext.Photos.RemoveRange(photos);
-                await _photosUserContext.SaveChangesAsync();
-            
+            _photosUserContext.Photos.RemoveRange(photos);
+            await _photosUserContext.SaveChangesAsync();
+
+            await _audit.LogAsync(userId, "DELETE_ALL_PHOTOS", "Photo", $"Count:{photos.Count}");
         }
+
 
         public async Task<int> GetUserPhotoIdAsync(int userId)
         {

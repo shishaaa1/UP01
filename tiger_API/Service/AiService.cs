@@ -1,13 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Messaging;
+using Microsoft.EntityFrameworkCore;
+using System.Text;
 using System.Text.Json;
 using tiger_API.Context;
-using tiger_API.Modell;
 using tiger_API.Itreface;
+using tiger_API.Modell;
 
 namespace tiger_API.Service
 {
-    public class AiService : AiInterface
+    public class AiService : AiInterface,IConversationAIService
     {
+        private readonly MessegeContext _messageContext;
         private readonly UsersContext _usersContext;
         private readonly IConfiguration _configuration;
         private readonly string _apiKey;
@@ -17,29 +20,29 @@ namespace tiger_API.Service
 
         public AiService(
     UsersContext usersContext,
+    MessegeContext messageContext,
     IConfiguration configuration,
     IHttpClientFactory httpClientFactory,
     ILogger<AiService> logger)
         {
             _usersContext = usersContext;
+            _messageContext = messageContext;
             _configuration = configuration;
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient("HuggingFace");
 
             _apiKey = _configuration["HuggingFace:ApiKey"]
                       ?? Environment.GetEnvironmentVariable("HF_TOKEN");
+
             if (string.IsNullOrEmpty(_apiKey))
-            {
                 throw new InvalidOperationException("HuggingFace API key is not configured.");
-            }
         }
+
         public async Task<AssistantStatus> GetAssistantStatusAsync()
         {
             try
             {
                 _logger.LogInformation("Checking AI assistant status");
-
-                // Проверяем, что ключ существует
                 if (string.IsNullOrEmpty(_apiKey))
                 {
                     return new AssistantStatus
@@ -49,8 +52,6 @@ namespace tiger_API.Service
                         CheckedAt = DateTime.UtcNow
                     };
                 }
-
-                // Проверяем доступность модели через простой запрос
                 var requestData = new
                 {
                     model = _defaultModel,
@@ -193,13 +194,13 @@ namespace tiger_API.Service
                     Bio: {user.BIO ?? "No bio provided"}
                     Sex: {user.Sex}
                     
-                    Potential matches:
+                    Потенциальные совпадения:
                     {matchesInfo}
                     
-                    Analyze these potential matches and recommend the best one with:
-                    1. Compatibility score (1-10) and why
-                    2. Suggested first message
-                    3. Topics for conversation
+                    Проанализируйте потенциальных кандидатов и порекомендуйте наиболее подходящего, указав:
+                    1. Рейтинг совместимости (1-10) и обоснование
+                    2. Предлагаемое первое сообщение
+                    3. Темы для разговора
                 ";
 
                 _logger.LogInformation("Generating match suggestions for user {UserId}", userId);
@@ -226,7 +227,7 @@ namespace tiger_API.Service
                 }
 
                 var prompt = $@"
-                    Generate 3 icebreaker conversation starters for a dating app:
+                    Сгенерируй 3 фразы для начала общения между:
                     
                     User 1: {user1.FirstName} ({user1.Sex})
                     Bio: {user1.BIO ?? "No bio"}
@@ -234,11 +235,11 @@ namespace tiger_API.Service
                     User 2: {user2.FirstName} ({user2.Sex})
                     Bio: {user2.BIO ?? "No bio"}
                     
-                    Provide icebreakers that:
-                    1. Are personalized based on their profiles
-                    2. Are open-ended to encourage response
-                    3. Are friendly and appropriate
-                    4. Can lead to deeper conversation
+                    Предложите варианты начала разговора, которые:
+                    1. Персонализированы на основе профиля пользователя
+                    2. Являются открытыми для поощрения ответов
+                    3. Дружелюбны и уместны
+                    4. Могут привести к более глубокому разговору
                 ";
 
                 _logger.LogInformation("Generating icebreakers for users {User1Id} and {User2Id}", user1Id, user2Id);
@@ -250,5 +251,62 @@ namespace tiger_API.Service
                 return $"Error generating icebreakers: {ex.Message}";
             }
         }
+        public async Task<string> GenerateConversationContinuationAsync(int user1Id, int user2Id)
+        {
+            try
+            {
+                var user1 = await _usersContext.Users.FindAsync(user1Id);
+                var user2 = await _usersContext.Users.FindAsync(user2Id);
+
+                if (user1 == null || user2 == null)
+                    return "One or both users not found";
+                var messages = await _messageContext.Message
+                    .Where(m =>
+                        (m.Userid1 == user1Id && m.Userid2 == user2Id) ||
+                        (m.Userid1 == user2Id && m.Userid2 == user1Id))
+                    .OrderByDescending(m => m.SendAt)
+                    .Take(20)
+                    .OrderBy(m => m.SendAt)
+                    .ToListAsync();
+                var conversationHistory = new StringBuilder();
+
+                foreach (var msg in messages)
+                {
+                    var senderName = msg.Userid1 == user1Id ? user1.FirstName : user2.FirstName;
+                    conversationHistory.AppendLine($"{senderName}: {msg.Text}");
+                }
+
+                var prompt = $@"
+                    Ты помогаешь продолжить диалог между людьми.
+
+                    Профили:
+                    User1: {user1.FirstName} ({user1.Sex})
+                    Bio: {user1.BIO ?? "No bio"}
+
+                    User2: {user2.FirstName} ({user2.Sex})
+                    Bio: {user2.BIO ?? "No bio"}
+
+                    История их разговора:
+                    {conversationHistory}
+
+                    Задача:
+                    Предложи 3 варианта следующего сообщения от {user1.FirstName}, которые:
+                    - логично продолжают разговор
+                    - звучат естественно
+                    - поддерживают интерес
+                    - не повторяют уже сказанное
+                    ";
+
+                _logger.LogInformation("Generating continuation for users {U1} and {U2}", user1Id, user2Id);
+
+                return await GetChatCompletionAsync(prompt);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error generating continuation");
+                return "AI error";
+            }
+        }
+
     }
 }

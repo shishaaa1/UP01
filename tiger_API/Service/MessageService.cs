@@ -9,7 +9,7 @@ namespace tiger_API.Service
     public class MessageService : IMessageService
     {
         private readonly MessegeContext _messegeContext;
-
+        private readonly IAuditService _audit;
         public MessageService(MessegeContext messegeContext)
         {
             _messegeContext = messegeContext;
@@ -39,6 +39,9 @@ namespace tiger_API.Service
 
             _messegeContext.Message.Add(message);
             await _messegeContext.SaveChangesAsync();
+            await _audit.LogAsync(senderId, "SEND_MESSAGE", "Message",
+       $"To:{recipientId}, Length:{text?.Length}");
+
         }
 
         public async Task<List<Message>> GetConversationAsync(int u1, int u2)

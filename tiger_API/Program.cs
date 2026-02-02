@@ -1,12 +1,13 @@
-using Microsoft.OpenApi.Models;
-using System.Reflection;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Data.Common;
+using System.Reflection;
+using tiger_API;
+using tiger_API.Context;
 using tiger_API.Itreface; 
 using tiger_API.Service;
-using tiger_API.Context;
-using System.Data.Common;
-using tiger_API;
-using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,10 @@ builder.Services.AddControllers()
             System.Text.Unicode.UnicodeRanges.BasicLatin,
             System.Text.Unicode.UnicodeRanges.Cyrillic); 
     });
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddDbContext<AuditContext>(options =>
+    options.UseSqlServer(tiger_API.DbConnection.config));
 builder.Services.AddScoped<IUsers, UsersService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IAdmin, AdminService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IPhotosUsers, PhotosUsersService>(); // реализация интерфейса и сервиса
@@ -31,6 +35,7 @@ builder.Services.AddScoped<iSLikeContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IUsers, UsersService>();
 builder.Services.AddScoped<AiInterface, AiService>();
 builder.Services.AddScoped<IPhotosUsers, PhotosUsersService>();
+builder.Services.AddScoped<IConversationAIService, AiService>();
 builder.Services.AddHttpClient("HuggingFace", (serviceProvider, client) =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
