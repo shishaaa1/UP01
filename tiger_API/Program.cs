@@ -28,7 +28,26 @@ builder.Services.AddScoped<AdminContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<PhotosUserContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<MessegeContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<iSLikeContext>(); // реализация интерфейса и сервиса
+builder.Services.AddScoped<IUsers, UsersService>();
+builder.Services.AddScoped<AiInterface, AiService>();
+builder.Services.AddScoped<IPhotosUsers, PhotosUsersService>();
+builder.Services.AddHttpClient("HuggingFace", (serviceProvider, client) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var apiKey = configuration["HuggingFace:ApiKey"] ?? Environment.GetEnvironmentVariable("HF_TOKEN");
 
+    if (string.IsNullOrEmpty(apiKey))
+    {
+        throw new InvalidOperationException("HuggingFace API key is not configured. Set it in appsettings.json or as HF_TOKEN environment variable.");
+    }
+
+    client.BaseAddress = new Uri("https://router.huggingface.co/v1/"); // Убраны лишние пробелы!
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+
+    // Для отладки (опционально, не в продакшене!)
+    // Console.WriteLine($"API Key loaded: {apiKey.Substring(0, 5)}...{apiKey.Substring(apiKey.Length - 5)}");
+}); 
 
 builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
