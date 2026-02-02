@@ -25,7 +25,7 @@ namespace tiger_API.Controllers
                 {
                     return BadRequest(new { error = "Message is required" });
                 }
-
+                bool work=false;
                 _logger.LogInformation("Processing chat request: {Message}", request.Message);
                 var response = await _aiService.GetChatCompletionAsync(request.Message);
                 return Ok(new { response });
@@ -36,7 +36,22 @@ namespace tiger_API.Controllers
                 return StatusCode(500, new { error = "Internal server error", details = ex.Message });
             }
         }
+        [HttpGet("status")]
+        public async Task<IActionResult> GetAssistantStatus()
+        {
+            try
+            {
+                _logger.LogInformation("Checking AI assistant status via API");
+                var status = await _aiService.GetAssistantStatusAsync();
 
+                return Ok(new { status });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting assistant status");
+                return StatusCode(500, new { error = "Internal server error", details = ex.Message });
+            }
+        }
         [HttpGet("match-suggestions/{userId}")]
         public async Task<IActionResult> GetMatchSuggestions( int userId)
         {

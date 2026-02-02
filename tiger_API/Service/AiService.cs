@@ -33,7 +33,80 @@ namespace tiger_API.Service
                 throw new InvalidOperationException("HuggingFace API key is not configured.");
             }
         }
+        public async Task<AssistantStatus> GetAssistantStatusAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Checking AI assistant status");
 
+                // Проверяем, что ключ существует
+                if (string.IsNullOrEmpty(_apiKey))
+                {
+                    return new AssistantStatus
+                    {
+                        IsWorking = false,
+                        StatusMessage = "API key not configured",
+                        CheckedAt = DateTime.UtcNow
+                    };
+                }
+
+                // Проверяем доступность модели через простой запрос
+                var requestData = new
+                {
+                    model = _defaultModel,
+                    messages = new[]
+                    {
+                new
+                {
+                    role = "user",
+                    content = "ping"
+                }
+            },
+                    max_tokens = 10
+                };
+
+                var jsonContent = JsonSerializer.Serialize(requestData);
+                var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("chat/completions", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return new AssistantStatus
+                    {
+                        IsWorking = true,
+                        StatusMessage = "AI Assistant is working properly",
+                        ModelName = _defaultModel,
+                        CheckedAt = DateTime.UtcNow
+                    };
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning("AI status check failed: {StatusCode} - {Content}", response.StatusCode, errorContent);
+
+                    return new AssistantStatus
+                    {
+                        IsWorking = false,
+                        StatusMessage = $"AI Assistant error: {response.StatusCode}",
+                        ModelName = _defaultModel,
+                        CheckedAt = DateTime.UtcNow
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error checking AI assistant status");
+
+                return new AssistantStatus
+                {
+                    IsWorking = false,
+                    StatusMessage = $"Error: {ex.Message}",
+                    ModelName = _defaultModel,
+                    CheckedAt = DateTime.UtcNow
+                };
+            }
+        }
         public async Task<string> GetChatCompletionAsync(string userMessage)
         {
             return await GetChatCompletionAsync(_defaultModel, userMessage);
@@ -44,8 +117,6 @@ namespace tiger_API.Service
             try
             {
                 _logger.LogInformation("Sending AI request for model: {Model}", model);
-
-                // Используем OpenAI-совместимый формат для роутера
                 var requestData = new
                 {
                     model = model,
@@ -60,11 +131,8 @@ namespace tiger_API.Service
                     max_tokens = 500,
                     temperature = 0.7
                 };
-
                 var jsonContent = JsonSerializer.Serialize(requestData);
                 var content = new StringContent(jsonContent, System.Text.Encoding.UTF8, "application/json");
-
-                // Отправляем на /chat/completions
                 var response = await _httpClient.PostAsync("chat/completions", content);
 
                 if (!response.IsSuccessStatusCode)
@@ -76,8 +144,6 @@ namespace tiger_API.Service
 
                 var responseJson = await response.Content.ReadAsStringAsync();
                 _logger.LogDebug("AI Response: {Response}", responseJson);
-
-                // Парсим OpenAI-совместимый ответ
                 using var document = JsonDocument.Parse(responseJson);
                 var root = document.RootElement;
 
