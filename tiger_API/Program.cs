@@ -9,7 +9,7 @@ using tiger_API.Context;
 using tiger_API.Itreface; 
 using tiger_API.Service;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args); 
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
