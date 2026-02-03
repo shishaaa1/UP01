@@ -34,6 +34,11 @@ public interface ApiService {
             @Field("Password") String password,
             @Field("CreatedAt") String createdAt
     );
+    @GET("api/Conversation/continuation")
+    Call<ResponseBody> getAiSuggestions(
+            @Query("user1Id") int user1Id,
+            @Query("user2Id") int user2Id
+    );
     @FormUrlEncoded
     @POST("api/UserController/LoginUsers")
     Call<Integer> loginUser(

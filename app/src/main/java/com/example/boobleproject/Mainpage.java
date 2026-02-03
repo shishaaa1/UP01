@@ -268,7 +268,7 @@ public class Mainpage extends AppCompatActivity {
             Profile topProfile = adapter.profiles.get(0);
             int currentProfileId = topProfile.id;
             likeManager.sendLike(currentProfileId, isLike);
-            Toast.makeText(this, isLike ? "Лайк!" : "Не нравится", Toast.LENGTH_SHORT).show();
+
 
             removeTopCardAndCheckQueue();
         }

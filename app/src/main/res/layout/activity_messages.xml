@@ -7,113 +7,156 @@
     android:orientation="vertical"
     android:background="@color/white">
 
-    <!-- Верхняя панель с информацией о пользователе -->
+    <!-- Верхняя панель -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        app:contentPadding="8dp">
+        app:cardElevation="2dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
 
-            <!-- Кнопка назад -->
             <ImageButton
                 android:id="@+id/btn_back"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerVertical="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:src="@drawable/backend"/>
+                android:src="@drawable/backend" />
 
-            <!-- Фото пользователя -->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_user_avatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerVertical="true"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_toEndOf="@id/btn_back"
                 android:layout_marginStart="12dp"
                 tools:src="@drawable/alt1" />
 
-            <!-- Имя и фамилия -->
             <TextView
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/iv_user_avatar"
+                android:layout_marginStart="14dp"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
                 android:text="Анна Смирнова"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/black" />
         </RelativeLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Список сообщений с возможностью скролла -->
+    <!-- Сообщения -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_messages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingHorizontal="8dp"
-        android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:padding="8dp"
+        android:clipToPadding="false"/>
 
-    <!-- Панель ввода сообщения -->
+    <!-- AI-подсказки -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_ai"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="2dp"
+        android:visibility="gone"
+        android:alpha="0"
+        android:translationY="100dp"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🤖 AI предлагает"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:paddingBottom="6dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_suggestions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Панель ввода -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:cardCornerRadius="24dp"
-        app:cardElevation="4dp">
+        app:cardCornerRadius="22dp"
+        app:cardElevation="6dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:padding="6dp">
 
-            <!-- Поле ввода сообщения с авто-растягиванием -->
             <EditText
                 android:id="@+id/et_message_input"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/btn_send"
-                android:layout_alignWithParentIfMissing="true"
-                android:layout_marginEnd="8dp"
+                android:layout_alignStart="@+id/ai_toggle_container"
+                android:layout_marginStart="-257dp"
+                android:layout_toStartOf="@+id/ai_toggle_container"
                 android:background="@null"
                 android:hint="Введите сообщение..."
-                android:maxLines="10"
-                android:minHeight="40dp"
-                android:gravity="top"
-                android:inputType="textMultiLine"
-                android:paddingStart="16dp"
-                android:paddingTop="12dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="12dp"
-                android:scrollbars="vertical" />
+                android:maxLines="6"
+                android:padding="12dp"
+                android:textSize="15sp" />
 
-            <!-- Кнопка отправки -->
+            <!-- AI блок -->
+            <LinearLayout
+                android:id="@+id/ai_toggle_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="4dp"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switch_ai"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:useMaterialThemeColors="true"/>
+            </LinearLayout>
+
+            <!-- Отправка -->
             <ImageButton
                 android:id="@+id/btn_send"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/et_message_input"
                 android:layout_alignBottom="@+id/et_message_input"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="-3dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="12dp"
-                android:src="@drawable/sendic"/>
-
+                android:padding="10dp"
+                android:src="@drawable/sendic" />
         </RelativeLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

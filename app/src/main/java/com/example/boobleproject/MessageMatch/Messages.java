@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -21,6 +22,9 @@ import com.example.boobleproject.Api.ApiClient;
 import com.example.boobleproject.Api.ApiService;
 import com.example.boobleproject.Profile;
 import com.example.boobleproject.R;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +41,12 @@ public class Messages extends AppCompatActivity {
     private Runnable refreshRunnable;
     private static final long REFRESH_INTERVAL = 2000;
 
+    private View cardAi;
+    private SwitchMaterial switchAi;
+
     private RecyclerView rvMessages;
     private EditText etMessageInput;
+    private RecyclerView rvSuggestions;
     private ImageButton btnSend, btnBack;
     private CircleImageView ivUserAvatar;
     private TextView tvUserName;
@@ -85,10 +93,26 @@ public class Messages extends AppCompatActivity {
             messageList = new ArrayList<>();
             Log.d("MESSAGES_DEBUG", "messageList инициализирован");
         }
+
+        cardAi = findViewById(R.id.card_ai);
+        switchAi = findViewById(R.id.switch_ai);
+
+        switchAi.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                showAiCard();
+                loadAiSuggestions();
+            } else {
+                hideAiCard();
+            }
+        });
     }
 
     private void initViews() {
         rvMessages = findViewById(R.id.rv_messages);
+        rvSuggestions = findViewById(R.id.rv_suggestions);
+
+        rvSuggestions.setLayoutManager(new LinearLayoutManager(this));
+
         etMessageInput = findViewById(R.id.et_message_input);
         btnSend = findViewById(R.id.btn_send);
         btnBack = findViewById(R.id.btn_back);
@@ -435,6 +459,78 @@ public class Messages extends AppCompatActivity {
             }
         };
 
+    }
+    private void loadAiSuggestions() {
+        apiService.getAiSuggestions(currentUserId, recipientId)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call,
+                                           Response<ResponseBody> response) {
+                        if (!response.isSuccessful() || response.body() == null)
+                            return;
+
+                        try {
+                            String json = response.body().string();
+                            JSONObject obj = new JSONObject(json);
+                            String suggestionsText = obj.getString("suggestions");
+
+                            List<AiSuggestion> list = parseSuggestions(suggestionsText);
+                            showAiSuggestions(list);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) { }
+                });
+    }
+    private void showAiSuggestions(List<AiSuggestion> list) {
+        AiSuggestionAdapter adapter = new AiSuggestionAdapter(
+                list,
+                suggestionText -> {
+                    // ВАРИАНТ 1: вставить в поле
+                    etMessageInput.setText(suggestionText);
+                    etMessageInput.setSelection(suggestionText.length());
+
+
+                    hideAiCard();
+                }
+        );
+
+        rvSuggestions.setAdapter(adapter);
+    }
+    private List<AiSuggestion> parseSuggestions(String text) {
+        List<AiSuggestion> list = new ArrayList<>();
+
+        String[] parts = text.split("\n\\d+\\. ");
+
+        for (String part : parts) {
+            part = part.trim();
+            if (!part.isEmpty() && !part.startsWith("Конечно")) {
+                list.add(new AiSuggestion(part));
+            }
+        }
+        return list;
+    }
+    private void showAiCard() {
+        cardAi.setVisibility(View.VISIBLE);
+        cardAi.animate()
+                .translationY(0)
+                .alpha(1f)
+                .setDuration(250)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+    }
+
+    private void hideAiCard() {
+        cardAi.animate()
+                .translationY(120)
+                .alpha(0f)
+                .setDuration(200)
+                .withEndAction(() -> cardAi.setVisibility(View.GONE))
+                .start();
     }
 
     @Override
