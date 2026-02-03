@@ -1,4 +1,5 @@
-﻿using tiger_API.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using tiger_API.Context;
 using tiger_API.Itreface;
 using tiger_API.Modell;
 
@@ -29,6 +30,17 @@ namespace tiger_API.Service
             _context.UserActivityLogs.Add(log);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<UserActivityLog>> GetAllUsersLogsAsync()
+        {
+            return await _context.UserActivityLogs.ToListAsync();
+        }
+        public async Task<List<UserActivityLog>> GetLogsByIdUser(int userId)
+        {
+            return await _context.UserActivityLogs
+                .Where(l => l.UserId == userId)
+                .ToListAsync();
+        }
+
     }
 
 }

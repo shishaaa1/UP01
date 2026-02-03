@@ -8,6 +8,13 @@ namespace tiger_API.Context
         public AuditContext(DbContextOptions<AuditContext> options) : base(options) { }
 
         public DbSet<UserActivityLog> UserActivityLogs { get; set; }
+        public DbSet<Users> Users { get; set; }
+        public AuditContext()
+        {
+            Database.EnsureCreated();
+            UserActivityLogs.Load();
+            Users.Load();
+        }
     }
 
 }
