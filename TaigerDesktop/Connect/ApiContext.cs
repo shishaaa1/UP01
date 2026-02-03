@@ -311,6 +311,48 @@ namespace TaigerDesktop.Connect
             }
             return new List<DailyStat>();
         }
+        public async Task<List<UserActivityLog>> GetAllLogsAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("Audit/GetAllLogs");
+                if (response.IsSuccessStatusCode)
+                {
+                    var logs = await response.Content.ReadFromJsonAsync<List<UserActivityLog>>(
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return logs ?? new List<UserActivityLog>();
+                }
+                Console.WriteLine($"Ошибка получения логов: {response.StatusCode}");
+                return new List<UserActivityLog>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка получения логов: {ex.Message}");
+                return new List<UserActivityLog>();
+            }
+        }
+
+        // Получить логи по ID пользователя
+        public async Task<List<UserActivityLog>> GetLogsByUserIdAsync(int userId)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"Audit/GetlogsByUserId?id={userId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var logs = await response.Content.ReadFromJsonAsync<List<UserActivityLog>>(
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return logs ?? new List<UserActivityLog>();
+                }
+                Console.WriteLine($"Ошибка получения логов пользователя {userId}: {response.StatusCode}");
+                return new List<UserActivityLog>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка получения логов пользователя {userId}: {ex.Message}");
+                return new List<UserActivityLog>();
+            }
+        }
         private class UserPhotoDto
         {
             public int PhotoId { get; set; }

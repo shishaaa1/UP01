@@ -36,6 +36,8 @@ namespace TaigerDesktop
             BthHome.Visibility = Visibility.Visible;
             BtnUsers.Visibility = Visibility.Visible;
             BtnAddAdmin.Visibility = Visibility.Visible;
+            BtnAllAdmin.Visibility = Visibility.Visible;
+            BtnLogs.Visibility = Visibility.Visible;
         }
         public void HideMenu()
         {
@@ -43,6 +45,7 @@ namespace TaigerDesktop
             BthHome.Visibility = Visibility.Collapsed;
             BtnUsers.Visibility = Visibility.Collapsed;
             BtnAddAdmin.Visibility = Visibility.Collapsed;
+            BtnLogs.Visibility = Visibility.Collapsed;
         }
 
         private void NavigateToPage(object sender, RoutedEventArgs e)
@@ -70,6 +73,9 @@ namespace TaigerDesktop
                     case "BtnAllAdmin":
                         MainFrame.Navigate(new Pages.CheckAdministrator());
                         break;
+                    case "BtnLogs": 
+                        MainFrame.Navigate(new Pages.ViewLogs());
+                        break;
                 }
             }
         }
@@ -86,7 +92,7 @@ namespace TaigerDesktop
 
         public void SetActiveButton(Button activeButton)
         {
-            var buttons = new[] { BthHome, BtnStatistics, BtnPhotos, BtnUsers, BtnAddAdmin };
+            var buttons = new[] { BthHome, BtnStatistics, BtnPhotos, BtnUsers, BtnAddAdmin,BtnLogs };
             foreach (var btn in buttons)
             {
                 btn.Style = (Style)FindResource("MenuItemButtonStyle");
