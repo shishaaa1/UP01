@@ -13,10 +13,11 @@ namespace tiger_API.Service
         private readonly UsersContext _Userscontext;
         private readonly IPhotosUsers _photosUsers;
         private readonly IAuditService _audit;
-        public UsersService(UsersContext Userscontext, IPhotosUsers photosUsers)
+        public UsersService(UsersContext Userscontext, IPhotosUsers photosUsers, IAuditService audit)
         {
             _Userscontext = Userscontext;
             _photosUsers = photosUsers;
+            _audit = audit;
         }
 
         public async Task ReginU(Users users)

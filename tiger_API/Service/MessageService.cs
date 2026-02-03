@@ -10,9 +10,10 @@ namespace tiger_API.Service
     {
         private readonly MessegeContext _messegeContext;
         private readonly IAuditService _audit;
-        public MessageService(MessegeContext messegeContext)
+        public MessageService(MessegeContext messegeContext, IAuditService audit)
         {
             _messegeContext = messegeContext;
+            _audit = audit;
         }
 
         public async Task SendMessageAsync(int senderId, int recipientId, string text)

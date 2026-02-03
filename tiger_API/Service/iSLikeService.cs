@@ -9,9 +9,10 @@ namespace tiger_API.Service
     {
         private readonly iSLikeContext _context;
         private readonly IAuditService _audit;
-        public iSLikeService(iSLikeContext context)
+        public iSLikeService(iSLikeContext context, IAuditService audit)
         {
             _context = context;
+            _audit = audit;
         }
 
         public async Task<bool> SendLikeAsync(int fromUserId, int toUserId, bool isLike)
