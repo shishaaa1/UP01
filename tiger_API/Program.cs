@@ -27,6 +27,7 @@ builder.Services.AddScoped<IAdmin, AdminService>(); // реализация интерфейса и с
 builder.Services.AddScoped<IPhotosUsers, PhotosUsersService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IIsLike, iSLikeService>();
+builder.Services.AddScoped<IGamification, GamificationService>();
 builder.Services.AddScoped<UsersContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<AdminContext>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<PhotosUserContext>(); // реализация интерфейса и сервиса

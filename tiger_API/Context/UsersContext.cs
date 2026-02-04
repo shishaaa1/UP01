@@ -6,7 +6,7 @@ namespace tiger_API.Context
     public class UsersContext : DbContext
     {
         public DbSet<Users> Users {  get; set; }
-
+        public DbSet<Gamification> Gamifications { get; set; }
 
         public UsersContext()
         {

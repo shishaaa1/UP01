@@ -9,54 +9,70 @@ namespace tiger_API.Service
     {
         private readonly iSLikeContext _context;
         private readonly IAuditService _audit;
-        public iSLikeService(iSLikeContext context, IAuditService audit)
+        private readonly IGamification _gamification;     // ← добавляем зависимость
+
+        public iSLikeService(
+            iSLikeContext context,
+            IAuditService audit,
+            IGamification gamification)                   // ← добавляем в конструктор
         {
             _context = context;
             _audit = audit;
+            _gamification = gamification;
         }
 
         public async Task<bool> SendLikeAsync(int fromUserId, int toUserId, bool isLike)
         {
-            // Получаем информацию о пользователях
             var fromUser = await _context.Users.FindAsync(fromUserId);
             var toUser = await _context.Users.FindAsync(toUserId);
 
             if (fromUser == null || toUser == null)
-            {
                 throw new ArgumentException("Пользователь не найден");
-            }
 
-            // Проверяем правила: мужчина → женщина или женщина → мужчина
             if (fromUser.Sex == toUser.Sex)
-            {
-                throw new InvalidOperationException("Лайки могут отправляться только между пользователями разнего пола");
-            }
+                throw new InvalidOperationException("Лайки могут отправляться только между пользователями разного пола");
 
-            // Проверяем, существует ли уже лайк
             var existingLike = await _context.Islike
                 .FirstOrDefaultAsync(l => l.FromUserid == fromUserId && l.ToUserid == toUserId);
 
+            bool isNewLike = existingLike == null;
+
             if (existingLike != null)
             {
-                // Обновляем существующий лайк
+                // было ли раньше лайком, а теперь нет
+                bool wasLikeBefore = existingLike.IsLike;
                 existingLike.IsLike = isLike;
-                existingLike.CreatedAt = DateTime.Now;
+                existingLike.CreatedAt = DateTime.UtcNow;
+
+                // Если раньше не было лайка, а теперь есть → увеличиваем
+                if (!wasLikeBefore && isLike)
+                {
+                    await _gamification.IncrementLikesGivenAsync(fromUserId);
+                }
+                // Если раньше был лайк, а теперь дизлайк → можно уменьшить (опционально)
+                // else if (wasLikeBefore && !isLike) { ... decrement ... }
             }
             else
             {
-                // Создаем новый лайк
                 var newLike = new Islike
                 {
                     FromUserid = fromUserId,
                     ToUserid = toUserId,
                     IsLike = isLike,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.UtcNow
                 };
                 _context.Islike.Add(newLike);
+
+                if (isLike)
+                {
+                    await _gamification.IncrementLikesGivenAsync(fromUserId);
+                }
             }
 
             await _context.SaveChangesAsync();
-            await _audit.LogAsync(fromUserId, isLike ? "LIKE" : "DISLIKE", "User", $"Target:{toUserId}");
+
+            string action = isLike ? "LIKE" : "DISLIKE";
+            await _audit.LogAsync(fromUserId, action, "User", $"Target:{toUserId}");
 
             return true;
         }

@@ -13,25 +13,38 @@ namespace tiger_API.Service
         private readonly UsersContext _Userscontext;
         private readonly IPhotosUsers _photosUsers;
         private readonly IAuditService _audit;
-        public UsersService(UsersContext Userscontext, IPhotosUsers photosUsers, IAuditService audit)
+        private readonly IGamification _gamification;
+        public UsersService(UsersContext Userscontext,
+        IPhotosUsers photosUsers,
+        IAuditService audit,
+        IGamification gamification)
         {
             _Userscontext = Userscontext;
             _photosUsers = photosUsers;
             _audit = audit;
+            _gamification = gamification;
         }
 
         public async Task ReginU(Users users)
         {
             _Userscontext.Users.Add(users);
             await _Userscontext.SaveChangesAsync();
-            
+            await _gamification.UpdateLoginStreakAsync(users.Id);
+
         }
 
         public async Task<int> LoginUsers(string login, string password)
         {
-            Users User = _Userscontext.Users.Where(x => x.Login == login && x.Password == password).First();
-            await _audit.LogAsync(User.Id, "LOGIN", "Auth");
-            return User.Id;
+            var user = _Userscontext.Users
+            .FirstOrDefault(x => x.Login == login && x.Password == password);
+
+            if (user == null)
+                throw new Exception("Неверный логин или пароль"); 
+
+            await _audit.LogAsync(user.Id, "LOGIN", "Auth");
+            await _gamification.UpdateLoginStreakAsync(user.Id);
+
+            return user.Id;
 
         }
 
