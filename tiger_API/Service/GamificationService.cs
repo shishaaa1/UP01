@@ -114,4 +114,19 @@ public class GamificationService : IGamification
         stats.LikesGivenCount += 1;
         await _context.SaveChangesAsync();
     }
+    public async Task<int> CountMutualLikes(int userId)
+    {
+
+
+        var query = from myLike in _likeContext.Islike
+                    join theirLike in _likeContext.Islike
+                    on myLike.ToUserid equals theirLike.FromUserid 
+                    where myLike.FromUserid == userId
+                          && myLike.IsLike == true
+                          && theirLike.ToUserid == userId 
+                          && theirLike.IsLike == true
+                    select 1;
+
+        return await query.CountAsync();
+    }
 }

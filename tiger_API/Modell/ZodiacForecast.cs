@@ -1,9 +1,8 @@
-﻿namespace tiger_API.Modell
+﻿public class ZodiacForecast
 {
-    public class ZodiacForecast
-    {
-        public string SignName { get; set; } = string.Empty;              // "Овнов", "Тельцов"...
-        public string DateRange { get; set; } = string.Empty;             // "21 марта - 19 апреля"
-        public string Text { get; set; } = string.Empty;                  // основной текст гороскопа
-    }
+    public string SignName { get; set; } = string.Empty;
+    public string DateRange { get; set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
+    // Новое поле для картинки
+    public string? ImageUrl { get; set; }
 }

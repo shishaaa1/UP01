@@ -1,9 +1,11 @@
 ﻿public interface IGamification
 {
-    Task<int> CountDay(int userId);        // Активные дни (из Gamification)
-    Task<int> CountOfDay(int userId);      // Текущий стрик
+    Task<int> CountDay(int userId);
+    Task<int> CountOfDay(int userId);
     Task<int> NumberOfUsersLiked(int userId);
-    Task<int> GetAccountAgeDays(int userId); // Дни с момента регистрации (из Users)
+    Task<int> GetAccountAgeDays(int userId);
+
+    Task<int> CountMutualLikes(int userId);
 
     Task UpdateLoginStreakAsync(int userId);
     Task IncrementLikesGivenAsync(int userId);

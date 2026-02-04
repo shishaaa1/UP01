@@ -5,21 +5,36 @@ using tiger_API.Modell;
 
 namespace tiger_API.Service
 {
-    public class HoroscopeParserService: IHoroscopeParser
+    public class HoroscopeParserService : IHoroscopeParser
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<HoroscopeParserService> _logger;
         private const string BaseUrl = "https://www.chita.ru/horoscope/";
 
-        private static readonly Regex DatePattern = new(@"(Прогноз на .*?Обновлено \d{2}\.\d{2}\.\d{4} в \d{2}:\d{2})", RegexOptions.Compiled);
+        // 1. ВОТ ТОТ САМЫЙ СЛОВАРЬ. Теперь картинки будут всегда.
+        private static readonly Dictionary<string, string> ZodiacStaticImages = new()
+        {
+            { "Овен", "https://img.icons8.com/color/96/aries.png" },
+            { "Телец", "https://img.icons8.com/color/96/taurus.png" },
+            { "Близнецы", "https://img.icons8.com/color/96/gemini.png" },
+            { "Рак", "https://img.icons8.com/color/96/cancer.png" },
+            { "Лев", "https://img.icons8.com/color/96/leo.png" },
+            { "Дева", "https://img.icons8.com/color/96/virgo.png" },
+            { "Весы", "https://img.icons8.com/color/96/libra.png" },
+            { "Скорпион", "https://img.icons8.com/color/96/scorpio.png" },
+            { "Стрелец", "https://img.icons8.com/color/96/sagittarius.png" },
+            { "Козерог", "https://img.icons8.com/color/96/capricorn.png" },
+            { "Водолей", "https://img.icons8.com/color/96/aquarius.png" },
+            { "Рыбы", "https://img.icons8.com/color/96/pisces.png" }
+        };
+
+        private static readonly string[] ZodiacNames = ZodiacStaticImages.Keys.ToArray();
 
         public HoroscopeParserService(HttpClient httpClient, ILogger<HoroscopeParserService> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
-
-            // Настраиваем HttpClient один раз
-            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
         }
 
         public async Task<DailyHoroscope?> GetTodayHoroscopeAsync(CancellationToken ct = default)
@@ -27,99 +42,83 @@ namespace tiger_API.Service
             try
             {
                 string html = await _httpClient.GetStringAsync(BaseUrl, ct);
-
                 var htmlDoc = new HtmlDocument();
                 htmlDoc.LoadHtml(html);
 
-                var result = new DailyHoroscope();
-
-                // 1. Дата прогноза (ищем текст, содержащий "Прогноз на" и "Обновлено")
-                var dateNode = htmlDoc.DocumentNode.SelectSingleNode("//*[contains(text(), 'Прогноз на') and contains(text(), 'Обновлено')]");
-                if (dateNode != null)
+                var result = new DailyHoroscope
                 {
-                    result.ForecastDate = dateNode.InnerText.Trim();
+                    UpdatedAt = DateTime.Now,
+                    Signs = new Dictionary<string, ZodiacForecast>()
+                };
 
-                    var match = DatePattern.Match(result.ForecastDate);
-                    if (match.Success && DateTime.TryParse(match.Groups[1].Value.Split("Обновлено ")[1], out var updated))
+                // Парсим дату с сайта
+                var dateNode = htmlDoc.DocumentNode.SelectSingleNode("//div[contains(@class, 'pub-date')] | //time");
+                result.ForecastDate = dateNode?.InnerText.Trim() ?? $"Прогноз на {DateTime.Now:dd.MM.yyyy}";
+
+                var headers = htmlDoc.DocumentNode.SelectNodes("//h2 | //h3");
+                if (headers == null) return null;
+
+                var signsDict = new Dictionary<string, ZodiacForecast>();
+
+                foreach (var header in headers)
+                {
+                    string headerText = header.InnerText.Trim();
+                    var detectedSign = ZodiacNames.FirstOrDefault(z => headerText.Contains(z, StringComparison.OrdinalIgnoreCase));
+
+                    if (string.IsNullOrEmpty(detectedSign)) continue;
+
+                    var forecast = new ZodiacForecast
                     {
-                        result.UpdatedAt = updated;
-                    }
-                }
+                        SignName = detectedSign,
+                        // Берем картинку из нашего словаря по названию знака
+                        ImageUrl = ZodiacStaticImages[detectedSign]
+                    };
 
-                // 2. Ищем все заголовки вида "## Гороскоп для ..."
-                // Но т.к. сайт отдаёт markdown-подобный контент → часто это <h2> или просто текст
-                var signNodes = htmlDoc.DocumentNode.SelectNodes("//h2 | //h3 | //*[contains(@class,'title') or contains(text(),'Гороскоп для')]");
-                if (signNodes == null || signNodes.Count == 0)
-                {
-                    _logger.LogWarning("Не найдены заголовки знаков зодиака");
-                    return null;
-                }
-
-                var signs = new Dictionary<string, ZodiacForecast>();
-
-                foreach (var header in signNodes)
-                {
-                    string title = header.InnerText.Trim();
-                    if (!title.Contains("Гороскоп для")) continue;
-
-                    string signName = title.Replace("Гороскоп для", "").Trim();
-
-                    // Следующий элемент — обычно диапазон дат
-                    var next = header.NextSibling;
-                    while (next != null && string.IsNullOrWhiteSpace(next.InnerText))
-                        next = next.NextSibling;
-
-                    string dateRange = next?.InnerText?.Trim() ?? "";
-
-                    // Собираем текст гороскопа до следующего заголовка
+                    // Собираем контент после заголовка
                     var textParts = new List<string>();
-                    var current = next?.NextSibling;
+                    var currentNode = header.NextSibling;
 
-                    while (current != null)
+                    while (currentNode != null)
                     {
-                        if (current.Name == "h2" || current.Name == "h3" || current.InnerText.Contains("Гороскоп для"))
-                            break;
+                        if (currentNode.Name == "h2" || currentNode.Name == "h3") break;
 
-                        string text = current.InnerText.Trim();
-                        if (!string.IsNullOrWhiteSpace(text) && text != "Показать полностью")
-                            textParts.Add(text);
-
-                        current = current.NextSibling;
+                        string innerText = currentNode.InnerText.Trim();
+                        if (!string.IsNullOrWhiteSpace(innerText))
+                        {
+                            // Если строка похожа на диапазон дат "21 марта — 20 апреля"
+                            if (Regex.IsMatch(innerText, @"\d{1,2}\s[а-я]+\s[—–-]\s\d{1,2}\s[а-я]+"))
+                            {
+                                forecast.DateRange = innerText;
+                            }
+                            // Если это не мусор, то это текст прогноза
+                            else if (innerText.Length > 5 && !innerText.Contains("Показать полностью"))
+                            {
+                                textParts.Add(innerText);
+                            }
+                        }
+                        currentNode = currentNode.NextSibling;
                     }
 
-                    string forecastText = string.Join(" ", textParts).Trim();
+                    forecast.Text = string.Join("\n\n", textParts).Trim();
 
-                    if (!string.IsNullOrEmpty(signName) && !string.IsNullOrEmpty(forecastText))
+                    if (!string.IsNullOrEmpty(forecast.Text))
                     {
-                        signs[signName] = new ZodiacForecast
-                        {
-                            SignName = signName,
-                            DateRange = dateRange,
-                            Text = forecastText
-                        };
+                        signsDict[detectedSign] = forecast;
                     }
                 }
 
-                result.Signs = signs;
+                result.Signs = signsDict;
                 return result.Signs.Count > 0 ? result : null;
-            }
-            catch (HttpRequestException ex)
-            {
-                _logger.LogError(ex, "Ошибка HTTP при загрузке гороскопа");
-                return null;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Неожиданная ошибка парсинга гороскопа");
+                _logger.LogError(ex, "Ошибка при парсинге гороскопа");
                 return null;
             }
         }
 
-        // Реализация кэша — можно добавить через IMemoryCache
         public Task<DailyHoroscope?> GetTodayHoroscopeCachedAsync(TimeSpan? maxAge = null, CancellationToken ct = default)
         {
-            // Здесь можно добавить логику кэширования
-            // Пока просто прокидываем в основной метод
             return GetTodayHoroscopeAsync(ct);
         }
     }
