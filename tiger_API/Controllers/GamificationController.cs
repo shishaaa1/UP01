@@ -10,9 +10,9 @@ public class GamificationController : ControllerBase
     {
         _gamification = gamification;
     }
-
-    [HttpGet("{userId}")]
-    public async Task<IActionResult> GetStats(int userId)
+    [Route("GetCountStats")]
+    [HttpGet]
+    public async Task<IActionResult> GetCountStats(int userId)
     {
         // 1. Сколько всего дней аккаунту
         var accountAge = await _gamification.GetAccountAgeDays(userId);
@@ -25,14 +25,39 @@ public class GamificationController : ControllerBase
 
         // 4. Всего поставлено лайков (включая старые)
         var likes = await _gamification.NumberOfUsersLiked(userId);
-
         return Ok(new
         {
             UserId = userId,
             DaysSinceRegistration = accountAge,
             TotalActiveDays = activeDays,
             CurrentStreak = streak,
-            TotalLikesGiven = likes
+            TotalLikesGiven = likes,
         });
     }
+    [Route("GetAchiv")]
+    [HttpGet]
+    public async Task<IActionResult> GetAchiv(int userId)
+    {
+        var accountAge = await _gamification.GetAccountAgeDays(userId);
+        var activeDays = await _gamification.CountDay(userId);
+        var streak = await _gamification.CountOfDay(userId);
+        var likes = await _gamification.NumberOfUsersLiked(userId);
+
+        var completedTasks = new
+        {
+            FirstLike = likes >= 1,
+            TenLikes = likes >= 10,
+            OneHundredLikes = likes >= 100,
+            FirstDayOnAccount = accountAge >= 1,
+            TenDaysOnAccount = accountAge >= 10,
+            OneHundredDaysOnAccount = accountAge >= 100
+        };
+
+        return Ok(new
+        {
+            CompletedTasks = completedTasks
+        });
+    }
+
+
 }

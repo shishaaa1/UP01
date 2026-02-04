@@ -15,6 +15,15 @@ namespace tiger_API.Modell
         public int LikesGivenCount { get; set; } = 0;         // Количество лайков, которые дал пользователь
 
         [ForeignKey("UserId")]
-        public virtual Users User { get; set; }               // Связь с Users (опционально, для навигации)
+        public virtual Users User { get; set; }  
+    }
+    public class completedtasks
+    {
+        public bool firstLike { get; set; } = false;
+        public bool tenLike { get; set; } = false;
+        public bool oneHundredLike { get; set; } = false;
+        public bool firstDayOnAccount { get; set; } = false;
+        public bool tenDaysOnTheAccount { get; set; } = false;
+        public bool oneHundredOnTheAccount { get; set; } = false;
     }
 }
