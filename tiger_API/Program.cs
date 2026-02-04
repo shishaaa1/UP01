@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Reflection;
 using tiger_API;
 using tiger_API.Context;
+using tiger_API.Interfaces;
 using tiger_API.Itreface; 
 using tiger_API.Service;
 
@@ -22,6 +23,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuditService, AuditService>();
 builder.Services.AddDbContext<AuditContext>(options =>
     options.UseSqlServer(tiger_API.DbConnection.config));
+builder.Services.AddHttpClient<IHoroscopeParser, HoroscopeParserService>();
+builder.Services.AddScoped<IHoroscopeParser, HoroscopeParserService>();
 builder.Services.AddScoped<IUsers, UsersService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IAdmin, AdminService>(); // реализация интерфейса и сервиса
 builder.Services.AddScoped<IPhotosUsers, PhotosUsersService>(); // реализация интерфейса и сервиса
