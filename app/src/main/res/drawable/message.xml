@@ -3,7 +3,7 @@
     <!-- Нижний слой: круглый фон -->
     <item>
         <shape android:shape="oval">
-            <solid android:color="#A78BFA" />
+            <solid android:color="#c3dffd" />
             <size android:width="40dp" android:height="40dp" />
         </shape>
     </item>

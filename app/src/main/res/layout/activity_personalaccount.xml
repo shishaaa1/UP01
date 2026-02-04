@@ -61,7 +61,7 @@
 
                                 android:scaleType="centerCrop"
                                 app:civ_border_width="2dp"
-                                app:civ_border_color="@color/primary" />
+                                app:civ_border_color="#c3dffd" />
 
                             <!-- Иконка добавления фото (в правом нижнем углу) -->
                             <ImageButton
@@ -159,7 +159,7 @@
                             android:id="@+id/btn_edit_profile"
                             android:layout_width="match_parent"
                             android:layout_height="56dp"
-                            android:backgroundTint="@color/primary"
+                            android:backgroundTint="#c3dffd"
                             android:text="Изменить профиль"
                             android:textAllCaps="false"
                             android:textSize="16sp"
@@ -200,13 +200,15 @@
 
                     android:background="@drawable/backs" />
 
-                <ImageView
+                <com.google.android.material.button.MaterialButton
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="50dp"
+                    android:text="Достижения"
+                    android:textAlignment="center"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:background="@drawable/view_panel"
-                    android:layout_weight="1" />
+                    android:backgroundTint="#c3dffd"
+                    android:layout_weight="3" />
 
                 <ImageButton
                     android:id="@+id/btn_message"

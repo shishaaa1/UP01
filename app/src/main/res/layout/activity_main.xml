@@ -15,7 +15,7 @@
         android:text="🫶 Booble"
         android:textSize="32sp"
         android:textStyle="bold"
-        android:textColor="@color/primary"
+        android:textColor="#c3dffd"
         android:layout_marginBottom="8dp" />
 
     <TextView
@@ -71,7 +71,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/white"
-        android:backgroundTint="@color/primary"
+        android:backgroundTint="#c3dffd"
         android:onClick="onLoginClick"
         android:layout_marginBottom="16dp" />
 
@@ -80,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Еще нет аккаунта? Зарегистрироваться"
-        android:textColor="@color/primary"
+        android:textColor="#c3dffd"
         android:textSize="14sp"
         android:onClick="goToRegistration"
         />

@@ -3,7 +3,7 @@
     <!-- Фон (круг) -->
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/primary" />
+            <solid android:color="#c3dffd" />
             <stroke
                 android:width="3dp"
                 android:color="@color/white" />

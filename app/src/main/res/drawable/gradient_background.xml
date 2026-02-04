@@ -1,9 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <gradient
-        android:startColor="@color/primary"
-        android:endColor="@color/white"
-        android:angle="40"
-        android:type="linear"
-        android:useLevel="false" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Слой 1: #00DFD5 at 69.43% 78.14% -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%"
+                android:centerX="69.43%" android:centerY="78.14%"
+                android:startColor="#00DFD5" android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Слой 2: #66A4F1 at 36.08% 24.24% -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%"
+                android:centerX="36.08%" android:centerY="24.24%"
+                android:startColor="#66A4F1" android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Слой 3: #7F8CFC at 4.57% 33.77% -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%"
+                android:centerX="4.57%" android:centerY="33.77%"
+                android:startColor="#7F8CFC" android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Слой 4: #B366F1 at 57.92% 0.07% -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%"
+                android:centerX="57.92%" android:centerY="0.07%"
+                android:startColor="#B366F1" android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Слой 5: #00DFD5 at 5.43% 99.40% -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%"
+                android:centerX="5.43%" android:centerY="99.40%"
+                android:startColor="#00DFD5" android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Слой 6: #66A4F1 at 29.47% 74.14% -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%"
+                android:centerX="29.47%" android:centerY="74.14%"
+                android:startColor="#66A4F1" android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Слой 7: #7F8CFC at 62.88% 10.10% -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%"
+                android:centerX="62.88%" android:centerY="10.10%"
+                android:startColor="#7F8CFC" android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <!-- Слой 8: #B366F1 at 48.86% 12.43% -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%"
+                android:centerX="48.86%" android:centerY="12.43%"
+                android:startColor="#B366F1" android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="100%"
+                android:centerX="54.29%" android:centerY="29.22%"
+                android:startColor="#00DFD5" android:endColor="#00FFFFFF" />
+        </shape>
+    </item>
+
+</layer-list>
