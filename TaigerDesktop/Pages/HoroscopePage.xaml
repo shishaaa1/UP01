@@ -1,0 +1,155 @@
+﻿<UserControl x:Class="TaigerDesktop.Pages.HoroscopePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TaigerDesktop.Pages"
+             mc:Ignorable="d" d:DesignHeight="700" d:DesignWidth="1000">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Шапка -->
+        <Border Background="{StaticResource SoftLavenderBrush}" 
+                CornerRadius="12" 
+                Padding="20" 
+                Margin="0,0,0,20"
+                Grid.Row="0">
+            <StackPanel>
+                <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" 
+                           FontSize="32" 
+                           Foreground="{StaticResource DarkPurpleBrush}"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,10"/>
+                <TextBlock x:Name="ForecastDateText" 
+                           Text="Загрузка гороскопа..." 
+                           FontSize="20" 
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource DarkPurpleBrush}"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"/>
+                <TextBlock x:Name="UpdatedAtText" 
+                           Text="" 
+                           FontSize="12" 
+                           Foreground="{StaticResource DarkPurpleBrush}"
+                           HorizontalAlignment="Center"
+                           Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Список знаков зодиака -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="HoroscopeItemsControl">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{StaticResource WhiteBrush}" 
+                                CornerRadius="12" 
+                                Margin="0,0,0,15"
+                                Padding="20"
+                                BorderBrush="{StaticResource SoftLavenderBrush}"
+                                BorderThickness="1">
+                            <Border.Triggers>
+                                <EventTrigger RoutedEvent="Border.MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                             To="0.95" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="Border.MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                             To="1.0" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Border.Triggers>
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                                    <TextBlock Text="&#xE918;" FontFamily="Segoe MDL2 Assets" 
+                                               FontSize="24" 
+                                               Foreground="{StaticResource DarkPurpleBrush}"
+                                               Margin="0,0,10,0"/>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding SignName}" 
+                                                   FontSize="18" 
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource DarkPurpleBrush}"/>
+                                        <TextBlock Text="{Binding DateRange}" 
+                                                   FontSize="12" 
+                                                   Foreground="{StaticResource SoftLavenderBrush}"
+                                                   Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Text}" 
+                                           FontSize="14" 
+                                           TextWrapping="Wrap"
+                                           Margin="0,15,0,0"
+                                           LineHeight="20"
+                                           Foreground="{StaticResource DarkPurpleBrush}"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Загрузка -->
+        <Border x:Name="LoadingOverlay" 
+                Grid.RowSpan="2"
+                Background="#CCFFFFFF"
+                CornerRadius="12"
+                Visibility="Collapsed"
+                Panel.ZIndex="100">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="&#xE897;" FontFamily="Segoe MDL2 Assets" 
+                           FontSize="48" 
+                           Foreground="{StaticResource SoftLavenderBrush}"
+                           Margin="0,0,0,20"/>
+                <TextBlock Text="Загрузка гороскопа..." 
+                           FontSize="18"
+                           Foreground="{StaticResource DarkPurpleBrush}"
+                           Margin="0,0,0,10"/>
+                <ProgressBar Width="200" 
+                             Height="10" 
+                             IsIndeterminate="True"
+                             Foreground="{StaticResource SoftLavenderBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Ошибка -->
+        <Border x:Name="ErrorOverlay" 
+                Grid.RowSpan="2"
+                Background="{StaticResource WhiteBrush}"
+                CornerRadius="12"
+                Visibility="Collapsed"
+                Panel.ZIndex="100">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="&#xE783;" FontFamily="Segoe MDL2 Assets" 
+                           FontSize="48" 
+                           Foreground="{StaticResource SoftLavenderBrush}"
+                           Margin="0,0,0,20"/>
+                <TextBlock Text="Гороскоп временно недоступен" 
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource DarkPurpleBrush}"
+                           Margin="0,0,0,10"/>
+                <TextBlock Text="Попробуйте обновить страницу позже" 
+                           FontSize="14"
+                           Foreground="{StaticResource SoftLavenderBrush}"
+                           Margin="0,0,0,20"/>
+                <Button Content="Обновить" 
+                        Click="RefreshHoroscope"
+                        Background="{StaticResource SoftLavenderBrush}"
+                        Foreground="{StaticResource DarkPurpleBrush}"
+                        Padding="20,10"
+                        BorderThickness="0"
+                        Cursor="Hand"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

@@ -353,6 +353,31 @@ namespace TaigerDesktop.Connect
                 return new List<UserActivityLog>();
             }
         }
+        public async Task<DailyHoroscope?> GetHoroscopeAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("Horoscope/today");
+                if (response.IsSuccessStatusCode)
+                {
+                    var horoscope = await response.Content.ReadFromJsonAsync<DailyHoroscope>(
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return horoscope;
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    Console.WriteLine("Гороскоп временно недоступен");
+                    return null;
+                }
+                Console.WriteLine($"Ошибка получения гороскопа: {response.StatusCode}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка получения гороскопа: {ex.Message}");
+                return null;
+            }
+        }
         private class UserPhotoDto
         {
             public int PhotoId { get; set; }
