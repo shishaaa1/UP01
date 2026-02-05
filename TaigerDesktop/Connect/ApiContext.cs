@@ -378,6 +378,46 @@ namespace TaigerDesktop.Connect
                 return null;
             }
         }
+        public async Task<bool> ClearAllLogsAsync()
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync("Audit/ClearAll");
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<Dictionary<string, object>>();
+                    return result != null && result.TryGetValue("success", out var success) && success.ToString() == "True";
+                }
+                Console.WriteLine($"Ошибка очистки логов: {response.StatusCode}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка очистки логов: {ex.Message}");
+                return false;
+            }
+        }
+
+        // Очистить старые логи (оставить последние 100)
+        public async Task<bool> TrimLogsAsync()
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync("Audit/Trim");
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<Dictionary<string, object>>();
+                    return result != null && result.TryGetValue("success", out var success) && success.ToString() == "True";
+                }
+                Console.WriteLine($"Ошибка очистки старых логов: {response.StatusCode}");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка очистки старых логов: {ex.Message}");
+                return false;
+            }
+        }
         private class UserPhotoDto
         {
             public int PhotoId { get; set; }

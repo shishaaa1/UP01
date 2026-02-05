@@ -13,7 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Панель фильтров -->
+        <!-- Панель управления -->
         <Border Background="{StaticResource WhiteBrush}" 
                 CornerRadius="12" 
                 Padding="20" 
@@ -21,53 +21,96 @@
                 Grid.Row="0"
                 BorderBrush="{StaticResource SoftLavenderBrush}"
                 BorderThickness="1">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <TextBlock Text="ID пользователя:" 
-                           VerticalAlignment="Center" 
-                           Margin="0,0,10,0"
-                           Foreground="{StaticResource DarkPurpleBrush}"
-                           FontWeight="SemiBold"/>
-                <TextBox x:Name="UserIdFilter" 
-                         Width="100" 
-                         Height="36"
-                         Margin="0,0,15,0"
-                         Padding="8,0"
-                         VerticalContentAlignment="Center"
-                         PreviewTextInput="UserIdFilter_PreviewTextInput"/>
-                <Button Content="Показать логи" 
-                        Click="LoadFilteredLogs"
-                        Background="{StaticResource SoftLavenderBrush}"
-                        Foreground="{StaticResource DarkPurpleBrush}"
-                        Height="36"
-                        Padding="15,0"
-                        Margin="0,0,15,0"
-                        Cursor="Hand"/>
-                <Button Content="Показать все логи" 
-                        Click="LoadAllLogs"
-                        Background="{StaticResource LightBackgroundBrush}"
-                        BorderBrush="{StaticResource SoftLavenderBrush}"
-                        BorderThickness="1"
-                        Foreground="{StaticResource DarkPurpleBrush}"
-                        Height="36"
-                        Padding="15,0"
-                        Cursor="Hand"/>
-                <Button 
-                        Click="RefreshLogs"
-                        Background="{StaticResource WhiteBrush}"
-                        BorderBrush="{StaticResource SoftLavenderBrush}"
-                        BorderThickness="1"
-                        Foreground="{StaticResource DarkPurpleBrush}"
-                        Height="36"
-                        Padding="15,0"
-                        Margin="15,0,0,0"
-                        Cursor="Hand">
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
-                            <TextBlock Text="Обновить"/>
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
+            <StackPanel>
+                <!-- Верхний ряд: фильтрация -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,15">
+                    <TextBlock Text="ID пользователя:" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,10,0"
+                               Foreground="{StaticResource DarkPurpleBrush}"
+                               FontWeight="SemiBold"/>
+                    <TextBox x:Name="UserIdFilter" 
+                             Width="100" 
+                             Height="36"
+                             Margin="0,0,15,0"
+                             Padding="8,0"
+                             VerticalContentAlignment="Center"
+                             PreviewTextInput="UserIdFilter_PreviewTextInput"
+                             ToolTip="Введите ID пользователя для фильтрации"/>
+                    <Button Content="Показать логи" 
+                            Click="LoadFilteredLogs"
+                            Background="{StaticResource SoftLavenderBrush}"
+                            Foreground="{StaticResource DarkPurpleBrush}"
+                            Height="36"
+                            Padding="15,0"
+                            Margin="0,0,15,0"
+                            Cursor="Hand"
+                            ToolTip="Показать логи выбранного пользователя"/>
+                    <Button Content="Показать все" 
+                            Click="LoadAllLogs"
+                            Background="{StaticResource LightBackgroundBrush}"
+                            BorderBrush="{StaticResource SoftLavenderBrush}"
+                            BorderThickness="1"
+                            Foreground="{StaticResource DarkPurpleBrush}"
+                            Height="36"
+                            Padding="15,0"
+                            Cursor="Hand"
+                            ToolTip="Показать все логи"/>
+                    <Button
+                            Click="RefreshLogs"
+                            Background="{StaticResource WhiteBrush}"
+                            BorderBrush="{StaticResource SoftLavenderBrush}"
+                            BorderThickness="1"
+                            Foreground="{StaticResource DarkPurpleBrush}"
+                            Height="36"
+                            Padding="15,0"
+                            Margin="15,0,0,0"
+                            Cursor="Hand"
+                            ToolTip="Обновить список логов">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
+                                <TextBlock Text="Обновить"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <!-- Нижний ряд: управление логами -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="BtnTrimLogs" 
+                            Click="TrimLogs"
+                            Background="{StaticResource SoftLavenderBrush}"
+                            Foreground="{StaticResource DarkPurpleBrush}"
+                            Height="36"
+                            Padding="15,0"
+                            Margin="0,0,10,0"
+                            Cursor="Hand"
+                            ToolTip="Оставить только 100 последних записей">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
+                                <TextBlock Text="Очистить старые"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+
+                    <Button x:Name="BtnClearAll" 
+                            Click="ClearAllLogs"
+                            Background="{StaticResource SoftLavenderBrush}"
+                            Foreground="{StaticResource DarkPurpleBrush}"
+                            Height="36"
+                            Padding="15,0"
+                            Cursor="Hand"
+                            ToolTip="Полностью очистить журнал аудита (нельзя отменить!)">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Margin="0,0,5,0"/>
+                                <TextBlock Text="Очистить всё"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
             </StackPanel>
         </Border>
 
@@ -126,7 +169,12 @@
                 Visibility="Collapsed"
                 Panel.ZIndex="100">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="Загрузка логов..." 
+                <TextBlock Text="&#xE897;" FontFamily="Segoe MDL2 Assets" 
+                           FontSize="48" 
+                           Foreground="{StaticResource SoftLavenderBrush}"
+                           Margin="0,0,0,20"/>
+                <TextBlock x:Name="LoadingText" 
+                           Text="Загрузка логов..." 
                            FontSize="18"
                            Foreground="{StaticResource DarkPurpleBrush}"
                            Margin="0,0,0,10"/>

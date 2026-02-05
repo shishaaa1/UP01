@@ -89,10 +89,94 @@ namespace TaigerDesktop.Pages
                 LoadFilteredLogs(null, null);
         }
 
-        private void ShowLoading(bool isLoading)
+        private async void TrimLogs(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show(
+                "Вы уверены, что хотите очистить старые логи?\nБудут оставлены только последние 100 записей.",
+                "Подтверждение очистки",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning,
+                MessageBoxResult.No);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                ShowLoading(true, "Очистка старых логов...");
+                try
+                {
+                    var success = await _apiContext.TrimLogsAsync();
+
+                    if (success)
+                    {
+                        MessageBox.Show("Старые логи успешно удалены. Оставлено 100 последних записей.",
+                            "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                        LoadAllLogs(null, null);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не удалось очистить логи", "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка очистки логов: {ex.Message}", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    ShowLoading(false);
+                }
+            }
+        }
+
+        private async void ClearAllLogs(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show(
+                "Вы уверены, что хотите ПОЛНОСТЬЮ ОЧИСТИТЬ журнал аудита?\nЭто действие НЕЛЬЗЯ отменить!",
+                "Подтверждение очистки",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Error,
+                MessageBoxResult.No);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                ShowLoading(true, "Полная очистка логов...");
+                try
+                {
+                    var success = await _apiContext.ClearAllLogsAsync();
+
+                    if (success)
+                    {
+                        MessageBox.Show("Журнал аудита полностью очищен!", "Успех",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                        LogsGrid.ItemsSource = new List<UserActivityLog>();
+                        _allLogs.Clear();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не удалось очистить логи", "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка очистки логов: {ex.Message}", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    ShowLoading(false);
+                }
+            }
+        }
+
+        private void ShowLoading(bool isLoading, string message = "Загрузка...")
+        {
+            LoadingText.Text = message;
             LoadingOverlay.Visibility = isLoading ? Visibility.Visible : Visibility.Collapsed;
         }
+
+        // Разрешаем только цифры в поле фильтра
         private void UserIdFilter_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = !Regex.IsMatch(e.Text, @"^\d+$");
