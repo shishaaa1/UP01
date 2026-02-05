@@ -1,5 +1,7 @@
 package com.example.boobleproject.Api;
 
+import com.example.boobleproject.AchievementsResponse;
+import com.example.boobleproject.CountStatsResponse;
 import com.example.boobleproject.Profile;
 
 import java.util.List;
@@ -72,6 +74,13 @@ public interface ApiService {
     );
     @DELETE("api/PhotoController/DeletePhoto")
     Call<ResponseBody> deletePhoto(@Query("id") int photoId);
+
+    @GET("api/Gamification/GetCountStats")
+    Call<CountStatsResponse> getCountStats(@Query("userId") int userId);
+
+    @GET("api/Gamification/GetAchiv")
+    Call<AchievementsResponse> getAchievements(@Query("userId") int userId);
+
 
     @GET("api/PhotoController/GetPhotoByUsersId")
     Call<ResponseBody> getPhotoByUserId(@Query("userId") int userId);

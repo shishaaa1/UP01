@@ -24,9 +24,7 @@
         <activity
             android:name=".MessageMatch.Messages"
             android:exported="false" />
-        <activity
-            android:name=".adapter_isLike"
-            android:exported="false" />
+
         <activity
             android:name=".MessageMatch.Islike"
             android:exported="false" />
@@ -38,6 +36,9 @@
             android:exported="false" />
         <activity
             android:name=".Mainpage"
+            android:exported="false" />
+        <activity
+            android:name=".AchievementActivity"
             android:exported="false" />
         <activity
             android:name=".Logins.MainActivity"

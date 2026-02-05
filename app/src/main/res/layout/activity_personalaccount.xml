@@ -201,6 +201,7 @@
                     android:background="@drawable/backs" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/dosti"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:text="Достижения"

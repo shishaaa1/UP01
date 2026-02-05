@@ -1,5 +1,6 @@
 package com.example.boobleproject.Account;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.boobleproject.AchievementActivity;
 import com.example.boobleproject.Api.ApiClient;
 import com.example.boobleproject.Api.ApiService;
 import com.example.boobleproject.Profile;
@@ -47,6 +50,9 @@ public class Personalaccount extends AppCompatActivity {
     private ImageButton bthAddPhoto;
     private MaterialButton btnEditProfile;
     private SharedPreferences prefs;
+    private ImageButton btnBack;
+    private Button btnDosti;
+
     private static final String PREFS_NAME = "ProfilePrefs";
     private static final String PHOTO_PATH_KEY = "profile_photo_path";
     private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
@@ -64,7 +70,7 @@ public class Personalaccount extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_personalaccount);
 
-
+        btnDosti = findViewById(R.id.dosti);
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         profilePhoto = findViewById(R.id.iv_profile_photo);
         bthAddPhoto = findViewById(R.id.btn_add_photo);
@@ -78,7 +84,10 @@ public class Personalaccount extends AppCompatActivity {
 
         SharedPreferences userPrefs = getSharedPreferences("userPrefs", MODE_PRIVATE);
         currentUserId = userPrefs.getInt("userId", -1);
-
+        btnDosti.setOnClickListener(v -> {
+            Intent intent = new Intent(Personalaccount.this, AchievementActivity.class);
+            startActivity(intent);
+        });
 
         if (currentUserId != -1) {
             loadUserProfile(currentUserId);
