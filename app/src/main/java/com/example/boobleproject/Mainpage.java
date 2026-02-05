@@ -41,6 +41,7 @@ public class Mainpage extends AppCompatActivity {
     private LikeManager likeManager;
     private List<Profile> profileQueue;
     private ImageView swipeIndicator;
+    private ImageButton horos;
     private ImageButton btnProfile;
     private ApiService apiService;
     private int currentUserId;
@@ -66,7 +67,12 @@ public class Mainpage extends AppCompatActivity {
 
         rvProfiles = findViewById(R.id.rv_profiles);
         swipeIndicator = findViewById(R.id.iv_swipe_indicator);
+        horos = findViewById(R.id.btn_news);
 
+        horos.setOnClickListener( v-> {
+            Intent intent1 = new Intent(Mainpage.this, HoroscopeActivity.class);
+            startActivity(intent1);
+        });
         setupRecyclerView();
         setupSwipeHelper();
         loadOppositeSexUsers();

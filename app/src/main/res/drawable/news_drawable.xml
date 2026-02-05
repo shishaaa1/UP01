@@ -11,7 +11,7 @@
     <!-- Верхний слой: иконка в центре -->
     <item
         android:gravity="center"
-        android:drawable="@drawable/likesss"
+        android:drawable="@drawable/horos"
         android:width="30dp"
         android:height="30dp" />
 </layer-list>

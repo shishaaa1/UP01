@@ -40,7 +40,7 @@ public class AchievementAdapter  extends RecyclerView.Adapter<AchievementAdapter
                 .inflate(R.layout.item_gaim, parent, false);
         return new ViewHolder(v);
     }
-
+    @Override
     public void onBindViewHolder(@NonNull ViewHolder h, int position) {
 
         Achievement a = list.get(position);
@@ -50,20 +50,12 @@ public class AchievementAdapter  extends RecyclerView.Adapter<AchievementAdapter
         h.progress.setText(a.getPercent() + "%");
         h.icon.setImageResource(a.iconRes);
 
-        // Если достижение не выполнено — затемняем
+        // СНАЧАЛА всегда сбрасываем состояние
+        h.itemView.setAlpha(1f);
+
+        // Потом применяем затемнение если не выполнено
         if (!a.completed) {
             h.itemView.setAlpha(0.4f);
-            h.icon.setAlpha(0.4f);
-            h.title.setAlpha(0.4f);
-            h.description.setAlpha(0.4f);
-            h.progress.setAlpha(0.4f);
-        } else {
-            // Выполненные — полностью яркие
-            h.itemView.setAlpha(1f);
-            h.icon.setAlpha(1f);
-            h.title.setAlpha(1f);
-            h.description.setAlpha(1f);
-            h.progress.setAlpha(1f);
         }
     }
 

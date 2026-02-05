@@ -40,6 +40,8 @@
         <activity
             android:name=".AchievementActivity"
             android:exported="false" />
+        <activity android:name=".HoroscopeActivity"
+            android:exported="false"/>
         <activity
             android:name=".Logins.MainActivity"
             android:exported="true">

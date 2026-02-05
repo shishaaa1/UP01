@@ -2,6 +2,7 @@ package com.example.boobleproject.Api;
 
 import com.example.boobleproject.AchievementsResponse;
 import com.example.boobleproject.CountStatsResponse;
+import com.example.boobleproject.HoroscopeResponse;
 import com.example.boobleproject.Profile;
 
 import java.util.List;
@@ -101,6 +102,9 @@ public interface ApiService {
             @Path("user2Id") int user2Id
     );
 
+
+    @GET("api/Horoscope/today")
+    Call<HoroscopeResponse> getTodayHoroscope();
     @GET("api/islIke/user/{userId}/matches")
     Call<Map<String, Object>> getUserMatches(@Path("userId") int userId);
     @FormUrlEncoded

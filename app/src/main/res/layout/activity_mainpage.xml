@@ -29,40 +29,50 @@
             android:layout_gravity="bottom"
             android:background="@android:color/transparent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp">
 
-            <ImageButton
+                <!-- Аккаунт -->
+                <ImageButton
+                    android:id="@+id/btn_account"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/cabinets" />
 
-                android:id="@+id/btn_account"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                <!-- Лайки (уменьшенная центральная кнопка) -->
+                <ImageView
+                    android:id="@+id/btn_likes"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/view_panel"
+                    android:onClick="goLike" />
 
-                android:background="@drawable/cabinets" />
+                <!-- Новости -->
+                <ImageButton
+                    android:id="@+id/btn_news"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/news_drawable" />
 
-            <ImageView
-                android:layout_width="0dp"
-                android:onClick="goLike"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/view_panel"
-                android:layout_weight="1" />
+                <!-- Сообщения -->
+                <ImageButton
+                    android:id="@+id/btn_messages"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/message"
+                    android:scaleType="center"
+                    android:src="@drawable/heart"
+                    android:onClick="goMessages" />
 
-            <ImageButton
-                android:id="@+id/btn_messages"
-                android:onClick="goMessages"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/message"
-                android:scaleType="center"
-                android:src="@drawable/heart" />
-        </LinearLayout>
+            </LinearLayout>
     </LinearLayout>
 </FrameLayout>
 

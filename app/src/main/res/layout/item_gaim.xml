@@ -3,9 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardCornerRadius="18dp"
-    app:cardElevation="4dp"
-    app:cardBackgroundColor="#1AFFFFFF">
+    app:cardCornerRadius="18dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -15,8 +13,8 @@
         <!-- Фото достижения -->
         <ImageView
             android:id="@+id/ivAchievement"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:scaleType="centerCrop"
             android:background="@drawable/bg_circle"
             app:layout_constraintTop_toTopOf="parent"
