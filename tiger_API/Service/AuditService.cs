@@ -41,6 +41,36 @@ namespace tiger_API.Service
                 .ToListAsync();
         }
 
+        public async Task ClearAllLogsAsync()
+        {
+            // Удаляем все записи из таблицы
+            var allLogs = await _context.UserActivityLogs.ToListAsync();
+            _context.UserActivityLogs.RemoveRange(allLogs);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task TrimLogsAsync(int keepCount = 100)
+        {
+            // 1. Получаем общее количество записей
+            int totalCount = await _context.UserActivityLogs.CountAsync();
+
+            // 2. Если записей больше чем нужно оставить
+            if (totalCount > keepCount)
+            {
+                // Вычисляем, сколько записей нужно удалить
+                int deleteCount = totalCount - keepCount;
+
+                // Берем самые старые записи (у которых ID меньше)
+                var logsToDelete = await _context.UserActivityLogs
+                    .OrderBy(l => l.Id) // Сортируем от старых к новым
+                    .Take(deleteCount)
+                    .ToListAsync();
+
+                _context.UserActivityLogs.RemoveRange(logsToDelete);
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
 
 }

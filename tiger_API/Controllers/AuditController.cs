@@ -49,5 +49,33 @@ namespace tiger_API.Controllers
             return Ok(res);
             
         }
+        [HttpDelete("ClearAll")]
+        public async Task<IActionResult> ClearAll()
+        {
+            try
+            {
+                await _auditServis.ClearAllLogsAsync();
+                return Ok(new { success = true, message = "Журнал аудита полностью очищен." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, error = ex.Message });
+            }
+        }
+
+        [HttpDelete("Trim")]
+        public async Task<IActionResult> Trim()
+        {
+            try
+            {
+                
+                await _auditServis.TrimLogsAsync(100);
+                return Ok(new { success = true, message = "Старые логи удалены. Оставлено 100 последних записей." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, error = ex.Message });
+            }
+        }
     }
 }
