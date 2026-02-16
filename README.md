@@ -170,69 +170,88 @@ ApiContext --- главный сетевой слой приложения.
 Он отвечает за авторизацию, CRUD‑операции, загрузку данных и удаление записей на сервере.
 
 📌 Функционал ApiContext
-🔐 Авторизация администратора
-Методы: - LoginAdminAsync --- простая авторизация (true/false) - LoginAdminAAsync --- авторизация + получение Login и Nickname (обновлённая версия)
+### 🔐 Авторизация администратора
 
-После успешного входа: - IsAuthenticated = true - CurrentLogin = ... - Передача информации в App.SetAdminData()
+Методы: - `LoginAdminAsync` --- простая авторизация (true/false) -
+`LoginAdminAAsync` --- авторизация + получение Login и Nickname
+(обновлённая версия)
 
-👤 Работа с администраторами
-AddAdminAsync(Admin admin) --- добавление администратора\
-EditAdminAsync(Admin admin) --- редактирование\
-DeleteAdminAsync(int id) --- удаление\
-GetAllAdminsAsync() --- получение списка администраторов
-🧑 Пользователи
-GetAllUsersAsync() --- получение всех пользователей\
-DeleteUserAsync(int id) --- удаление пользователя
-🖼 Фото пользователей
-GetPhotosByUsersIdAsync() --- получение всех фото
-Преобразует DTO → модель PhotosUsers\
-DeletePhotoAsync(int id) --- удаление фото
+После успешного входа: - `IsAuthenticated = true` -
+`CurrentLogin = ...` - Передача информации в `App.SetAdminData()`
+
+### 👤 Работа с администраторами
+
+-   `AddAdminAsync(Admin admin)` --- добавление администратора\
+-   `EditAdminAsync(Admin admin)` --- редактирование\
+-   `DeleteAdminAsync(int id)` --- удаление\
+-   `GetAllAdminsAsync()` --- получение списка администраторов
+
+### 🧑 Пользователи
+
+-   `GetAllUsersAsync()` --- получение всех пользователей\
+-   `DeleteUserAsync(int id)` --- удаление пользователя
+
+### 🖼 Фото пользователей
+
+-   `GetPhotosByUsersIdAsync()` --- получение всех фото\
+    Преобразует DTO → модель `PhotosUsers`\
+-   `DeletePhotoAsync(int id)` --- удаление фото
+
 DTO:
 
-UserPhotoDto
-  - PhotoId
-  - UserId
-  - FirstName
-  - LastName
-  - Login
-  - PhotoData (byte[])
-📊 Статистика
-GetStatsLast30DaysAsync() --- статистика регистраций
-(данные из: UserController/CountUsersToday)
-🏗 Структура проекта
-TaigerDesktop
-│
-├── Connect/
-│   └── ApiContext.cs
-│
-├── Images/
-│   ├── backgroundHomePage.jpg
-│   └── icon.ico
-│
-├── Models/
-│   ├── Admin.cs
-│   ├── DailyStat.cs
-│   ├── KpiCard.cs
-│   ├── PhotosUser.cs
-│   └── Users.cs
-│
-├── Pages/
-│   ├── AddAdministrator.xaml
-│   ├── CheckAdministrator.xaml
-│   ├── CheckPhotos.xaml
-│   ├── CheckStat.xaml
-│   ├── CheckUsers.xaml
-│   ├── HomePage.xaml
-│   └── PhotoViewerWindow.xaml
-│
-├── View/
-│   ├── AdministratorCard.xaml
-│   ├── UserCard.xaml
-│   └── UserPhotoCard.xaml
-│
-├── App.xaml
-├── MainWindow.xaml
-└── Styles.xaml
+    UserPhotoDto
+      - PhotoId
+      - UserId
+      - FirstName
+      - LastName
+      - Login
+      - PhotoData (byte[])
+
+### 📊 Статистика
+
+-   `GetStatsLast30DaysAsync()` --- статистика регистраций\
+    (данные из: UserController/CountUsersToday)
+
+------------------------------------------------------------------------
+
+# 🏗 Структура проекта
+
+    TaigerDesktop
+    │
+    ├── Connect/
+    │   └── ApiContext.cs
+    │
+    ├── Images/
+    │   ├── backgroundHomePage.jpg
+    │   └── icon.ico
+    │
+    ├── Models/
+    │   ├── Admin.cs
+    │   ├── DailyStat.cs
+    │   ├── KpiCard.cs
+    │   ├── PhotosUser.cs
+    │   └── Users.cs
+    │
+    ├── Pages/
+    │   ├── AddAdministrator.xaml
+    │   ├── CheckAdministrator.xaml
+    │   ├── CheckPhotos.xaml
+    │   ├── CheckStat.xaml
+    │   ├── CheckUsers.xaml
+    │   ├── HomePage.xaml
+    │   └── PhotoViewerWindow.xaml
+    │
+    ├── View/
+    │   ├── AdministratorCard.xaml
+    │   ├── UserCard.xaml
+    │   └── UserPhotoCard.xaml
+    │
+    ├── App.xaml
+    ├── MainWindow.xaml
+    └── Styles.xaml
+
+------------------------------------------------------------------------
+
 ⚙️ Используемые технологии
 WPF (.NET 8)
 MVVM‑структура
