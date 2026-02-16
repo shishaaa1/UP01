@@ -125,16 +125,6 @@ API будет доступно по адресам:
 
     http://localhost:7252
 
-## 📡 Основные эндпоинты
-
-  Контроллер          Маршруты
-  ------------------- ----------------------------------------
-  UsersController     /users/AddUsers, /users/LoginUsers, /users/"DeleteUser/{id}", /users/CountUsersToday, /users/GetUserById, /users/GetUsers, /users/GetUsersAndPhoto, /users/GetAllUsersWithPhoto  /users/UpdateUsers, /users/GetOppositeSexUser.
-  MessageController   /message/send, /message/history,  /message/WriteMessage, /message/Conversation, /message/DeleteMessage,/message/DeleteConversation.
-  IsLikeController    /iSLikeController/add, /iSLikeController/check, /iSLikeController/send, /iSLikeController/received/{userId}, /iSLikeController/sent/{userId, /iSLikeController/mutual/{user1Id}/{user2Id}, /iSLikeController/user/{userId}/matches, /iSLikeController/revokeLike
-  PhotoController     /PhotoController/upload, /PhotoController/get
-  AdminController     /admin/stats
-
 
 ## 🔐 Конфигурации
 
